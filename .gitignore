@@ -5,4 +5,5 @@ build/*
 dist/*
 nbproject/private/*
 
+/logs/*
 /wz/*
