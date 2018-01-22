@@ -269,11 +269,10 @@ public class Server implements Runnable {
             System.exit(0);
         }
 
-        System.out.println("HeavenMS v" + ServerConstants.VERSION + " starting up.\r\n");
+        System.out.println("VxC_Svr v" + ServerConstants.VERSION + " starting up.\r\n");
 
 
-        if(ServerConstants.SHUTDOWNHOOK)
-            Runtime.getRuntime().addShutdownHook(new Thread(shutdown(false)));
+        Runtime.getRuntime().addShutdownHook(new Thread(shutdown(false)));
         
         Connection c = null;
         try {
@@ -365,7 +364,7 @@ public class Server implements Runnable {
         
         System.out.println("Listening on port 8484\r\n\r\n");
 
-        System.out.println("HeavenMS is now online.\r\n");
+        System.out.println("VxC_Svr is now online.\r\n");
         online = true;
     }
 

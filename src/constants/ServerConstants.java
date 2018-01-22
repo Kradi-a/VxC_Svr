@@ -14,8 +14,8 @@ public class ServerConstants {
     public static final boolean DB_CONNECTION_POOL = true;      //Installs a connection pool to hub DB connections. Set false to default.
     
     //World And Version
-    public static short VERSION = 83;
-    public static String TIMEZONE = "-GMT3";
+    public static short VERSION = 90;
+    public static String TIMEZONE = "GMT9";
     public static String[] WORLD_NAMES = {"Scania", "Bera", "Broa", "Windia", "Khaini", "Bellocan", "Mardia", "Kradia", "Yellonde", "Demethos", "Galicia", "El Nido", "Zenith", "Arcenia", "Kastia", "Judis", "Plana", "Kalluna", "Stius", "Croa", "Medere"};
 
     //Login Configuration
@@ -34,13 +34,9 @@ public class ServerConstants {
     
     //Ip Configuration
     public static String HOST;
-
-    //Other Configuration
-    public static boolean JAVA_8;
-    public static boolean SHUTDOWNHOOK;
     
     //Server Flags
-    public static final boolean USE_CUSTOM_KEYSET = true;           //Enables auto-setup of the HeavenMS's custom keybindings when creating characters.
+    public static final boolean USE_CUSTOM_KEYSET = false;           //Enables auto-setup of the HeavenMS's custom keybindings when creating characters.
     public static final boolean USE_MAXRANGE_ECHO_OF_HERO = true;
     public static final boolean USE_MAXRANGE = true;                //Will send and receive packets from all events on a map, rather than those of only view range.
     public static final boolean USE_DEBUG = false;                  //Will enable some text prints on the client, oriented for debugging purposes.
@@ -170,10 +166,6 @@ public class ServerConstants {
             ServerConstants.DB_URL = p.getProperty("URL");
             ServerConstants.DB_USER = p.getProperty("DB_USER");
             ServerConstants.DB_PASS = p.getProperty("DB_PASS");
-
-            //java8 And Shutdownhook
-            ServerConstants.JAVA_8 = p.getProperty("JAVA8").equalsIgnoreCase("TRUE");
-            ServerConstants.SHUTDOWNHOOK = p.getProperty("SHUTDOWNHOOK").equalsIgnoreCase("true");
 
         } catch (Exception e) {
             e.printStackTrace();
