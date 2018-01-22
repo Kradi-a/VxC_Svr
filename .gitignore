@@ -1,0 +1,8 @@
+manifest.mf
+
+build.xml
+build/*
+dist/*
+nbproject/private/*
+
+/wz/*
