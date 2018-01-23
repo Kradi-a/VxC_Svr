@@ -1,0 +1,24 @@
+#RemoveNMCOM?
+00000197: 00 02
+
+#Login.img or Login1.img Date
+00271A48: 9C B7 32 01 [20101020]
+
+#Remove AskPIC when DeleteCharacter?
+#00275C15: 75 EB
+
+#?
+0074AA56: 01 00
+
+#Start Windowed Mode
+00752A18: A1 B8
+00752A19: D0 00
+00752A1A: E7 00
+00752A1B: D8 00
+
+
+#LoginSvr Addr
+0087CD20
+
+#LoginSvr Port
+00405160
