@@ -71,9 +71,11 @@ import client.SkillFactory;
 import client.newyear.NewYearCardRecord;
 import constants.ItemConstants;
 import constants.ServerConstants;
+import java.security.Security;
 import java.util.Calendar;
 import net.server.audit.ThreadTracker;
 import server.quest.MapleQuest;
+import tools.AutoJCE;
 import tools.locks.MonitoredLockType;
 
 public class Server implements Runnable {
@@ -381,6 +383,8 @@ public class Server implements Runnable {
 
     public static void main(String args[]) {
         System.setProperty("wzpath", "wz");
+        Security.setProperty("crypto.policy", "unlimited");
+        AutoJCE.removeCryptographyRestrictions();
         Server.getInstance().run();
     }
 

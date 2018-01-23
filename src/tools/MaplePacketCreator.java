@@ -557,7 +557,7 @@ public class MaplePacketCreator {
                 final MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter(8);
                 mplew.writeShort(0x0E);
                 mplew.writeShort(mapleVersion);
-                mplew.writeMapleAsciiString("1");
+                mplew.writeMapleAsciiString("3");
                 mplew.write(recvIv);
                 mplew.write(sendIv);
                 mplew.write(8);

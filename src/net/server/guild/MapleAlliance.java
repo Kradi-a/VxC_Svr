@@ -53,9 +53,7 @@ public class MapleAlliance {
         this.name = name;
         allianceId = id;
         String[] ranks = {"Master", "Jr.Master", "Member", "Member", "Member"};
-        for (int i = 0; i < 5; i++) {
-            rankTitles[i] = ranks[i];
-        }
+        System.arraycopy(ranks, 0, rankTitles, 0, 5);
     }
     
     public static boolean canBeUsedAllianceName(String name) {

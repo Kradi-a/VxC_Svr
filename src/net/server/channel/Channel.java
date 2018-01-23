@@ -67,6 +67,7 @@ import server.maps.MapleMiniDungeon;
 import tools.MaplePacketCreator;
 import client.MapleCharacter;
 import constants.ServerConstants;
+import java.util.Arrays;
 import server.maps.MapleMiniDungeonInfo;
 import tools.locks.MonitoredLockType;
 
@@ -116,9 +117,7 @@ public final class Channel {
             acceptor.getFilterChain().addLast("codec", (IoFilter) new ProtocolCodecFilter(new MapleCodecFactory()));
             acceptor.bind(new InetSocketAddress(port));
             ((SocketSessionConfig) acceptor.getSessionConfig()).setTcpNoDelay(true);
-            for (MapleExpeditionType exped : MapleExpeditionType.values()) {
-            	expedType.add(exped);
-            }
+            expedType.addAll(Arrays.asList(MapleExpeditionType.values()));
             eventSM.init();
             
             dojoStage = new int[20];
