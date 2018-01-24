@@ -35,6 +35,7 @@ public final class GeneralChatHandler extends net.AbstractMaplePacketHandler {
 
     @Override
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+        slea.readInt();
         String s = slea.readMapleAsciiString();
         MapleCharacter chr = c.getPlayer();
         if (chr.getAutobanManager().getLastSpam(7) + 200 > System.currentTimeMillis()) {
