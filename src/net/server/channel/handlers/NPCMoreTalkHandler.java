@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package net.server.channel.handlers;
 
 import client.MapleClient;
@@ -32,8 +32,9 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * @author Matze
  */
 public final class NPCMoreTalkHandler extends AbstractMaplePacketHandler {
+
     @Override
-    public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {        
+    public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         byte lastMsg = slea.readByte(); // 00 (last msg type I think)
         byte action = slea.readByte(); // 00 = end chat, 01 == follow
         if (lastMsg == 2) {

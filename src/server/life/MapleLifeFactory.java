@@ -69,7 +69,7 @@ public class MapleLifeFactory {
                 stats.setPADamage(MapleDataTool.getIntConvert("PADamage", monsterInfoData));
                 stats.setPDDamage(MapleDataTool.getIntConvert("PDDamage", monsterInfoData));
                 stats.setMADamage(MapleDataTool.getIntConvert("MADamage", monsterInfoData));
-                stats.setMDDamage(MapleDataTool.getIntConvert("MDDamage", monsterInfoData));  
+                stats.setMDDamage(MapleDataTool.getIntConvert("MDDamage", monsterInfoData));
                 stats.setMp(MapleDataTool.getIntConvert("maxMP", monsterInfoData, 0));
                 stats.setExp(MapleDataTool.getIntConvert("exp", monsterInfoData, 0));
                 stats.setLevel(MapleDataTool.getIntConvert("level", monsterInfoData));
@@ -150,14 +150,14 @@ public class MapleLifeFactory {
             }
             MapleMonster ret = new MapleMonster(mid, stats);
             return ret;
-        } catch(NullPointerException npe) {
+        } catch (NullPointerException npe) {
             System.out.println("[SEVERE] MOB " + mid + " failed to load. Issue: " + npe.getMessage() + "\n\n");
             npe.printStackTrace();
-            
+
             return null;
         }
     }
-    
+
     public static int getMonsterLevel(int mid) {
         try {
             MapleMonsterStats stats = monsterStats.get(Integer.valueOf(mid));
@@ -171,11 +171,11 @@ public class MapleLifeFactory {
             } else {
                 return stats.getLevel();
             }
-        } catch(NullPointerException npe) {
+        } catch (NullPointerException npe) {
             System.out.println("[SEVERE] MOB " + mid + " failed to load. Issue: " + npe.getMessage() + "\n\n");
             npe.printStackTrace();
         }
-        
+
         return -1;
     }
 
@@ -252,7 +252,7 @@ public class MapleLifeFactory {
         public int getHp() {
             return hp;
         }
-        
+
         public byte getAction() {
             return action;
         }

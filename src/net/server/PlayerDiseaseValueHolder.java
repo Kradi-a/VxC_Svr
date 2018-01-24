@@ -17,7 +17,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package net.server;
 
 import client.MapleDisease;
@@ -29,8 +29,8 @@ public class PlayerDiseaseValueHolder {//Thanks Celino
     public MapleDisease disease;
 
     public PlayerDiseaseValueHolder(final MapleDisease disease, final long startTime, final long length) {
-	this.disease = disease;
-	this.startTime = startTime;
-	this.length = length;
+        this.disease = disease;
+        this.startTime = startTime;
+        this.length = length;
     }
 }

@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package net.mina;
 
 import client.MapleClient;
@@ -29,26 +29,28 @@ import org.apache.mina.filter.codec.ProtocolDecoderOutput;
 import tools.MapleAESOFB;
 
 public class MaplePacketDecoder extends CumulativeProtocolDecoder {
+
     private static final String DECODER_STATE_KEY = MaplePacketDecoder.class.getName() + ".STATE";
 
     private static class DecoderState {
+
         public int packetlength = -1;
     }
 
     @Override
     protected boolean doDecode(IoSession session, IoBuffer in, ProtocolDecoderOutput out) throws Exception {
         final MapleClient client = (MapleClient) session.getAttribute(MapleClient.CLIENT_KEY);
-        if(client == null) {
+        if (client == null) {
             session.close(true);
             return false;
         }
-        
+
         DecoderState decoderState = (DecoderState) session.getAttribute(DECODER_STATE_KEY);
         if (decoderState == null) {
             decoderState = new DecoderState();
             session.setAttribute(DECODER_STATE_KEY, decoderState);
         }
-        
+
         MapleAESOFB rcvdCrypto = client.getReceiveCrypto();
         if (in.remaining() >= 4 && decoderState.packetlength == -1) {
             int packetHeader = in.getInt();

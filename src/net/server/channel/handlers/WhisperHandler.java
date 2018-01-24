@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package net.server.channel.handlers;
 
 import java.sql.PreparedStatement;
@@ -42,53 +42,54 @@ import java.sql.Connection;
  * @author Matze
  */
 public final class WhisperHandler extends AbstractMaplePacketHandler {
-	
+
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         byte mode = slea.readByte();
         if (mode == 6) { // whisper
             String recipient = slea.readMapleAsciiString();
             String text = slea.readMapleAsciiString();
             MapleCharacter player = c.getChannelServer().getPlayerStorage().getCharacterByName(recipient);
-			if(c.getPlayer().getAutobanManager().getLastSpam(7) + 200 > System.currentTimeMillis()) {
-				return;
-			}
+            if (c.getPlayer().getAutobanManager().getLastSpam(7) + 200 > System.currentTimeMillis()) {
+                return;
+            }
             if (text.length() > Byte.MAX_VALUE && !player.isGM()) {
-            	AutobanFactory.PACKET_EDIT.alert(c.getPlayer(), c.getPlayer().getName() + " tried to packet edit with whispers.");
-            	FilePrinter.printError(FilePrinter.EXPLOITS + c.getPlayer().getName() + ".txt", c.getPlayer().getName() + " tried to send text with length of " + text.length() + "\r\n");
-            	c.disconnect(true, false);
-            	return;
+                AutobanFactory.PACKET_EDIT.alert(c.getPlayer(), c.getPlayer().getName() + " tried to packet edit with whispers.");
+                FilePrinter.printError(FilePrinter.EXPLOITS + c.getPlayer().getName() + ".txt", c.getPlayer().getName() + " tried to send text with length of " + text.length() + "\r\n");
+                c.disconnect(true, false);
+                return;
             }
             if (player != null) {
                 player.getClient().announce(MaplePacketCreator.getWhisper(c.getPlayer().getName(), c.getChannel(), text));
-                
-                if(player.isHidden() && player.gmLevel() >= c.getPlayer().gmLevel()) {
+
+                if (player.isHidden() && player.gmLevel() >= c.getPlayer().gmLevel()) {
                     c.announce(MaplePacketCreator.getWhisperReply(recipient, (byte) 0));
                 } else {
                     c.announce(MaplePacketCreator.getWhisperReply(recipient, (byte) 1));
                 }
             } else {// not found
                 World world = c.getWorldServer();
-                    if (world.isConnected(recipient)) {
-                        world.whisper(c.getPlayer().getName(), recipient, c.getChannel(), text);
-                        
-                        player = world.getPlayerStorage().getCharacterByName(recipient);
-                        if(player.isHidden() && player.gmLevel() >= c.getPlayer().gmLevel())
-                            c.announce(MaplePacketCreator.getWhisperReply(recipient, (byte) 0));
-                        else
-                            c.announce(MaplePacketCreator.getWhisperReply(recipient, (byte) 1));
-                    } else {
+                if (world.isConnected(recipient)) {
+                    world.whisper(c.getPlayer().getName(), recipient, c.getChannel(), text);
+
+                    player = world.getPlayerStorage().getCharacterByName(recipient);
+                    if (player.isHidden() && player.gmLevel() >= c.getPlayer().gmLevel()) {
                         c.announce(MaplePacketCreator.getWhisperReply(recipient, (byte) 0));
+                    } else {
+                        c.announce(MaplePacketCreator.getWhisperReply(recipient, (byte) 1));
                     }
+                } else {
+                    c.announce(MaplePacketCreator.getWhisperReply(recipient, (byte) 0));
+                }
             }
-			c.getPlayer().getAutobanManager().spam(7);
+            c.getPlayer().getAutobanManager().spam(7);
         } else if (mode == 5) { // - /find
             String recipient = slea.readMapleAsciiString();
             MapleCharacter victim = c.getChannelServer().getPlayerStorage().getCharacterByName(recipient);
             if (victim != null && c.getPlayer().gmLevel() >= victim.gmLevel()) {
                 if (victim.getCashShop().isOpened()) {
                     c.announce(MaplePacketCreator.getFindReply(victim.getName(), -1, 2));
-                //} else if (victim.inMTS()) {
-                //    c.announce(MaplePacketCreator.getFindReply(victim.getName(), -1, 0));
+                    //} else if (victim.inMTS()) {
+                    //    c.announce(MaplePacketCreator.getFindReply(victim.getName(), -1, 0));
                 } else {
                     c.announce(MaplePacketCreator.getFindReply(victim.getName(), victim.getMap().getId(), 1));
                 }

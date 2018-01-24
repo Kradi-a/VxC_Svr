@@ -38,175 +38,162 @@ import tools.DatabaseConnection;
 import tools.Pair;
 
 public class MapleMonsterInformationProvider {
-	// Author : LightPepsi
+    // Author : LightPepsi
 
-	private static final MapleMonsterInformationProvider instance = new MapleMonsterInformationProvider();
-	private final Map<Integer, List<MonsterDropEntry>> drops = new HashMap<>();
-	private final List<MonsterGlobalDropEntry> globaldrops = new ArrayList<>();
+    private static final MapleMonsterInformationProvider instance = new MapleMonsterInformationProvider();
+    private final Map<Integer, List<MonsterDropEntry>> drops = new HashMap<>();
+    private final List<MonsterGlobalDropEntry> globaldrops = new ArrayList<>();
 
-	protected MapleMonsterInformationProvider() {
-		retrieveGlobal();
-	}
+    protected MapleMonsterInformationProvider() {
+        retrieveGlobal();
+    }
 
-	public static MapleMonsterInformationProvider getInstance() {
-		return instance;
-	}
+    public static MapleMonsterInformationProvider getInstance() {
+        return instance;
+    }
 
-	public final List<MonsterGlobalDropEntry> getGlobalDrop() {
-		return globaldrops;
-	}
+    public final List<MonsterGlobalDropEntry> getGlobalDrop() {
+        return globaldrops;
+    }
 
-	private void retrieveGlobal() {
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-                Connection con = null;
+    private void retrieveGlobal() {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        Connection con = null;
 
-		try {
-                        con = DatabaseConnection.getConnection();
-			ps = con.prepareStatement("SELECT * FROM drop_data_global WHERE chance > 0");
-			rs = ps.executeQuery();
+        try {
+            con = DatabaseConnection.getConnection();
+            ps = con.prepareStatement("SELECT * FROM drop_data_global WHERE chance > 0");
+            rs = ps.executeQuery();
 
-			while (rs.next()) {
-				globaldrops.add(
-						new MonsterGlobalDropEntry(
-								rs.getInt("itemid"),
-								rs.getInt("chance"),
-								rs.getInt("continent"),
-								rs.getByte("dropType"),
-								rs.getInt("minimum_quantity"),
-								rs.getInt("maximum_quantity"),
-								rs.getShort("questid")));
-			}
-                        
-			rs.close();
-			ps.close();
-                        con.close();
-		} catch (SQLException e) {
-                        System.err.println("Error retrieving drop" + e);
-		} finally {
-			try {
-				if (ps != null && !ps.isClosed()) { 
-					ps.close();
-				}
-				if (rs != null && !rs.isClosed()) {
-					rs.close();
-				}
-                                if (con != null && !con.isClosed()) {
-					con.close();
-				}
-			} catch (SQLException ignore) {
-                                ignore.printStackTrace();
-			}
-		}
-	}
+            while (rs.next()) {
+                globaldrops.add(
+                        new MonsterGlobalDropEntry(
+                                rs.getInt("itemid"),
+                                rs.getInt("chance"),
+                                rs.getInt("continent"),
+                                rs.getByte("dropType"),
+                                rs.getInt("minimum_quantity"),
+                                rs.getInt("maximum_quantity"),
+                                rs.getShort("questid")));
+            }
 
-	public final List<MonsterDropEntry> retrieveDrop(final int monsterId) {
-		if (drops.containsKey(monsterId)) {
-			return drops.get(monsterId);
-		}
-		final List<MonsterDropEntry> ret = new LinkedList<>();
+            rs.close();
+            ps.close();
+            con.close();
+        } catch (SQLException e) {
+            System.err.println("Error retrieving drop" + e);
+        } finally {
+            try {
+                if (ps != null && !ps.isClosed()) {
+                    ps.close();
+                }
+                if (rs != null && !rs.isClosed()) {
+                    rs.close();
+                }
+                if (con != null && !con.isClosed()) {
+                    con.close();
+                }
+            } catch (SQLException ignore) {
+                ignore.printStackTrace();
+            }
+        }
+    }
 
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-                Connection con = null;
-		try {
-                        con = DatabaseConnection.getConnection();
-			ps = con.prepareStatement("SELECT itemid, chance, minimum_quantity, maximum_quantity, questid FROM drop_data WHERE dropperid = ?");
-			ps.setInt(1, monsterId);
-			rs = ps.executeQuery();
+    public final List<MonsterDropEntry> retrieveDrop(final int monsterId) {
+        if (drops.containsKey(monsterId)) {
+            return drops.get(monsterId);
+        }
+        final List<MonsterDropEntry> ret = new LinkedList<>();
 
-			while (rs.next()) {
-				ret.add(
-                                    new MonsterDropEntry(
-                                        rs.getInt("itemid"),
-                                        rs.getInt("chance"),
-                                        rs.getInt("minimum_quantity"),
-                                        rs.getInt("maximum_quantity"),
-                                        rs.getShort("questid")));
-			}
-                        
-                        con.close();
-		} catch (SQLException e) {
-                        e.printStackTrace();
-			return ret;
-		} finally {
-			try {
-				if (ps != null && !ps.isClosed()) {
-					ps.close();
-				}
-				if (rs != null && !rs.isClosed()) {
-					rs.close();
-				}
-                                if (con != null && !con.isClosed()) {
-					con.close();
-				}
-			} catch (SQLException ignore) {
-                                ignore.printStackTrace();
-				return ret;
-			}
-		}
-		drops.put(monsterId, ret);
-		return ret;
-	}
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        Connection con = null;
+        try {
+            con = DatabaseConnection.getConnection();
+            ps = con.prepareStatement("SELECT itemid, chance, minimum_quantity, maximum_quantity, questid FROM drop_data WHERE dropperid = ?");
+            ps.setInt(1, monsterId);
+            rs = ps.executeQuery();
 
-	public static ArrayList<Pair<Integer, String>> getMobsIDsFromName(String search)
-	{
-		MapleDataProvider dataProvider = MapleDataProviderFactory.getDataProvider(new File("wz/String.wz"));
-		ArrayList<Pair<Integer, String>> retMobs = new ArrayList<Pair<Integer, String>>();
-		MapleData data = dataProvider.getData("Mob.img");
-		List<Pair<Integer, String>> mobPairList = new LinkedList<Pair<Integer, String>>();
-		for (MapleData mobIdData : data.getChildren()) {
-			int mobIdFromData = Integer.parseInt(mobIdData.getName());
-			String mobNameFromData = MapleDataTool.getString(mobIdData.getChildByPath("name"), "NO-NAME");
-			mobPairList.add(new Pair<Integer, String>(mobIdFromData, mobNameFromData));
-		}
-		for (Pair<Integer, String> mobPair : mobPairList) {
-			if (mobPair.getRight().toLowerCase().contains(search.toLowerCase())) {
-				retMobs.add(mobPair);
-			}
-		}
-		return retMobs;
-	}
+            while (rs.next()) {
+                ret.add(
+                        new MonsterDropEntry(
+                                rs.getInt("itemid"),
+                                rs.getInt("chance"),
+                                rs.getInt("minimum_quantity"),
+                                rs.getInt("maximum_quantity"),
+                                rs.getShort("questid")));
+            }
 
-	public static String getMobNameFromId(int id)
-	{
-		try
-		{
-			return MapleLifeFactory.getMonster(id).getName();
-		} 
-                catch (NullPointerException npe)
-		{
-			return null; //nonexistant mob
-		}
-                catch (Exception e)
-		{
-                        e.printStackTrace();
-                        System.err.println("Nonexistant mob id " + id);
-			return null; //nonexistant mob
-		}
-	}
-        
-        public static String getMobNameFromID(int id)
-	{
-		try
-		{
-			return MapleLifeFactory.getMonster(id).getName();
-		}
-                catch (NullPointerException npe)
-		{
-			return null; //nonexistant mob
-		}
-                catch (Exception e)
-		{
-                        e.printStackTrace();
-                        System.err.println("Nonexistant mob id " + id);
-			return null; //nonexistant mob
-		}
-	}
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return ret;
+        } finally {
+            try {
+                if (ps != null && !ps.isClosed()) {
+                    ps.close();
+                }
+                if (rs != null && !rs.isClosed()) {
+                    rs.close();
+                }
+                if (con != null && !con.isClosed()) {
+                    con.close();
+                }
+            } catch (SQLException ignore) {
+                ignore.printStackTrace();
+                return ret;
+            }
+        }
+        drops.put(monsterId, ret);
+        return ret;
+    }
 
-	public final void clearDrops() {
-		drops.clear();
-		globaldrops.clear();
-		retrieveGlobal();
-	}
+    public static ArrayList<Pair<Integer, String>> getMobsIDsFromName(String search) {
+        MapleDataProvider dataProvider = MapleDataProviderFactory.getDataProvider(new File("wz/String.wz"));
+        ArrayList<Pair<Integer, String>> retMobs = new ArrayList<Pair<Integer, String>>();
+        MapleData data = dataProvider.getData("Mob.img");
+        List<Pair<Integer, String>> mobPairList = new LinkedList<Pair<Integer, String>>();
+        for (MapleData mobIdData : data.getChildren()) {
+            int mobIdFromData = Integer.parseInt(mobIdData.getName());
+            String mobNameFromData = MapleDataTool.getString(mobIdData.getChildByPath("name"), "NO-NAME");
+            mobPairList.add(new Pair<Integer, String>(mobIdFromData, mobNameFromData));
+        }
+        for (Pair<Integer, String> mobPair : mobPairList) {
+            if (mobPair.getRight().toLowerCase().contains(search.toLowerCase())) {
+                retMobs.add(mobPair);
+            }
+        }
+        return retMobs;
+    }
+
+    public static String getMobNameFromId(int id) {
+        try {
+            return MapleLifeFactory.getMonster(id).getName();
+        } catch (NullPointerException npe) {
+            return null; //nonexistant mob
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Nonexistant mob id " + id);
+            return null; //nonexistant mob
+        }
+    }
+
+    public static String getMobNameFromID(int id) {
+        try {
+            return MapleLifeFactory.getMonster(id).getName();
+        } catch (NullPointerException npe) {
+            return null; //nonexistant mob
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Nonexistant mob id " + id);
+            return null; //nonexistant mob
+        }
+    }
+
+    public final void clearDrops() {
+        drops.clear();
+        globaldrops.clear();
+        retrieveGlobal();
+    }
 }

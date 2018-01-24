@@ -47,13 +47,13 @@ public final class CashOperationHandler extends AbstractMaplePacketHandler {
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         MapleCharacter chr = c.getPlayer();
         CashShop cs = chr.getCashShop();
-        
+
         if (!cs.isOpened()) {
             c.announce(MaplePacketCreator.enableActions());
             return;
         }
         final int action = slea.readByte();
-        
+
         if (action == 0x03 || action == 0x1E) {
             slea.readByte();
             final int useNX = slea.readInt();
@@ -66,7 +66,7 @@ public final class CashOperationHandler extends AbstractMaplePacketHandler {
             }
             if (action == 0x03) { // Item
                 Item item = cItem.toItem();
-                cs.addToInventory(item);               
+                cs.addToInventory(item);
                 c.announce(MaplePacketCreator.showBoughtCashItem(item, c.getAccID()));
             } else { // Package
                 List<Item> cashPackage = CashItemFactory.getPackage(cItem.getItemId());
@@ -109,7 +109,9 @@ public final class CashOperationHandler extends AbstractMaplePacketHandler {
                 ex.printStackTrace();
             }
             MapleCharacter receiver = c.getChannelServer().getPlayerStorage().getCharacterByName(recipient.get("name"));
-            if (receiver != null) receiver.showNote();
+            if (receiver != null) {
+                receiver.showNote();
+            }
         } else if (action == 0x05) { // Modify wish list
             cs.clearWishList();
             for (byte i = 0; i < 10; i++) {
@@ -176,20 +178,20 @@ public final class CashOperationHandler extends AbstractMaplePacketHandler {
                 }
             }
         } else if (action == 0x08) { // Increase Character Slots
-                slea.skip(1); 
-                int cash = slea.readInt();
-                CashItem cItem = CashItemFactory.getItem(slea.readInt());
+            slea.skip(1);
+            int cash = slea.readInt();
+            CashItem cItem = CashItemFactory.getItem(slea.readInt());
 
-                if (!canBuy(cItem, cs.getCash(cash))) {
-                    c.announce(MaplePacketCreator.enableActions());
-                    return;
-                }
+            if (!canBuy(cItem, cs.getCash(cash))) {
+                c.announce(MaplePacketCreator.enableActions());
+                return;
+            }
 
-                if (c.gainCharacterSlot()) {
-                    c.announce(MaplePacketCreator.showBoughtCharacterSlot(c.getCharacterSlots()));
-                    cs.gainCash(cash, -cItem.getPrice());
-                    c.announce(MaplePacketCreator.showCash(chr));
-                }
+            if (c.gainCharacterSlot()) {
+                c.announce(MaplePacketCreator.showBoughtCharacterSlot(c.getCharacterSlots()));
+                cs.gainCash(cash, -cItem.getPrice());
+                c.announce(MaplePacketCreator.showCash(chr));
+            }
         } else if (action == 0x0D) { // Take from Cash Inventory
             Item item = cs.findByCashId(slea.readInt());
             if (item == null) {
@@ -199,17 +201,17 @@ public final class CashOperationHandler extends AbstractMaplePacketHandler {
             if (chr.getInventory(item.getInventoryType()).addItem(item) != -1) {
                 cs.removeFromInventory(item);
                 c.announce(MaplePacketCreator.takeFromCashInventory(item));
-                
-                if(item instanceof Equip) {
-                        Equip equip = (Equip) item;
-                        if(equip.getRingId() >= 0) {
-                                MapleRing ring = MapleRing.loadFromDb(equip.getRingId());
-                                if (ring.getItemId() > 1112012) {
-                                        chr.addFriendshipRing(ring);
-                                } else {
-                                        chr.addCrushRing(ring);
-                                }
+
+                if (item instanceof Equip) {
+                    Equip equip = (Equip) item;
+                    if (equip.getRingId() >= 0) {
+                        MapleRing ring = MapleRing.loadFromDb(equip.getRingId());
+                        if (ring.getItemId() > 1112012) {
+                            chr.addFriendshipRing(ring);
+                        } else {
+                            chr.addCrushRing(ring);
                         }
+                    }
                 }
             }
         } else if (action == 0x0E) { // Put into Cash Inventory
@@ -220,7 +222,7 @@ public final class CashOperationHandler extends AbstractMaplePacketHandler {
             if (item == null) {
                 c.announce(MaplePacketCreator.enableActions());
                 return;
-            } else if(c.getPlayer().getPetIndex(item.getPetId()) > -1) {
+            } else if (c.getPlayer().getPetIndex(item.getPetId()) > -1) {
                 chr.getClient().announce(MaplePacketCreator.serverNotice(1, "You cannot put the pet you currently equip into the Cash Shop inventory."));
                 c.announce(MaplePacketCreator.enableActions());
                 return;
@@ -230,48 +232,44 @@ public final class CashOperationHandler extends AbstractMaplePacketHandler {
             c.announce(MaplePacketCreator.putIntoCashInventory(item, c.getAccID()));
         } else if (action == 0x1D) { //crush ring (action 28)
             slea.readInt();//Birthday
-           // if (checkBirthday(c, birthday)) { //We're using a default birthday, so why restrict rings to only people who know of it? 
-                int toCharge = slea.readInt();
-                int SN = slea.readInt();
-                String recipient = slea.readMapleAsciiString();
-                String text = slea.readMapleAsciiString();
-                CashItem ring = CashItemFactory.getItem(SN);
-                MapleCharacter partner = c.getChannelServer().getPlayerStorage().getCharacterByName(recipient);
-                if (partner == null) {
-                    chr.getClient().announce(MaplePacketCreator.serverNotice(1, "The partner you specified cannot be found.\r\nPlease make sure your partner is online and in the same channel."));
-                } else {
-                	
-                  /*  if (partner.getGender() == chr.getGender()) {
+            // if (checkBirthday(c, birthday)) { //We're using a default birthday, so why restrict rings to only people who know of it? 
+            int toCharge = slea.readInt();
+            int SN = slea.readInt();
+            String recipient = slea.readMapleAsciiString();
+            String text = slea.readMapleAsciiString();
+            CashItem ring = CashItemFactory.getItem(SN);
+            MapleCharacter partner = c.getChannelServer().getPlayerStorage().getCharacterByName(recipient);
+            if (partner == null) {
+                chr.getClient().announce(MaplePacketCreator.serverNotice(1, "The partner you specified cannot be found.\r\nPlease make sure your partner is online and in the same channel."));
+            } else /*  if (partner.getGender() == chr.getGender()) {
                         chr.dropMessage("You and your partner are the same gender, please buy a friendship ring.");
                         c.announce(MaplePacketCreator.enableActions());
                         return;
                     }*/ //Gotta let them faggots marry too, hence why this is commented out <3 
-                	
-                    if(ring.toItem() instanceof Equip) {
-                        Equip item = (Equip) ring.toItem();
-                        int ringid = MapleRing.createRing(ring.getItemId(), chr, partner);
-                        item.setRingId(ringid);
-                        cs.addToInventory(item);
-                        c.announce(MaplePacketCreator.showBoughtCashItem(item, c.getAccID()));
-                        cs.gift(partner.getId(), chr.getName(), text, item.getSN(), (ringid + 1));
-                        cs.gainCash(toCharge, -ring.getPrice());
-                        chr.addCrushRing(MapleRing.loadFromDb(ringid));
-                        try {
-                            chr.sendNote(partner.getName(), text, (byte) 1);
-                        } catch (SQLException ex) {
-                            ex.printStackTrace();
-                        }
-                        partner.showNote();
-                    }   
+            if (ring.toItem() instanceof Equip) {
+                Equip item = (Equip) ring.toItem();
+                int ringid = MapleRing.createRing(ring.getItemId(), chr, partner);
+                item.setRingId(ringid);
+                cs.addToInventory(item);
+                c.announce(MaplePacketCreator.showBoughtCashItem(item, c.getAccID()));
+                cs.gift(partner.getId(), chr.getName(), text, item.getSN(), (ringid + 1));
+                cs.gainCash(toCharge, -ring.getPrice());
+                chr.addCrushRing(MapleRing.loadFromDb(ringid));
+                try {
+                    chr.sendNote(partner.getName(), text, (byte) 1);
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
                 }
-           /* } else {
+                partner.showNote();
+            }
+            /* } else {
                 chr.dropMessage("The birthday you entered was incorrect.");
             }*/
-                
+
             c.announce(MaplePacketCreator.showCash(c.getPlayer()));
         } else if (action == 0x20) { // everything is 1 meso...
             int itemId = CashItemFactory.getItem(slea.readInt()).getItemId();
-            
+
             if (chr.getMeso() > 0) {
                 if (chr.canHold(itemId)) {
                     chr.gainMeso(-1, false);
@@ -281,42 +279,40 @@ public final class CashOperationHandler extends AbstractMaplePacketHandler {
             }
             c.announce(MaplePacketCreator.showCash(c.getPlayer()));
         } else if (action == 0x23) { //Friendship :3
-			slea.readInt(); //Birthday
-          // if (checkBirthday(c, birthday)) {
-                int payment = slea.readByte();
-                slea.skip(3); //0s
-                int snID = slea.readInt();
-                CashItem ring = CashItemFactory.getItem(snID);
-                String sentTo = slea.readMapleAsciiString();
-                int available = slea.readShort() - 1;
-                String text = slea.readAsciiString(available);
-                slea.readByte();
-                MapleCharacter partner = c.getChannelServer().getPlayerStorage().getCharacterByName(sentTo);
-                if (partner == null) {
-                    chr.dropMessage("The partner you specified cannot be found.\r\nPlease make sure your partner is online and in the same channel.");
-                } else {
-                    // Need to check to make sure its actually an equip and the right SN...
-                    if(ring.toItem() instanceof Equip) {
-                        Equip item = (Equip) ring.toItem();
-                        int ringid = MapleRing.createRing(ring.getItemId(), chr, partner);
-                        item.setRingId(ringid);
-                        cs.addToInventory(item);
-                        c.announce(MaplePacketCreator.showBoughtCashItem(item, c.getAccID()));
-                        cs.gift(partner.getId(), chr.getName(), text, item.getSN(), (ringid + 1));
-                        cs.gainCash(payment, -ring.getPrice());
-                        chr.addFriendshipRing(MapleRing.loadFromDb(ringid));
-                        try {
-                            chr.sendNote(partner.getName(), text, (byte) 1);
-                        } catch (SQLException ex) {
-                            ex.printStackTrace();
-                        }
-                        partner.showNote();
-                    }
+            slea.readInt(); //Birthday
+            // if (checkBirthday(c, birthday)) {
+            int payment = slea.readByte();
+            slea.skip(3); //0s
+            int snID = slea.readInt();
+            CashItem ring = CashItemFactory.getItem(snID);
+            String sentTo = slea.readMapleAsciiString();
+            int available = slea.readShort() - 1;
+            String text = slea.readAsciiString(available);
+            slea.readByte();
+            MapleCharacter partner = c.getChannelServer().getPlayerStorage().getCharacterByName(sentTo);
+            if (partner == null) {
+                chr.dropMessage("The partner you specified cannot be found.\r\nPlease make sure your partner is online and in the same channel.");
+            } else // Need to check to make sure its actually an equip and the right SN...
+            if (ring.toItem() instanceof Equip) {
+                Equip item = (Equip) ring.toItem();
+                int ringid = MapleRing.createRing(ring.getItemId(), chr, partner);
+                item.setRingId(ringid);
+                cs.addToInventory(item);
+                c.announce(MaplePacketCreator.showBoughtCashItem(item, c.getAccID()));
+                cs.gift(partner.getId(), chr.getName(), text, item.getSN(), (ringid + 1));
+                cs.gainCash(payment, -ring.getPrice());
+                chr.addFriendshipRing(MapleRing.loadFromDb(ringid));
+                try {
+                    chr.sendNote(partner.getName(), text, (byte) 1);
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
                 }
-           /* } else {
+                partner.showNote();
+            }
+            /* } else {
                 chr.dropMessage("The birthday you entered was incorrect.");
             } */
-                
+
             c.announce(MaplePacketCreator.showCash(c.getPlayer()));
         } else {
             System.out.println(slea);

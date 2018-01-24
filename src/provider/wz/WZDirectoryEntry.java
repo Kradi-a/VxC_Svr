@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package provider.wz;
 
 import java.util.ArrayList;
@@ -32,6 +32,7 @@ import provider.MapleDataEntry;
 import provider.MapleDataFileEntry;
 
 public class WZDirectoryEntry extends WZEntry implements MapleDataDirectoryEntry {
+
     private List<MapleDataDirectoryEntry> subdirs = new ArrayList<MapleDataDirectoryEntry>();
     private List<MapleDataFileEntry> files = new ArrayList<MapleDataFileEntry>();
     private Map<String, MapleDataEntry> entries = new HashMap<String, MapleDataEntry>();

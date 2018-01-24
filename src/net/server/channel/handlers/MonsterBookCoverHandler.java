@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package net.server.channel.handlers;
 
 import client.MapleClient;
@@ -27,6 +27,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 import tools.MaplePacketCreator;
 
 public final class MonsterBookCoverHandler extends AbstractMaplePacketHandler {
+
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         int id = slea.readInt();
         if (id == 0 || id / 10000 == 238) {

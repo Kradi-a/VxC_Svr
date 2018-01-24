@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package constants.skills;
 
 /**
@@ -26,6 +26,7 @@ package constants.skills;
  * @author BubblesDev
  */
 public class Gunslinger {
+
     public static final int GUN_MASTERY = 5200000;
     public static final int INVISIBLE_SHOT = 5201001;
     public static final int GRENADE = 5201002;

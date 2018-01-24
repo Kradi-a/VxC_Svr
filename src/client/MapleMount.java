@@ -18,13 +18,14 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package client;
 
 /**
  * @author PurpleMadness Patrick :O
  */
 public class MapleMount {
+
     private int itemid;
     private int skillid;
     private int tiredness;
@@ -52,17 +53,10 @@ public class MapleMount {
     }
 
     /**
-     * 1902000 - Hog
-     * 1902001 - Silver Mane
-     * 1902002 - Red Draco
-     * 1902005 - Mimiana
-     * 1902006 - Mimio
-     * 1902007 - Shinjou
-     * 1902008 - Frog
-     * 1902009 - Ostrich
-     * 1902010 - Frog
-     * 1902011 - Turtle
-     * 1902012 - Yeti
+     * 1902000 - Hog 1902001 - Silver Mane 1902002 - Red Draco 1902005 - Mimiana
+     * 1902006 - Mimio 1902007 - Shinjou 1902008 - Frog 1902009 - Ostrich
+     * 1902010 - Frog 1902011 - Turtle 1902012 - Yeti
+     *
      * @return the id
      */
     public int getId() {
@@ -90,7 +84,7 @@ public class MapleMount {
             tiredness = 0;
         }
     }
-    
+
     public int incrementAndGetTiredness() {
         this.tiredness++;
         return this.tiredness;
@@ -115,9 +109,11 @@ public class MapleMount {
     public boolean isActive() {
         return active;
     }
-    
+
     public void empty() {
-        if(owner != null) owner.getClient().getWorldServer().unregisterMountHunger(owner);
+        if (owner != null) {
+            owner.getClient().getWorldServer().unregisterMountHunger(owner);
+        }
         this.owner = null;
-    }    
+    }
 }

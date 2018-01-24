@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package constants.skills;
 
 /**
@@ -26,6 +26,7 @@ package constants.skills;
  * @author BubblesDev
  */
 public class NightWalker {
+
     public static final int ALCHEMIST = 14110003;
     public static final int DISORDER = 14001002;
     public static final int DARK_SIGHT = 14001003;

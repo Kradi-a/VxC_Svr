@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package server.events.gm;
 
 import client.MapleCharacter;
@@ -38,6 +38,7 @@ import tools.MaplePacketCreator;
  * @author FloppyDisk
  */
 public final class MapleOxQuiz {
+
     private int round = 1;
     private int question = 1;
     private MapleMap map = null;
@@ -73,8 +74,8 @@ public final class MapleOxQuiz {
             @Override
             public void run() {
                 map.broadcastMessage(MaplePacketCreator.showOXQuiz(round, question, true));
-				List<MapleCharacter> chars = new ArrayList<>(map.getCharacters());
-				
+                List<MapleCharacter> chars = new ArrayList<>(map.getCharacters());
+
                 for (MapleCharacter chr : chars) {
                     if (chr != null) // make sure they aren't null... maybe something can happen in 12 seconds.
                     {

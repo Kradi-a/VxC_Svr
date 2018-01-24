@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package net.server.worker;
 
 import java.sql.Connection;
@@ -36,9 +36,10 @@ import net.server.Server;
  * @author Ronan
  */
 public class RankingWorker implements Runnable {
+
     private Connection con;
     private long lastUpdate = System.currentTimeMillis();
-    
+
     private void resetMoveRank(boolean job) throws SQLException {
         String query = "UPDATE characters SET " + (job == true ? "jobRankMove = 0" : "rankMove = 0");
         PreparedStatement reset = con.prepareStatement(query);
@@ -51,7 +52,7 @@ public class RankingWorker implements Runnable {
             sqlCharSelect += "AND c.job DIV 100 = ? ";
         }
         sqlCharSelect += "ORDER BY c.level DESC , c.exp DESC , c.fame DESC , c.meso DESC";
-        
+
         PreparedStatement charSelect = con.prepareStatement(sqlCharSelect);
         charSelect.setInt(1, world);
         if (job != -1) {
@@ -60,7 +61,7 @@ public class RankingWorker implements Runnable {
         ResultSet rs = charSelect.executeQuery();
         PreparedStatement ps = con.prepareStatement("UPDATE characters SET " + (job != -1 ? "jobRank = ?, jobRankMove = ? " : "rank = ?, rankMove = ? ") + "WHERE id = ?");
         int rank = 0;
-        
+
         while (rs.next()) {
             int rankMove = 0;
             rank++;
@@ -73,41 +74,43 @@ public class RankingWorker implements Runnable {
             ps.setInt(3, rs.getInt("id"));
             ps.executeUpdate();
         }
-        
+
         rs.close();
         charSelect.close();
         ps.close();
     }
-    
+
     @Override
     public void run() {
         try {
             con = DatabaseConnection.getConnection();
             con.setAutoCommit(false);
-            
-            if(ServerConstants.USE_REFRESH_RANK_MOVE == true) {
+
+            if (ServerConstants.USE_REFRESH_RANK_MOVE == true) {
                 resetMoveRank(true);
                 resetMoveRank(false);
             }
-            
-            for(int j = 0; j < Server.getInstance().getWorlds().size(); j++) {
+
+            for (int j = 0; j < Server.getInstance().getWorlds().size(); j++) {
                 updateRanking(-1, j);    //overall ranking
                 for (int i = 0; i <= MapleJob.getMax(); i++) {
                     updateRanking(i, j);
                 }
                 con.commit();
             }
-            
+
             con.setAutoCommit(true);
             lastUpdate = System.currentTimeMillis();
             con.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
-            
+
             try {
                 con.rollback();
                 con.setAutoCommit(true);
-                if(!con.isClosed()) con.close();
+                if (!con.isClosed()) {
+                    con.close();
+                }
             } catch (SQLException ex2) {
                 ex2.printStackTrace();
             }

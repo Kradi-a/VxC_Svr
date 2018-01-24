@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package client;
 
 import java.util.Collections;
@@ -34,6 +34,7 @@ import tools.StringUtil;
  * @author Matze
  */
 public class MapleQuestStatus {
+
     public enum Status {
         UNDEFINED(-1),
         NOT_STARTED(0),
@@ -72,8 +73,9 @@ public class MapleQuestStatus {
         this.setStatus(status);
         this.completionTime = System.currentTimeMillis();
         this.expirationTime = 0;
-        if (status == Status.STARTED) 
-            registerMobs();      
+        if (status == Status.STARTED) {
+            registerMobs();
+        }
     }
 
     public MapleQuestStatus(MapleQuest quest, Status status, int npc) {
@@ -90,7 +92,7 @@ public class MapleQuestStatus {
     public MapleQuest getQuest() {
         return MapleQuest.getInstance(questID);
     }
-	
+
     public short getQuestID() {
         return questID;
     }
@@ -118,7 +120,9 @@ public class MapleQuestStatus {
     }
 
     public boolean addMedalMap(int mapid) {
-        if (medalProgress.contains(mapid)) return false;
+        if (medalProgress.contains(mapid)) {
+            return false;
+        }
         medalProgress.add(mapid);
         return true;
     }
@@ -142,7 +146,7 @@ public class MapleQuestStatus {
     }
 
     public void setProgress(int id, String pr) {
-        	progress.put(id, pr);
+        progress.put(id, pr);
     }
 
     public boolean madeProgress() {
@@ -150,21 +154,25 @@ public class MapleQuestStatus {
     }
 
     public Integer getAnyProgressKey() {
-        if (!progress.isEmpty()) return progress.entrySet().iterator().next().getKey();
+        if (!progress.isEmpty()) {
+            return progress.entrySet().iterator().next().getKey();
+        }
         return 0;
     }
-    
+
     public String getProgress(int id) {
-        if (progress.get(id) == null) return "";
+        if (progress.get(id) == null) {
+            return "";
+        }
         return progress.get(id);
     }
-    
+
     public void resetProgress(int id) {
         setProgress(id, "000");
     }
-    
+
     public void resetAllProgress() {
-        for(Map.Entry<Integer, String> entry : progress.entrySet()) {
+        for (Map.Entry<Integer, String> entry : progress.entrySet()) {
             setProgress(entry.getKey(), "000");
         }
     }
@@ -180,11 +188,11 @@ public class MapleQuestStatus {
     public void setCompletionTime(long completionTime) {
         this.completionTime = completionTime;
     }
-    
+
     public long getExpirationTime() {
         return expirationTime;
     }
-    
+
     public void setExpirationTime(long expirationTime) {
         this.expirationTime = expirationTime;
     }
@@ -192,14 +200,14 @@ public class MapleQuestStatus {
     public int getForfeited() {
         return forfeited;
     }
-    
+
     public String getInfo() {
-        if(!progress.containsKey(0) && !getMedalMaps().isEmpty()) {
+        if (!progress.containsKey(0) && !getMedalMaps().isEmpty()) {
             return Integer.toString(getMedalProgress());
         }
         return getProgress(0);
     }
-    
+
     public void setInfo(String newInfo) {
         progress.put(0, newInfo);
     }
@@ -219,7 +227,7 @@ public class MapleQuestStatus {
     public final String getCustomData() {
         return customData;
     }
-    
+
     public String getQuestData() {
         StringBuilder str = new StringBuilder();
         for (String ps : progress.values()) {

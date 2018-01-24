@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package server.events.gm;
 
 /**
@@ -26,7 +26,7 @@ package server.events.gm;
  * @author kevintjuh93
  */
 public class MapleCoconuts {
-	
+
     private int id;
     private int hits = 0;
     private boolean hittable = false;

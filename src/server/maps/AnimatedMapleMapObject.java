@@ -18,11 +18,14 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package server.maps;
 
 public interface AnimatedMapleMapObject extends MapleMapObject {
+
     int getStance();
+
     void setStance(int stance);
+
     boolean isFacingLeft();
 }

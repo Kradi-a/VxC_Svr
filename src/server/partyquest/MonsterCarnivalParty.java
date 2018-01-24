@@ -7,7 +7,7 @@ import server.maps.MapleMap;
 import tools.MaplePacketCreator;
 
 /**
- * @author Rob //Thanks :3  - LOST MOTIVATION >=(
+ * @author Rob //Thanks :3 - LOST MOTIVATION >=(
  */
 public class MonsterCarnivalParty {
 
@@ -76,10 +76,11 @@ public class MonsterCarnivalParty {
     }
 
     public void warpOut() {
-        if (winner == true)
+        if (winner == true) {
             warpOut(980000003 + (leader.getCarnival().getRoom() * 100));
-        else
+        } else {
             warpOut(980000004 + (leader.getCarnival().getRoom() * 100));
+        }
     }
 
     public boolean allInMap(MapleMap map) {

@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package client.status;
 
 public enum MonsterStatus {
@@ -63,14 +63,14 @@ public enum MonsterStatus {
     }
 
     private MonsterStatus(int i, boolean first) {
-		this.i = i;
-		this.first = first;
+        this.i = i;
+        this.first = first;
     }
 
     public boolean isFirst() {
-    	return first;
+        return first;
     }
-    
+
     public int getValue() {
         return i;
     }

@@ -18,8 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
+ */
 package net.server.channel.handlers;
 
 import client.MapleCharacter;
@@ -34,6 +33,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * @author kevintjuh93 :3
  */
 public class RemoteStoreHandler extends AbstractMaplePacketHandler {
+
     public void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         MapleCharacter chr = c.getPlayer();
         MapleHiredMerchant hm = getMerchant(c);
@@ -42,14 +42,14 @@ public class RemoteStoreHandler extends AbstractMaplePacketHandler {
                 hm.setOpen(false);
                 hm.removeAllVisitors();
                 chr.setHiredMerchant(hm);
-                
+
                 chr.announce(MaplePacketCreator.getHiredMerchant(chr, hm, false));
             } else {
                 c.announce(MaplePacketCreator.remoteChannelChange((byte) (hm.getChannel() - 1)));
             }
             return;
         } else {
-           chr.dropMessage(1, "You don't have a Merchant open.");
+            chr.dropMessage(1, "You don't have a Merchant open.");
         }
         c.announce(MaplePacketCreator.enableActions());
     }

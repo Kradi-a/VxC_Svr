@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package provider.wz;
 
 import java.util.ArrayList;
@@ -29,6 +29,7 @@ import provider.MapleData;
 import provider.MapleDataEntity;
 
 public class WZIMGEntry implements MapleData {
+
     private String name;
     private MapleDataType type;
     private List<MapleData> children = new ArrayList<MapleData>(10);

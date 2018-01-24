@@ -25,8 +25,9 @@ import tools.Pair;
  * @author Simon
  */
 public class DataTool {
+
     private static Map<String, Integer> hardcodedMobs = new HashMap<>();
-    
+
     private static ArrayList<Pair<Integer, String>> npc_list = null;
     private static LinkedList<Pair<Integer, String>> mob_pairs = null;
     private static MapleDataProvider data = MapleDataProviderFactory.getDataProvider(MapleDataProviderFactory.fileInWZPath("Mob.wz"));
@@ -37,14 +38,14 @@ public class DataTool {
         hardcodedMobs.put("Gold Slime", 7120105);
         hardcodedMobs.put("Nibelung [3]", 8220015);
     }
-    
+
     public static void addMonsterIdsFromHardcodedName(List<Integer> monster_ids, String monster_name) {
         Integer id = hardcodedMobs.get(monster_name);
-        if(id != null) {
+        if (id != null) {
             monster_ids.add(id);
         }
     }
-    
+
     public static ArrayList<Integer> monsterIdsFromName(String name) {
         MapleData data = null;
         MapleDataProvider dataProvider = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("wzpath") + "/" + "String.wz"));

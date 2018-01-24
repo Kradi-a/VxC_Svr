@@ -32,49 +32,49 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public final class GeneralChatHandler extends net.AbstractMaplePacketHandler {
-	@Override
-        public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
-                String s = slea.readMapleAsciiString();
-                MapleCharacter chr = c.getPlayer();
-                if(chr.getAutobanManager().getLastSpam(7) + 200 > System.currentTimeMillis()) {
-                        c.announce(MaplePacketCreator.enableActions());
-                        return;
-                }
-                if (s.length() > Byte.MAX_VALUE && !chr.isGM()) {
-                        AutobanFactory.PACKET_EDIT.alert(c.getPlayer(), c.getPlayer().getName() + " tried to packet edit in General Chat.");
-                        FilePrinter.printError(FilePrinter.EXPLOITS + c.getPlayer().getName() + ".txt", c.getPlayer().getName() + " tried to send text with length of " + s.length() + "\r\n");
-                        c.disconnect(true, false);
-                        return;
-                }
-                char heading = s.charAt(0);
-                if (heading == '!' || heading == '@') {
-                        String[] sp = s.split(" ");
-                        sp[0] = sp[0].toLowerCase().substring(1);
 
-                        if(Commands.executeSolaxiaPlayerCommand(c, sp, heading)) {
-                            String command = "";
-                            for (String used : sp) {
-                                    command += used + " ";
-                            }
-
-                            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
-                            FilePrinter.print(FilePrinter.USED_COMMANDS, c.getPlayer().getName() + " used: " + heading + command + "on " + sdf.format(Calendar.getInstance().getTime()) + "\r\n");
-                        }
-                } else if (heading != '/') {
-                        int show = slea.readByte();
-                        if(chr.getMap().isMuted() && !chr.isGM()) {
-                                chr.dropMessage(5, "The map you are in is currently muted. Please try again later.");
-                                return;
-                        }
-
-                        if (!chr.isHidden()) {
-                                chr.getMap().broadcastMessage(MaplePacketCreator.getChatText(chr.getId(), s, chr.getWhiteChat(), show));	
-                        } else {
-                                chr.getMap().broadcastGMMessage(MaplePacketCreator.getChatText(chr.getId(), s, chr.getWhiteChat(), show));
-                        }
-
-                        chr.getAutobanManager().spam(7);
-                }
+    @Override
+    public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+        String s = slea.readMapleAsciiString();
+        MapleCharacter chr = c.getPlayer();
+        if (chr.getAutobanManager().getLastSpam(7) + 200 > System.currentTimeMillis()) {
+            c.announce(MaplePacketCreator.enableActions());
+            return;
         }
-}
+        if (s.length() > Byte.MAX_VALUE && !chr.isGM()) {
+            AutobanFactory.PACKET_EDIT.alert(c.getPlayer(), c.getPlayer().getName() + " tried to packet edit in General Chat.");
+            FilePrinter.printError(FilePrinter.EXPLOITS + c.getPlayer().getName() + ".txt", c.getPlayer().getName() + " tried to send text with length of " + s.length() + "\r\n");
+            c.disconnect(true, false);
+            return;
+        }
+        char heading = s.charAt(0);
+        if (heading == '!' || heading == '@') {
+            String[] sp = s.split(" ");
+            sp[0] = sp[0].toLowerCase().substring(1);
 
+            if (Commands.executeSolaxiaPlayerCommand(c, sp, heading)) {
+                String command = "";
+                for (String used : sp) {
+                    command += used + " ";
+                }
+
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+                FilePrinter.print(FilePrinter.USED_COMMANDS, c.getPlayer().getName() + " used: " + heading + command + "on " + sdf.format(Calendar.getInstance().getTime()) + "\r\n");
+            }
+        } else if (heading != '/') {
+            int show = slea.readByte();
+            if (chr.getMap().isMuted() && !chr.isGM()) {
+                chr.dropMessage(5, "The map you are in is currently muted. Please try again later.");
+                return;
+            }
+
+            if (!chr.isHidden()) {
+                chr.getMap().broadcastMessage(MaplePacketCreator.getChatText(chr.getId(), s, chr.getWhiteChat(), show));
+            } else {
+                chr.getMap().broadcastGMMessage(MaplePacketCreator.getChatText(chr.getId(), s, chr.getWhiteChat(), show));
+            }
+
+            chr.getAutobanManager().spam(7);
+        }
+    }
+}

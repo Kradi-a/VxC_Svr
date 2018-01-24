@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package provider;
 
 import java.awt.Point;
@@ -26,6 +26,7 @@ import java.awt.image.BufferedImage;
 import provider.wz.MapleDataType;
 
 public class MapleDataTool {
+
     public static String getString(MapleData data) {
         return ((String) data.getData());
     }
@@ -84,7 +85,7 @@ public class MapleDataTool {
 
     public static int getInt(MapleData data, int def) {
         if (data == null || data.getData() == null) {
-            return  def;
+            return def;
         } else if (data.getType() == MapleDataType.STRING) {
             return Integer.parseInt(getString(data));
         } else {

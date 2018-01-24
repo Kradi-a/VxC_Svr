@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package tools.data.input;
 
 import java.io.IOException;
@@ -26,17 +26,17 @@ import java.io.IOException;
 /**
  * Provides an abstract interface to a stream of bytes. This stream can be
  * seeked.
- * 
+ *
  * @author Frz
  * @version 1.0
  * @since 299
  */
 public interface SeekableInputStreamBytestream extends ByteInputStream {
+
     /**
      * Seeks the stream by the specified offset.
      *
-     * @param offset
-     *            Number of bytes to seek.
+     * @param offset Number of bytes to seek.
      * @throws IOException
      */
     void seek(long offset) throws IOException;

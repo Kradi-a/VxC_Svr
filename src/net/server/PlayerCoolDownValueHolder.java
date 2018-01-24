@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package net.server;
 
 /**
@@ -26,6 +26,7 @@ package net.server;
  * @author Danny
  */
 public class PlayerCoolDownValueHolder {
+
     public int skillId;
     public long startTime;
     public long length;

@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package server.life;
 
 import java.io.File;
@@ -35,6 +35,7 @@ import tools.StringUtil;
  * @author Danny (Leifde)
  */
 public class MobAttackInfoFactory {
+
     private static Map<String, MobAttackInfo> mobAttacks = new HashMap<String, MobAttackInfo>();
     private static MapleDataProvider dataSource = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("wzpath") + "/Mob.wz"));
 
@@ -54,11 +55,11 @@ public class MobAttackInfoFactory {
                         mobData = dataSource.getData(StringUtil.getLeftPaddedStr(linkedmob + ".img", '0', 11));
                     }
                     MapleData attackData = mobData.getChildByPath("attack" + (attack + 1) + "/info");
-                   
+
                     if (attackData == null) {
-                    	return null;
+                        return null;
                     }
-                    
+
                     MapleData deadlyAttack = attackData.getChildByPath("deadlyAttack");
                     int mpBurn = MapleDataTool.getInt("mpBurn", attackData, 0);
                     int disease = MapleDataTool.getInt("disease", attackData, 0);
@@ -69,7 +70,7 @@ public class MobAttackInfoFactory {
                     ret.setMpBurn(mpBurn);
                     ret.setDiseaseSkill(disease);
                     ret.setDiseaseLevel(level);
-                    ret.setMpCon(mpCon);          
+                    ret.setMpCon(mpCon);
                 }
                 mobAttacks.put(mob.getId() + "" + attack, ret);
             }

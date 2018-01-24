@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package net.server.channel.handlers;
 
 import client.*;
@@ -42,19 +42,20 @@ import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class EnterMTSHandler extends AbstractMaplePacketHandler {
+
     @Override
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
-    	if (!ServerConstants.USE_MTS){
+        if (!ServerConstants.USE_MTS) {
             c.announce(MaplePacketCreator.enableActions());
             return;
-    	}
-        
-        if(MapleMiniDungeonInfo.isDungeonMap(c.getPlayer().getMapId())) {
+        }
+
+        if (MapleMiniDungeonInfo.isDungeonMap(c.getPlayer().getMapId())) {
             c.announce(MaplePacketCreator.serverNotice(5, "Changing channels or entering Cash Shop or MTS are disabled when inside a Mini-Dungeon."));
             c.announce(MaplePacketCreator.enableActions());
             return;
         }
-        
+
         MapleCharacter chr = c.getPlayer();
         if (!chr.isAlive()) {
             c.announce(MaplePacketCreator.enableActions());
@@ -65,7 +66,7 @@ public final class EnterMTSHandler extends AbstractMaplePacketHandler {
             c.announce(MaplePacketCreator.enableActions());
             return;
         }
-        
+
         chr.unregisterChairBuff();
         Server.getInstance().getPlayerBuffStorage().addBuffsToStorage(chr.getId(), chr.getAllBuffs());
         chr.setAwayFromWorld(true);
@@ -75,7 +76,7 @@ public final class EnterMTSHandler extends AbstractMaplePacketHandler {
         chr.cancelSkillCooldownTask();
         chr.cancelExpirationTask();
         chr.cancelQuestExpirationTask();
-        
+
         chr.saveToDB();
         chr.getMap().removePlayer(c.getPlayer());
         try {
@@ -126,7 +127,7 @@ public final class EnterMTSHandler extends AbstractMaplePacketHandler {
             }
             rs.close();
             ps.close();
-            
+
             ps = con.prepareStatement("SELECT COUNT(*) FROM mts_items");
             rs = ps.executeQuery();
             if (rs.next()) {

@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package client;
 
 public enum MapleBuffStat {
@@ -30,11 +30,11 @@ public enum MapleBuffStat {
     SHARP_EYES(0x20L),
     MANA_REFLECTION(0x40L),
     //ALWAYS_RIGHT(0X80L),
-    
+
     //------ bgn EDITED SLOT (was unused before) --------
     MAP_PROTECTION(0x100000000000000L),
     //------ end EDITED SLOT ----------------------------
-    
+
     SHADOW_CLAW(0x100L),
     INFINITY(0x200L),
     HOLY_SHIELD(0x400L),
@@ -47,9 +47,8 @@ public enum MapleBuffStat {
     GHOST_MORPH(0x20000L),
     AURA(0x40000L),
     CONFUSE(0x80000L),
-    
     // ------ COUPON feature ------
-    
+
     COUPON_EXP1(0x100000L),
     COUPON_EXP2(0x200000L),
     COUPON_EXP3(0x400000L),
@@ -57,9 +56,8 @@ public enum MapleBuffStat {
     COUPON_DRP1(0x1000000L),
     COUPON_DRP2(0x2000000L),
     COUPON_DRP3(0x4000000L),
-    
     // ---- end COUPON feature ----
-    
+
     BERSERK_FURY(0x8000000L),
     DIVINE_BODY(0x10000000L),
     SPARK(0x20000000L),
@@ -101,15 +99,15 @@ public enum MapleBuffStat {
     //0x2000000000000000L
     WEAKEN(0x4000000000000000L),
     //THAT GAP
-    
+
     //all incorrect buffstats
-    SLOW(0x200000000L, true), 
-    ELEMENTAL_RESET(0x200000000L, true), 
-    MAGIC_SHIELD(0x400000000L, true), 
-    MAGIC_RESISTANCE(0x800000000L, true), 
+    SLOW(0x200000000L, true),
+    ELEMENTAL_RESET(0x200000000L, true),
+    MAGIC_SHIELD(0x400000000L, true),
+    MAGIC_RESISTANCE(0x800000000L, true),
     // needs Soul Stone
     //end incorrect buffstats
-    
+
     WIND_WALK(0x400000000L, true),
     ARAN_COMBO(0x1000000000L, true),
     COMBO_DRAIN(0x2000000000L, true),
@@ -120,7 +118,7 @@ public enum MapleBuffStat {
     ENERGY_CHARGE(0x4000000000000L, true),
     DASH2(0x8000000000000L, true), // correct (speed)
     DASH(0x10000000000000L, true), // correct (jump)
-    MONSTER_RIDING(0x20000000000000L, true),    
+    MONSTER_RIDING(0x20000000000000L, true),
     SPEED_INFUSION(0x40000000000000L, true),
     HOMING_BEACON(0x80000000000000L, true);
 

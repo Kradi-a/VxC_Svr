@@ -35,30 +35,29 @@ import server.quest.MapleQuestRequirementType;
  * @author Tyler (Twdtwd)
  */
 public class PetRequirement extends MapleQuestRequirement {
-	List<Integer> petIDs = new ArrayList<>();
-	
-	
-	public PetRequirement(MapleQuest quest, MapleData data) {
-		super(MapleQuestRequirementType.PET);
-		processData(data);
-	}
-	
-	
-	@Override
-	public void processData(MapleData data) {
-		for(MapleData petData : data.getChildren()) {
-			petIDs.add(MapleDataTool.getInt(petData.getChildByPath("id")));
-		}
-	}
-	
-	
-	@Override
-	public boolean check(MapleCharacter chr, Integer npcid) {
-		for(MaplePet pet : chr.getPets()) {
-			if(petIDs.contains(pet.getItemId()))
-				return true;
-		}
-		
-		return false;
-	}
+
+    List<Integer> petIDs = new ArrayList<>();
+
+    public PetRequirement(MapleQuest quest, MapleData data) {
+        super(MapleQuestRequirementType.PET);
+        processData(data);
+    }
+
+    @Override
+    public void processData(MapleData data) {
+        for (MapleData petData : data.getChildren()) {
+            petIDs.add(MapleDataTool.getInt(petData.getChildByPath("id")));
+        }
+    }
+
+    @Override
+    public boolean check(MapleCharacter chr, Integer npcid) {
+        for (MaplePet pet : chr.getPets()) {
+            if (petIDs.contains(pet.getItemId())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

@@ -18,13 +18,14 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package tools.data.input;
 
 import java.io.IOException;
 import tools.HexTool;
 
 public class ByteArrayByteStream implements SeekableInputStreamBytestream {
+
     private int pos = 0;
     private long bytesRead = 0;
     private byte[] arr;
@@ -64,7 +65,7 @@ public class ByteArrayByteStream implements SeekableInputStreamBytestream {
         }
         return "All: " + HexTool.toString(arr) + "\nNow: " + nows;
     }
-  
+
     @Override
     public long available() {
         return arr.length - pos;

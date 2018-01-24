@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package provider.wz;
 
 import java.awt.Point;
@@ -34,6 +34,7 @@ import java.util.zip.Inflater;
 import provider.MapleCanvas;
 
 public class PNGMapleCanvas implements MapleCanvas {
+
     private static final int[] ZAHLEN = new int[]{2, 1, 0, 3};
     private int height;
     private int width;
@@ -73,7 +74,7 @@ public class PNGMapleCanvas implements MapleCanvas {
         int maxWriteBuf = 2;
         int maxHeight = 3;
         byte[] writeBuf = new byte[maxWriteBuf];
-        @SuppressWarnings ("unused")
+        @SuppressWarnings("unused")
         byte[] rowPointers = new byte[maxHeight];
         switch (getFormat()) {
             case 1:

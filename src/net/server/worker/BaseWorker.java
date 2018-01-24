@@ -16,7 +16,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package net.server.worker;
 
 import net.server.world.World;
@@ -25,11 +25,13 @@ import net.server.world.World;
  * @author Ronan
  */
 public class BaseWorker implements Runnable {
+
     protected World wserv;
-    
+
     @Override
-    public void run() {}
-    
+    public void run() {
+    }
+
     public BaseWorker(World world) {
         wserv = world;
     }

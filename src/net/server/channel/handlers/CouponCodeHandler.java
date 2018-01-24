@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package net.server.channel.handlers;
 
 import java.sql.SQLException;
@@ -37,6 +37,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * @author Penguins (Acrylic)
  */
 public final class CouponCodeHandler extends AbstractMaplePacketHandler {
+
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         slea.skip(2);
         String code = slea.readMapleAsciiString();

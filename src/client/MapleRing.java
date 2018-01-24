@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package client;
 
 import java.sql.Connection;
@@ -33,6 +33,7 @@ import tools.DatabaseConnection;
  * @author Danny
  */
 public class MapleRing implements Comparable<MapleRing> {
+
     private int ringId;
     private int ringId2;
     private int partnerId;

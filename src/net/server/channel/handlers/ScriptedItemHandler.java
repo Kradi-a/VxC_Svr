@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package net.server.channel.handlers;
 
 import client.MapleClient;
@@ -36,6 +36,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * @author Jay Estrella
  */
 public final class ScriptedItemHandler extends AbstractMaplePacketHandler {
+
     @Override
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
@@ -43,7 +44,9 @@ public final class ScriptedItemHandler extends AbstractMaplePacketHandler {
         short itemSlot = slea.readShort(); // item sl0t (thx rmzero)
         int itemId = slea.readInt(); // itemId
         scriptedItem info = ii.getScriptedItemInfo(itemId);
-        if (info == null) return;
+        if (info == null) {
+            return;
+        }
         ItemScriptManager ism = ItemScriptManager.getInstance();
         Item item = c.getPlayer().getInventory(ItemConstants.getInventoryType(itemId)).getItem(itemSlot);
         if (item == null || item.getItemId() != itemId || item.getQuantity() < 1 || !ism.scriptExists(info.getScript())) {

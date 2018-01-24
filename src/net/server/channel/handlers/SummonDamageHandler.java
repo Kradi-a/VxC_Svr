@@ -35,6 +35,7 @@ import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class SummonDamageHandler extends AbstractDealDamageHandler {
+
     public final class SummonAttackEntry {
 
         private int monsterOid;

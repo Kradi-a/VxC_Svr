@@ -37,126 +37,125 @@ import client.inventory.MapleInventoryType;
 
 public final class ChangeMapHandler extends AbstractMaplePacketHandler {
 
-	@Override
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
-		MapleCharacter chr = c.getPlayer();
+    @Override
+    public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+        MapleCharacter chr = c.getPlayer();
 
-		if (chr.isChangingMaps() || chr.isBanned()) {
+        if (chr.isChangingMaps() || chr.isBanned()) {
+            c.announce(MaplePacketCreator.enableActions());
+            return;
+        }
+        if (chr.getTrade() != null) {
+            MapleTrade.cancelTrade(chr);
+        }
+        if (slea.available() == 0) { //Cash Shop :)
+            if (!chr.getCashShop().isOpened()) {
+                c.disconnect(false, false);
+                return;
+            }
+            String[] socket = c.getChannelServer().getIP().split(":");
+            chr.getCashShop().open(false);
+            c.updateLoginState(MapleClient.LOGIN_SERVER_TRANSITION);
+            try {
+                c.announce(MaplePacketCreator.getChannelChange(InetAddress.getByName(socket[0]), Integer.parseInt(socket[1])));
+            } catch (UnknownHostException ex) {
+                ex.printStackTrace();
+            }
+        } else {
+            if (chr.getCashShop().isOpened()) {
+                c.disconnect(false, false);
+                return;
+            }
+            try {
+                slea.readByte(); // 1 = from dying 0 = regular portals
+                int targetid = slea.readInt();
+                String startwp = slea.readMapleAsciiString();
+                MaplePortal portal = chr.getMap().getPortal(startwp);
+                slea.readByte();
+                boolean wheel = slea.readShort() > 0;
+                if (targetid != -1 && !chr.isAlive()) {
+                    boolean executeStandardPath = true;
+                    if (chr.getEventInstance() != null) {
+                        executeStandardPath = chr.getEventInstance().revivePlayer(chr);
+                    }
+                    if (executeStandardPath) {
+                        MapleMap to = chr.getMap();
+                        if (wheel && chr.haveItemWithId(5510000, false)) {
+                            MapleInventoryManipulator.removeById(c, MapleInventoryType.CASH, 5510000, 1, true, false);
+                            chr.announce(MaplePacketCreator.showWheelsLeft(chr.getItemQuantity(5510000, false)));
+                        } else {
+                            chr.cancelAllBuffs(false);
+                            to = chr.getWarpMap(chr.getMap().getReturnMapId());
+                            chr.setStance(0);
+                        }
+                        chr.setHp(50);
+                        chr.updatePartyMemberHP();
+                        chr.changeMap(to, to.getRandomPlayerSpawnpoint());
+                    }
+                } else if (targetid != -1) {
+                    if (chr.isGM()) {
+                        MapleMap to = chr.getWarpMap(targetid);
+                        chr.changeMap(to, to.getPortal(0));
+                    } else {
+                        final int divi = chr.getMapId() / 100;
+                        boolean warp = false;
+                        if (divi == 0) {
+                            if (targetid == 10000) {
+                                warp = true;
+                            }
+                        } else if (divi == 20100) {
+                            if (targetid == 104000000) {
+                                c.announce(MaplePacketCreator.lockUI(false));
+                                c.announce(MaplePacketCreator.disableUI(false));
+                                warp = true;
+                            }
+                        } else if (divi == 9130401) { // Only allow warp if player is already in Intro map, or else = hack
+                            if (targetid == 130000000 || targetid / 100 == 9130401) { // Cygnus introduction
+                                warp = true;
+                            }
+                        } else if (divi == 9140900) { // Aran Introduction
+                            if (targetid == 914090011 || targetid == 914090012 || targetid == 914090013 || targetid == 140090000) {
+                                warp = true;
+                            }
+                        } else if (divi / 10 == 1020) { // Adventurer movie clip Intro
+                            if (targetid == 1020000) {
+                                warp = true;
+                            }
+                        } else if (divi / 10 >= 980040 && divi / 10 <= 980045) {
+                            if (targetid == 980040000) {
+                                warp = true;
+                            }
+                        }
+                        if (warp) {
+                            final MapleMap to = chr.getWarpMap(targetid);
+                            chr.changeMap(to, to.getPortal(0));
+                        }
+                    }
+                }
+                if (portal != null && !portal.getPortalStatus()) {
+                    c.announce(MaplePacketCreator.blockedMessage(1));
+                    c.announce(MaplePacketCreator.enableActions());
+                    return;
+                }
+                if (chr.getMapId() == 109040004) {
+                    chr.getFitness().resetTimes();
+                }
+                if (chr.getMapId() == 109030003 || chr.getMapId() == 109030103) {
+                    chr.getOla().resetTimes();
+                }
+                if (portal != null) {
+                    if (portal.getPosition().distanceSq(chr.getPosition()) > 400000) {
                         c.announce(MaplePacketCreator.enableActions());
-			return;
-		}
-		if (chr.getTrade() != null) {
-			MapleTrade.cancelTrade(chr);
-		}
-		if (slea.available() == 0) { //Cash Shop :)
-			if(!chr.getCashShop().isOpened()) {                 
-                                c.disconnect(false, false);
-				return;           
-			}
-			String[] socket = c.getChannelServer().getIP().split(":");
-			chr.getCashShop().open(false);
-			c.updateLoginState(MapleClient.LOGIN_SERVER_TRANSITION);
-			try {
-				c.announce(MaplePacketCreator.getChannelChange(InetAddress.getByName(socket[0]), Integer.parseInt(socket[1])));
-			} catch (UnknownHostException ex) {
-                            ex.printStackTrace();
-			}
-		} else {
-			if(chr.getCashShop().isOpened()) {                 
-				c.disconnect(false, false);
-				return;           
-			}
-			try {
-				slea.readByte(); // 1 = from dying 0 = regular portals
-				int targetid = slea.readInt();
-				String startwp = slea.readMapleAsciiString();
-				MaplePortal portal = chr.getMap().getPortal(startwp);
-				slea.readByte();
-				boolean wheel = slea.readShort() > 0;
-				if (targetid != -1 && !chr.isAlive()) {
-					boolean executeStandardPath = true;
-					if (chr.getEventInstance() != null) {
-						executeStandardPath = chr.getEventInstance().revivePlayer(chr);
-					}
-					if (executeStandardPath) {
-						MapleMap to = chr.getMap();
-						if (wheel && chr.haveItemWithId(5510000, false)) {
-							MapleInventoryManipulator.removeById(c, MapleInventoryType.CASH, 5510000, 1, true, false);
-							chr.announce(MaplePacketCreator.showWheelsLeft(chr.getItemQuantity(5510000, false)));
-						} else {
-							chr.cancelAllBuffs(false);
-							to = chr.getWarpMap(chr.getMap().getReturnMapId());
-							chr.setStance(0);
-						}
-						chr.setHp(50);
-                                                chr.updatePartyMemberHP();
-						chr.changeMap(to, to.getRandomPlayerSpawnpoint());
-					}
-				} else if (targetid != -1) {
-                                        if(chr.isGM()) {
-                                                MapleMap to = chr.getWarpMap(targetid);
-                                                chr.changeMap(to, to.getPortal(0));
-                                        }
-                                        else {
-                                                final int divi = chr.getMapId() / 100;
-                                                boolean warp = false;
-                                                if (divi == 0) {
-                                                        if (targetid == 10000) {
-                                                                warp = true;
-                                                        }
-                                                } else if (divi == 20100) {
-                                                        if (targetid == 104000000) {
-                                                                c.announce(MaplePacketCreator.lockUI(false));
-                                                                c.announce(MaplePacketCreator.disableUI(false));
-                                                                warp = true;
-                                                        }
-                                                } else if (divi == 9130401) { // Only allow warp if player is already in Intro map, or else = hack
-                                                        if (targetid == 130000000 || targetid / 100 == 9130401) { // Cygnus introduction
-                                                                warp = true;
-                                                        }
-                                                } else if (divi == 9140900) { // Aran Introduction
-                                                        if (targetid == 914090011 || targetid == 914090012 || targetid == 914090013 || targetid == 140090000) {
-                                                                warp = true;
-                                                        }
-                                                } else if (divi / 10 == 1020) { // Adventurer movie clip Intro
-                                                        if (targetid == 1020000) {
-                                                                warp = true;
-                                                        }
-                                                } else if(divi / 10 >= 980040 && divi / 10 <= 980045) {
-                                                        if(targetid == 980040000) {
-                                                                warp = true;
-                                                        }
-                                                }
-                                                if (warp) {
-                                                        final MapleMap to = chr.getWarpMap(targetid);
-                                                        chr.changeMap(to, to.getPortal(0));
-                                                }
-                                        }
-				}
-				if (portal != null && !portal.getPortalStatus()) {
-					c.announce(MaplePacketCreator.blockedMessage(1));
-					c.announce(MaplePacketCreator.enableActions());
-					return;
-				}
-				if (chr.getMapId() == 109040004) {
-					chr.getFitness().resetTimes();
-				}
-				if (chr.getMapId() == 109030003 || chr.getMapId() == 109030103) {
-					chr.getOla().resetTimes();
-				}
-				if (portal != null) {
-					if(portal.getPosition().distanceSq(chr.getPosition()) > 400000) {
-						c.announce(MaplePacketCreator.enableActions());
-						return;
-					}
-					
-					portal.enterPortal(c);
-				} else {
-					c.announce(MaplePacketCreator.enableActions());
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
+                        return;
+                    }
+
+                    portal.enterPortal(c);
+                } else {
+                    c.announce(MaplePacketCreator.enableActions());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package client.inventory;
 
 import com.mysql.jdbc.Statement;
@@ -42,6 +42,7 @@ import tools.MaplePacketCreator;
  * @author Matze
  */
 public class MaplePet extends Item {
+
     private String name;
     private int uniqueid;
     private int closeness = 0;
@@ -93,7 +94,7 @@ public class MaplePet extends Item {
             ex.printStackTrace();
         }
     }
-    
+
     public void saveToDb() {
         try {
             Connection con = DatabaseConnection.getConnection();
@@ -173,6 +174,11 @@ public class MaplePet extends Item {
         this.uniqueid = id;
     }
 
+    @Override
+    public int getCashId() {
+        return getPetId();
+    }
+
     public int getCloseness() {
         return closeness;
     }
@@ -184,51 +190,60 @@ public class MaplePet extends Item {
     public byte getLevel() {
         return level;
     }
-    
+
     public void gainClosenessFullness(MapleCharacter owner, int incCloseness, int incFullness, int type) {
         byte slot = owner.getPetIndex(this);
         boolean enjoyed;
-        
+
         //will NOT increase pet's closeness if tried to feed pet with 100% fullness
         if (fullness < 100 || incFullness == 0) {   //incFullness == 0: command given
             int newFullness = fullness + incFullness;
-            if (newFullness > 100) newFullness = 100;
+            if (newFullness > 100) {
+                newFullness = 100;
+            }
             fullness = newFullness;
-            
+
             if (incCloseness > 0 && closeness < 30000) {
                 int newCloseness = closeness + incCloseness;
-                if (newCloseness > 30000) newCloseness = 30000;
-                
+                if (newCloseness > 30000) {
+                    newCloseness = 30000;
+                }
+
                 closeness = newCloseness;
-                while(newCloseness >= ExpTable.getClosenessNeededForLevel(level)) {
+                while (newCloseness >= ExpTable.getClosenessNeededForLevel(level)) {
                     level += 1;
                     owner.getClient().announce(MaplePacketCreator.showOwnPetLevelUp(slot));
                     owner.getMap().broadcastMessage(MaplePacketCreator.showPetLevelUp(owner, slot));
                 }
             }
-            
+
             enjoyed = true;
         } else {
             if (incCloseness > 0) {
                 int newCloseness = closeness - 1;
-                if (newCloseness < 0) newCloseness = 0;
-                
+                if (newCloseness < 0) {
+                    newCloseness = 0;
+                }
+
                 closeness = newCloseness;
                 if (level > 1 && newCloseness < ExpTable.getClosenessNeededForLevel(level - 1)) {
                     level -= 1;
                 }
             }
-            
+
             enjoyed = false;
         }
-        
+
         owner.getMap().broadcastMessage(MaplePacketCreator.commandResponse(owner.getId(), slot, type, enjoyed));
-        if(owner.getMount() != null) owner.getMap().broadcastMessage(MaplePacketCreator.updateMount(owner.getId(), owner.getMount(), false));
+        if (owner.getMount() != null) {
+            owner.getMap().broadcastMessage(MaplePacketCreator.updateMount(owner.getId(), owner.getMount(), false));
+        }
         saveToDb();
-        
+
         Item petz = owner.getInventory(MapleInventoryType.CASH).getItem(getPosition());
-        if (petz != null)
+        if (petz != null) {
             owner.forceUpdateItem(petz);
+        }
     }
 
     public void setLevel(byte level) {

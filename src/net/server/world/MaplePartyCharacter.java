@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package net.server.world;
 
 import java.util.Map;
@@ -32,6 +32,7 @@ import client.MapleJob;
 import java.util.Collections;
 
 public class MaplePartyCharacter {
+
     private String name;
     private int id;
     private int level;
@@ -42,10 +43,10 @@ public class MaplePartyCharacter {
     private boolean online;
     private MapleJob job;
     private MapleCharacter character;
-    
+
     public MaplePartyCharacter(MapleCharacter maplechar) {
         this.character = maplechar;
-    	this.name = maplechar.getName();
+        this.name = maplechar.getName();
         this.level = maplechar.getLevel();
         this.channel = maplechar.getClient().getChannel();
         this.world = maplechar.getWorld();
@@ -62,9 +63,9 @@ public class MaplePartyCharacter {
     public MaplePartyCharacter() {
         this.name = "";
     }
-    
+
     public MapleCharacter getPlayer() {
-    	return character;
+        return character;
     }
 
     public MapleJob getJob() {
@@ -82,7 +83,7 @@ public class MaplePartyCharacter {
     public void setChannel(int channel) {
         this.channel = channel;
     }
-    
+
     public boolean isLeader() {
         return getPlayer().isPartyLeader();
     }
@@ -114,23 +115,23 @@ public class MaplePartyCharacter {
     public int getJobId() {
         return jobid;
     }
-    
+
     public int getGuildId() {
         return character.getGuildId();
     }
 
     public void addDoor(Integer owner, MapleDoor door) {
-    	this.doors.put(owner, door);
+        this.doors.put(owner, door);
     }
-    
+
     public void removeDoor(Integer owner) {
-    	this.doors.remove(owner);
+        this.doors.remove(owner);
     }
-    
+
     public Collection<MapleDoor> getDoors() {
-    	return Collections.unmodifiableCollection(doors.values());
+        return Collections.unmodifiableCollection(doors.values());
     }
-    
+
     @Override
     public int hashCode() {
         final int prime = 31;

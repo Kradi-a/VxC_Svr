@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package net.server.channel.handlers;
 
 import client.MapleCharacter;
@@ -33,6 +33,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * @author Matze
  */
 public final class QuestActionHandler extends AbstractMaplePacketHandler {
+
     @Override
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         byte action = slea.readByte();
@@ -59,15 +60,15 @@ public final class QuestActionHandler extends AbstractMaplePacketHandler {
         } else if (action == 4) { // scripted start quest
             int npc = slea.readInt();
             slea.readInt();
-            if(quest.canStart(player, npc)) {
+            if (quest.canStart(player, npc)) {
                 QuestScriptManager.getInstance().start(c, questid, npc);
             }
         } else if (action == 5) { // scripted end quests
             //System.out.println(slea.toString());
             int npc = slea.readInt();
             slea.readInt();
-            
-            if(quest.canComplete(player, npc)) {
+
+            if (quest.canComplete(player, npc)) {
                 QuestScriptManager.getInstance().end(c, questid, npc);
             }
         }

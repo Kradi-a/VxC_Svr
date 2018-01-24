@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package server.maps;
 
 import java.awt.Point;
@@ -32,6 +32,7 @@ import tools.Pair;
  * @author Ronan
  */
 public class MapleReactorStats {
+
     private Point tl;
     private Point br;
     private Map<Byte, List<StateData>> stateInfo = new HashMap<>();
@@ -55,14 +56,16 @@ public class MapleReactorStats {
 
     public void addState(byte state, List<StateData> data, int timeOut) {
         stateInfo.put(state, data);
-        if(timeOut > -1) timeoutInfo.put(state, timeOut);
+        if (timeOut > -1) {
+            timeoutInfo.put(state, timeOut);
+        }
     }
-    
+
     public int getTimeout(byte state) {
         Integer i = timeoutInfo.get(state);
         return (i == null) ? -1 : i;
     }
-    
+
     public byte getTimeoutState(byte state) {
         return stateInfo.get(state).get(stateInfo.get(state).size() - 1).getNextState();
     }
@@ -72,7 +75,9 @@ public class MapleReactorStats {
     }
 
     public byte getNextState(byte state, byte index) {
-        if (stateInfo.get(state) == null || stateInfo.get(state).size() < (index + 1)) return -1;
+        if (stateInfo.get(state) == null || stateInfo.get(state).size() < (index + 1)) {
+            return -1;
+        }
         StateData nextState = stateInfo.get(state).get(index);
         if (nextState != null) {
             return nextState.getNextState();
@@ -108,8 +113,8 @@ public class MapleReactorStats {
         }
     }
 
-
     public static class StateData {
+
         private int type;
         private Pair<Integer, Integer> reactItem;
         private List<Integer> activeSkills;

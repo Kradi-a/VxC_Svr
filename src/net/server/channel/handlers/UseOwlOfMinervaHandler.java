@@ -16,7 +16,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package net.server.channel.handlers;
 
 import client.MapleClient;
@@ -35,17 +35,16 @@ import constants.GameConstants;
 /**
  * @author Ronan
  */
-
 public final class UseOwlOfMinervaHandler extends AbstractMaplePacketHandler {
 
     @Override
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         List<Pair<Integer, Integer>> owlSearched = c.getWorldServer().getOwlSearchedItems();
         List<Integer> owlLeaderboards;
-        
-        if(owlSearched.size() < 5) {
+
+        if (owlSearched.size() < 5) {
             owlLeaderboards = new LinkedList<>();
-            for(int i : GameConstants.OWL_DATA) {
+            for (int i : GameConstants.OWL_DATA) {
                 owlLeaderboards.add(i);
             }
         } else {
@@ -55,18 +54,18 @@ public final class UseOwlOfMinervaHandler extends AbstractMaplePacketHandler {
                     return p2.getRight().compareTo(p1.getRight());
                 }
             };
-            
+
             PriorityQueue<Pair<Integer, Integer>> queue = new PriorityQueue<>(10, comparator);
-            for(Pair<Integer, Integer> p : owlSearched) {
+            for (Pair<Integer, Integer> p : owlSearched) {
                 queue.add(p);
             }
-            
+
             owlLeaderboards = new LinkedList<>();
-            for(int i = 0; i < Math.min(owlSearched.size(), 10); i++) {
+            for (int i = 0; i < Math.min(owlSearched.size(), 10); i++) {
                 owlLeaderboards.add(queue.remove().getLeft());
             }
         }
-        
+
         c.announce(MaplePacketCreator.getOwlOpen(owlLeaderboards));
     }
 }

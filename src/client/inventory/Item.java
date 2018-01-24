@@ -26,10 +26,12 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+import server.MapleItemInformationProvider;
+import tools.Randomizer;
 
 public class Item implements Comparable<Item> {
 
-    private int id, cashId, sn;
+    private int id, cashId = -1, sn;
     private short position;
     private short quantity;
     private int petid = -1;
@@ -53,7 +55,9 @@ public class Item implements Comparable<Item> {
         this.position = position;
         this.quantity = quantity;
         this.petid = petid;
-        if (petid > -1) this.pet = MaplePet.loadFromDb(id, position, petid);
+        if (petid > -1) {
+            this.pet = MaplePet.loadFromDb(id, position, petid);
+        }
         this.flag = 0;
         this.log = new LinkedList<>();
     }
@@ -80,8 +84,16 @@ public class Item implements Comparable<Item> {
     }
 
     public int getCashId() {
-        if (cashId == 0) {
-            cashId = new Random().nextInt(Integer.MAX_VALUE) + 1;
+        if (petid > -1) {
+            return petid;
+        }
+        if (cashId == -1) {
+            MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
+            if (ItemConstants.isRechargable(id) || ii.isCash(id)) {
+                cashId = Randomizer.nextPositiveInt();
+            } else {
+                cashId = 0;
+            }
         }
         return cashId;
     }
@@ -97,7 +109,7 @@ public class Item implements Comparable<Item> {
     public MapleInventoryType getInventoryType() {
         return ItemConstants.getInventoryType(id);
     }
-    
+
     public byte getItemType() { // 1: equip, 3: pet, 2: other
         if (getPetId() > -1) {
             return 3;
@@ -120,7 +132,7 @@ public class Item implements Comparable<Item> {
     public void setPetId(int id) {
         this.petid = id;
     }
- 
+
     @Override
     public int compareTo(Item other) {
         if (this.id < other.getItemId()) {
@@ -130,7 +142,7 @@ public class Item implements Comparable<Item> {
         }
         return 0;
     }
-    
+
     @Override
     public String toString() {
         return "Item: " + id + " quantity: " + quantity;

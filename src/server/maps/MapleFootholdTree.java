@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package server.maps;
 
 import java.awt.Point;
@@ -31,6 +31,7 @@ import java.util.List;
  * @author Matze
  */
 public class MapleFootholdTree {
+
     private MapleFootholdTree nw = null;
     private MapleFootholdTree ne = null;
     private MapleFootholdTree sw = null;
@@ -72,9 +73,9 @@ public class MapleFootholdTree {
                 minDropX = f.getX2();
             }
         }
-        if (depth == maxDepth ||
-                (f.getX1() >= p1.x && f.getX2() <= p2.x &&
-                f.getY1() >= p1.y && f.getY2() <= p2.y)) {
+        if (depth == maxDepth
+                || (f.getX1() >= p1.x && f.getX2() <= p2.x
+                && f.getY1() >= p1.y && f.getY2() <= p2.y)) {
             footholds.add(f);
         } else {
             if (nw == null) {
@@ -118,8 +119,8 @@ public class MapleFootholdTree {
     private MapleFoothold findWallR(Point p1, Point p2) {
         MapleFoothold ret;
         for (MapleFoothold f : footholds) {
-            if (f.isWall() && f.getX1() >= p1.x && f.getX1() <= p2.x &&
-                    f.getY1() >= p1.y && f.getY2() <= p1.y) {
+            if (f.isWall() && f.getX1() >= p1.x && f.getX1() <= p2.x
+                    && f.getY1() >= p1.y && f.getY2() <= p1.y) {
                 return f;
             }
         }

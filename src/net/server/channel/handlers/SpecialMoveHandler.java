@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package net.server.channel.handlers;
 
 import java.awt.Point;
@@ -44,15 +44,14 @@ import constants.skills.Paladin;
 import constants.skills.Priest;
 import constants.skills.SuperGM;
 
-
 public final class SpecialMoveHandler extends AbstractMaplePacketHandler {
-    
+
     @Override
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
-    	MapleCharacter chr = c.getPlayer();
+        MapleCharacter chr = c.getPlayer();
         chr.getAutobanManager().setTimestamp(4, slea.readInt(), 3);
         int skillid = slea.readInt();
-        
+
         /*
         if ((!GameConstants.isPqSkillMap(chr.getMapId()) && GameConstants.isPqSkill(skillid)) || (!chr.isGM() && GameConstants.isGMSkills(skillid)) || (!GameConstants.isInJobTree(skillid, chr.getJob().getId()) && !chr.isGM())) {
         	AutobanFactory.PACKET_EDIT.alert(chr, chr.getName() + " tried to packet edit skills.");
@@ -60,8 +59,7 @@ public final class SpecialMoveHandler extends AbstractMaplePacketHandler {
     		c.disconnect(true, false);
             return;
         }
-        */
-        
+         */
         Point pos = null;
         int __skillLevel = slea.readByte();
         Skill skill = SkillFactory.getSkill(skillid);
@@ -75,8 +73,10 @@ public final class SpecialMoveHandler extends AbstractMaplePacketHandler {
             c.announce(MaplePacketCreator.getEnergy("energy", chr.getDojoEnergy()));
             c.announce(MaplePacketCreator.serverNotice(5, "As you used the secret skill, your energy bar has been reset."));
         }
-        if (skillLevel == 0 || skillLevel != __skillLevel) return;
-        
+        if (skillLevel == 0 || skillLevel != __skillLevel) {
+            return;
+        }
+
         MapleStatEffect effect = skill.getEffect(skillLevel);
         if (effect.getCooldown() > 0) {
             if (chr.skillIsCooling(skillid)) {
@@ -96,9 +96,9 @@ public final class SpecialMoveHandler extends AbstractMaplePacketHandler {
                 chr.getMap().broadcastMessage(chr, MaplePacketCreator.showMagnet(mobId, success), false);
                 MapleMonster monster = chr.getMap().getMonsterByOid(mobId);
                 if (monster != null) {
-                	if (!monster.isBoss()) {
-                		monster.switchController(chr, monster.isControllerHasAggro());
-                	}
+                    if (!monster.isBoss()) {
+                        monster.switchController(chr, monster.isControllerHasAggro());
+                    }
                 }
             }
             byte direction = slea.readByte();
@@ -120,14 +120,14 @@ public final class SpecialMoveHandler extends AbstractMaplePacketHandler {
         } else if (skillid % 10000000 == 1004) {
             slea.readShort();
         }
-        
+
         if (slea.available() == 5) {
             pos = new Point(slea.readShort(), slea.readShort());
         }
         if (chr.isAlive()) {
             if (skill.getId() != Priest.MYSTIC_DOOR) {
                 skill.getEffect(skillLevel).applyTo(chr, pos);
-            } else if(chr.canDoor()) {
+            } else if (chr.canDoor()) {
                 //update door lists
                 chr.cancelMagicDoor();
                 skill.getEffect(skillLevel).applyTo(chr, pos);

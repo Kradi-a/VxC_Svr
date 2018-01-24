@@ -16,7 +16,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package net.server.worker;
 
 import net.server.world.World;
@@ -25,12 +25,12 @@ import net.server.world.World;
  * @author Ronan
  */
 public class PetFullnessWorker extends BaseWorker implements Runnable {
-    
+
     @Override
     public void run() {
         wserv.runPetSchedule();
     }
-    
+
     public PetFullnessWorker(World world) {
         super(world);
     }

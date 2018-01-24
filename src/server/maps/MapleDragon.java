@@ -25,8 +25,6 @@ import tools.MaplePacketCreator;
 import client.MapleCharacter;
 import client.MapleClient;
 
-
-
 public class MapleDragon extends AbstractAnimatedMapleMapObject {
 
     private MapleCharacter owner;
@@ -35,7 +33,7 @@ public class MapleDragon extends AbstractAnimatedMapleMapObject {
         super();
         this.owner = chr;
         this.setPosition(chr.getPosition());
-		this.setStance(chr.getStance());
+        this.setStance(chr.getStance());
         sendSpawnData(chr.getClient());
     }
 
@@ -46,7 +44,7 @@ public class MapleDragon extends AbstractAnimatedMapleMapObject {
 
     @Override
     public void sendSpawnData(MapleClient c) {
-        c.announce(MaplePacketCreator.spawnDragon(this));     
+        c.announce(MaplePacketCreator.spawnDragon(this));
     }
 
     @Override
@@ -58,8 +56,8 @@ public class MapleDragon extends AbstractAnimatedMapleMapObject {
     public void sendDestroyData(MapleClient c) {
         c.announce(MaplePacketCreator.removeDragon(owner.getId()));
     }
-    
+
     public MapleCharacter getOwner() {
-    	return owner;
+        return owner;
     }
 }

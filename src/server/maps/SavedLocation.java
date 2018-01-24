@@ -18,11 +18,12 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package server.maps;
 
 public class SavedLocation {
-    private int mapid = 102000000,  portal;
+
+    private int mapid = 102000000, portal;
 
     public SavedLocation(int mapid, int portal) {
         this.mapid = mapid;

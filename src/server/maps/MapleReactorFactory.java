@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package server.maps;
 
 import java.io.File;
@@ -35,6 +35,7 @@ import tools.Pair;
 import tools.StringUtil;
 
 public class MapleReactorFactory {
+
     private static MapleDataProvider data = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("wzpath") + "/Reactor.wz"));
     private static Map<Integer, MapleReactorStats> reactorStats = new HashMap<Integer, MapleReactorStats>();
 
@@ -65,7 +66,7 @@ public class MapleReactorFactory {
                         MapleData eventData = reactorInfoData.getChildByPath("event");
                         if (eventData != null) {
                             int timeOut = -1;
-                            
+
                             for (MapleData fknexon : eventData.getChildren()) {
                                 if (fknexon.getName().equals("timeOut")) {
                                     timeOut = MapleDataTool.getInt(fknexon);

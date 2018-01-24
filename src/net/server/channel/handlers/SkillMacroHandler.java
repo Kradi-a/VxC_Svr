@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package net.server.channel.handlers;
 
 import client.MapleClient;
@@ -27,6 +27,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
 import net.AbstractMaplePacketHandler;
 
 public final class SkillMacroHandler extends AbstractMaplePacketHandler {
+
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         int num = slea.readByte();
         for (int i = 0; i < num; i++) {

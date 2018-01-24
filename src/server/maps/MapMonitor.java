@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package server.maps;
 
 import java.util.concurrent.ScheduledFuture;
@@ -26,6 +26,7 @@ import server.MaplePortal;
 import server.TimerManager;
 
 public class MapMonitor {
+
     private ScheduledFuture<?> monitorSchedule;
     private MapleMap map;
     private MaplePortal portal;

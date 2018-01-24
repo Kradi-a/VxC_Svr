@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package server.maps;
 
 import java.awt.Point;
@@ -37,6 +37,7 @@ import tools.MaplePacketCreator;
  * @author XoticStory
  */
 public class PlayerNPCs extends AbstractMapleMapObject {
+
     private Map<Short, Integer> equips = new HashMap<Short, Integer>();
     private int npcId, face, hair;
     private byte skin;
@@ -55,7 +56,7 @@ public class PlayerNPCs extends AbstractMapleMapObject {
             RX1 = rs.getInt("rx1");
             npcId = rs.getInt("ScriptId");
             setPosition(new Point(rs.getInt("x"), CY));
-            
+
             Connection con = DatabaseConnection.getConnection();
             PreparedStatement ps = con.prepareStatement("SELECT equippos, equipid FROM playernpcs_equip WHERE NpcId = ?");
             ps.setInt(1, rs.getInt("id"));

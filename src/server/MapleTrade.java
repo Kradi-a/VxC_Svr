@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package server;
 
 import java.util.ArrayList;
@@ -42,6 +42,7 @@ import tools.Pair;
  * @author Ronan (concurrency safety & check available slots)
  */
 public class MapleTrade {
+
     private MapleTrade partner = null;
     private List<Item> items = new ArrayList<>();
     private List<Item> exchangeItems;
@@ -51,7 +52,7 @@ public class MapleTrade {
     private MapleCharacter chr;
     private byte number;
     private boolean fullTrade = false;
-    
+
     public MapleTrade(byte number, MapleCharacter c) {
         chr = c;
         this.number = number;
@@ -87,13 +88,13 @@ public class MapleTrade {
 
     private void complete2() {
         boolean show = ServerConstants.USE_DEBUG;
-        
+
         items.clear();
         meso = 0;
         for (Item item : exchangeItems) {
-            if ((item.getFlag() & ItemConstants.KARMA) == ItemConstants.KARMA) 
+            if ((item.getFlag() & ItemConstants.KARMA) == ItemConstants.KARMA) {
                 item.setFlag((byte) (item.getFlag() ^ ItemConstants.KARMA)); //items with scissors of karma used on them are reset once traded
-
+            }
             MapleInventoryManipulator.addFromDrop(chr.getClient(), item, show);
         }
         if (exchangeMeso > 0) {
@@ -108,7 +109,7 @@ public class MapleTrade {
 
     private void cancel() {
         boolean show = ServerConstants.USE_DEBUG;
-        
+
         for (Item item : items) {
             MapleInventoryManipulator.addFromDrop(chr.getClient(), item, show);
         }
@@ -187,16 +188,16 @@ public class MapleTrade {
         return new LinkedList<>(items);
     }
 
-    public int getExchangeMesos(){
-    	return exchangeMeso;
+    public int getExchangeMesos() {
+        return exchangeMeso;
     }
-    
+
     private boolean fitsInInventory() {
         List<Pair<Item, MapleInventoryType>> tradeItems = new LinkedList<>();
         for (Item item : exchangeItems) {
             tradeItems.add(new Pair(item, item.getInventoryType()));
         }
-        
+
         return MapleInventory.checkSpotsAndOwnership(chr, tradeItems);
     }
 
@@ -212,8 +213,7 @@ public class MapleTrade {
                 c.message("There is not enough inventory space to complete the trade.");
                 partner.getChr().message("Partner does not have enough inventory space to complete the trade.");
                 return;
-            }
-            else if (!partner.fitsInInventory()) {
+            } else if (!partner.fitsInInventory()) {
                 cancelTrade(c);
                 c.message("Partner does not have enough inventory space to complete the trade.");
                 partner.getChr().message("There is not enough inventory space to complete the trade.");
@@ -246,8 +246,10 @@ public class MapleTrade {
 
     public static void cancelTrade(MapleCharacter c) {
         MapleTrade trade = c.getTrade();
-        if(trade == null) return;
-        
+        if (trade == null) {
+            return;
+        }
+
         trade.cancel();
         if (trade.getPartner() != null) {
             trade.getPartner().cancel();
@@ -302,11 +304,11 @@ public class MapleTrade {
         }
     }
 
-	public boolean isFullTrade() {
-		return fullTrade;
-	}
+    public boolean isFullTrade() {
+        return fullTrade;
+    }
 
-	public void setFullTrade(boolean fullTrade) {
-		this.fullTrade = fullTrade;
-	}
+    public void setFullTrade(boolean fullTrade) {
+        this.fullTrade = fullTrade;
+    }
 }

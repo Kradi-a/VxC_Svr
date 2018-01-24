@@ -18,14 +18,15 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package constants.skills;
 
 /**
- * 
+ *
  * @author David
  */
 public class DragonKnight {
+
     public static final int ELEMENTAL_RESISTANCE = 1310000;
     public static final int SPEAR_CRUSHER = 1311001;
     public static final int POLE_ARM_CRUSHER = 1311002;

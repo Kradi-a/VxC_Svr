@@ -18,13 +18,14 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package server.maps;
 
 import client.MapleClient;
 import tools.MaplePacketCreator;
 
 public class MapleMapEffect {
+
     private String msg;
     private int itemId;
     private boolean active = true;

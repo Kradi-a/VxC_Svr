@@ -65,12 +65,12 @@ public class MapleMapFactory {
         this.world = world;
         this.channel = channel;
         this.event = eim;
-        
+
         ReentrantReadWriteLock rrwl = new MonitoredReentrantReadWriteLock(MonitoredLockType.MAP_FACTORY);
         this.mapsRLock = rrwl.readLock();
         this.mapsWLock = rrwl.writeLock();
     }
-    
+
     public MapleMap resetMap(int mapid) {
         mapsWLock.lock();
         try {
@@ -78,13 +78,13 @@ public class MapleMapFactory {
         } finally {
             mapsWLock.unlock();
         }
-        
+
         return getMap(mapid);
     }
-    
+
     private synchronized MapleMap loadMapFromWz(int mapid, Integer omapid) {
         MapleMap map;
-        
+
         mapsRLock.lock();
         try {
             map = maps.get(omapid);
@@ -95,7 +95,7 @@ public class MapleMapFactory {
         if (map != null) {
             return map;
         }
-        
+
         String mapName = getMapName(mapid);
         MapleData mapData = source.getData(mapName);
         MapleData infoData = mapData.getChildByPath("info");
@@ -135,9 +135,9 @@ public class MapleMapFactory {
         bounds[0] = MapleDataTool.getInt(infoData.getChildByPath("VRTop"));
         bounds[1] = MapleDataTool.getInt(infoData.getChildByPath("VRBottom"));
 
-        if(bounds[0] == bounds[1]) {    // old-style baked map
+        if (bounds[0] == bounds[1]) {    // old-style baked map
             MapleData minimapData = mapData.getChildByPath("miniMap");
-            if(minimapData != null) {
+            if (minimapData != null) {
                 bounds[0] = MapleDataTool.getInt(minimapData.getChildByPath("centerX")) * -1;
                 bounds[1] = MapleDataTool.getInt(minimapData.getChildByPath("centerY")) * -1;
                 bounds[2] = MapleDataTool.getInt(minimapData.getChildByPath("height"));
@@ -278,7 +278,7 @@ public class MapleMapFactory {
             e.printStackTrace();
             // swallow cause I'm cool
         }
-        
+
         map.setBackgroundTypes(backTypes);
         map.generateMapDropRangeCache();
 
@@ -288,21 +288,21 @@ public class MapleMapFactory {
         } finally {
             mapsWLock.unlock();
         }
-        
+
         return map;
     }
-    
+
     public MapleMap getMap(int mapid) {
         Integer omapid = Integer.valueOf(mapid);
         MapleMap map;
-        
+
         mapsRLock.lock();
         try {
             map = maps.get(omapid);
         } finally {
             mapsRLock.unlock();
         }
-        
+
         return (map != null) ? map : loadMapFromWz(mapid, omapid);
     }
 
@@ -317,8 +317,12 @@ public class MapleMapFactory {
 
     private AbstractLoadedMapleLife loadLife(MapleData life, String id, String type) {
         AbstractLoadedMapleLife myLife = MapleLifeFactory.getLife(Integer.parseInt(id), type);
-        if(life == null) System.out.println("lf null");
-        if(myLife == null) System.out.println("mlf null");
+        if (life == null) {
+            System.out.println("lf null");
+        }
+        if (myLife == null) {
+            System.out.println("mlf null");
+        }
         myLife.setCy(MapleDataTool.getInt(life.getChildByPath("cy")));
         MapleData dF = life.getChildByPath("f");
         if (dF != null) {
@@ -407,18 +411,20 @@ public class MapleMapFactory {
             mapsRLock.unlock();
         }
     }
-    
+
     public void dispose() {
         Collection<MapleMap> mapValues;
-        
+
         mapsRLock.lock();
         try {
             mapValues = maps.values();
         } finally {
             mapsRLock.unlock();
         }
-        
-        for(MapleMap map: mapValues) map.setEventInstance(null);
+
+        for (MapleMap map : mapValues) {
+            map.setEventInstance(null);
+        }
         this.event = null;
     }
 }

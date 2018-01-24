@@ -16,14 +16,13 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package tools.locks;
 
 /**
  *
  * @author RonanLana
  */
-
 public enum MonitoredLockType {
     UNDEFINED(-1),
     CHR(0),
@@ -70,9 +69,9 @@ public enum MonitoredLockType {
     MAP_BOUNDS(40),
     MINIDUNGEON(41),
     REACTOR(42);
-    
+
     private final int i;
-    
+
     private MonitoredLockType(int val) {
         this.i = val;
     }

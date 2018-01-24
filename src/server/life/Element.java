@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package server.life;
 
 public enum Element {
@@ -37,7 +37,7 @@ public enum Element {
             case 'H':
                 return HOLY;
             case 'D':
-            	return DARK;
+                return DARK;
             case 'P':
                 return NEUTRAL;
         }

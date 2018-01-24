@@ -48,19 +48,20 @@ public class ReactorScriptManager extends AbstractScriptManager {
     public synchronized static ReactorScriptManager getInstance() {
         return instance;
     }
-    
+
     public void onHit(MapleClient c, MapleReactor reactor) {
         try {
             Invocable iv = getInvocable("reactor/" + reactor.getId() + ".js", c);
-            if (iv == null) return;
-            
+            if (iv == null) {
+                return;
+            }
+
             ReactorActionManager rm = new ReactorActionManager(c, reactor, iv);
             engine.put("rm", rm);
             iv.invokeFunction("hit");
-        } catch(final NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
             //do nothing, hit is OPTIONAL
-        }
-        catch (final ScriptException | NullPointerException e) {
+        } catch (final ScriptException | NullPointerException e) {
             FilePrinter.printError(FilePrinter.REACTOR + reactor.getId() + ".txt", e);
         }
     }
@@ -68,8 +69,10 @@ public class ReactorScriptManager extends AbstractScriptManager {
     public void act(MapleClient c, MapleReactor reactor) {
         try {
             Invocable iv = getInvocable("reactor/" + reactor.getId() + ".js", c);
-            if (iv == null) return;
-            
+            if (iv == null) {
+                return;
+            }
+
             ReactorActionManager rm = new ReactorActionManager(c, reactor, iv);
             engine.put("rm", rm);
             iv.invokeFunction("act");
@@ -92,7 +95,7 @@ public class ReactorScriptManager extends AbstractScriptManager {
                         }
                     }
                 }
-                
+
                 con.close();
             } catch (Throwable e) {
                 FilePrinter.printError(FilePrinter.REACTOR + rid + ".txt", e);
@@ -117,8 +120,10 @@ public class ReactorScriptManager extends AbstractScriptManager {
     public synchronized void touching(MapleClient c, MapleReactor reactor, boolean touching) {
         try {
             Invocable iv = getInvocable("reactor/" + reactor.getId() + ".js", c);
-            if (iv == null) return;
-            
+            if (iv == null) {
+                return;
+            }
+
             ReactorActionManager rm = new ReactorActionManager(c, reactor, iv);
             engine.put("rm", rm);
             if (touching) {

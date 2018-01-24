@@ -18,8 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
+ */
 package net.server.handlers.login;
 
 import client.MapleClient;
@@ -33,6 +32,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * @author kevintjuh93
  */
 public class SetGenderHandler extends AbstractMaplePacketHandler {
+
     @Override
     public void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         byte type = slea.readByte(); //?
@@ -40,7 +40,7 @@ public class SetGenderHandler extends AbstractMaplePacketHandler {
             c.setGender(slea.readByte());
             c.announce(MaplePacketCreator.getAuthSuccess(c));
             final MapleClient client = c;
-            
+
             Server.getInstance().registerLoginState(c);
         }
     }

@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package server.maps;
 
 import client.MapleCharacter;
@@ -33,6 +33,7 @@ import tools.MaplePacketCreator;
  * @author Matze
  */
 public class MapleMiniGame extends AbstractMapleMapObject {
+
     private MapleCharacter owner;
     private MapleCharacter visitor;
     private String GameType = null;

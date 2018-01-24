@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package server.quest;
 
 /**
@@ -76,12 +76,12 @@ public enum MapleQuestRequirementType {
             return INFO_EX;
         } else if (name.equals("questComplete")) {
             return COMPLETED_QUEST;
-	} else if(name.equals("start")) {
-		return START;
-	} else if(name.equals("end")) {
-		return END;
-	} else if(name.equals("daybyday")) {
-		return DAY_BY_DAY;
+        } else if (name.equals("start")) {
+            return START;
+        } else if (name.equals("end")) {
+            return END;
+        } else if (name.equals("daybyday")) {
+            return DAY_BY_DAY;
         } else if (name.equals("money")) {
             return MESO;
         } else {

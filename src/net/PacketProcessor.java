@@ -34,6 +34,7 @@ import net.server.handlers.login.CharSelectedHandler;
 import net.server.handlers.login.CharSelectedWithPicHandler;
 import net.server.handlers.login.CharlistRequestHandler;
 import net.server.handlers.login.CheckCharNameHandler;
+import net.server.handlers.login.ClientStartErrorHandler;
 import net.server.handlers.login.CreateCharHandler;
 import net.server.handlers.login.DeleteCharHandler;
 import net.server.handlers.login.GuestLoginHandler;
@@ -101,6 +102,7 @@ public final class PacketProcessor {
         registerHandler(RecvOpcode.PONG, new KeepAliveHandler());
         registerHandler(RecvOpcode.CUSTOM_PACKET, new CustomPacketHandler());
         if (channel < 0) {//login
+            registerHandler(RecvOpcode.CLIENT_START_ERROR, new ClientStartErrorHandler());
             registerHandler(RecvOpcode.ACCEPT_TOS, new AcceptToSHandler());
             registerHandler(RecvOpcode.AFTER_LOGIN, new AfterLoginHandler());
             registerHandler(RecvOpcode.SERVERLIST_REREQUEST, new ServerlistRequestHandler());

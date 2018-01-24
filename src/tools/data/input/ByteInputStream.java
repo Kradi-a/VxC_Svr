@@ -18,18 +18,21 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package tools.data.input;
 
 /**
  * Represents an abstract stream of bytes.
- * 
+ *
  * @author Frz
  * @version 1.0
  * @since Revision 323
  */
 public interface ByteInputStream {
+
     int readByte();
+
     long getBytesRead();
+
     long available();
 }

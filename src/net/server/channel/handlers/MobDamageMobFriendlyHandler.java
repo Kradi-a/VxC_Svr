@@ -33,47 +33,43 @@ import client.MapleClient;
  *
  * @author Xotic & BubblesDev
  */
-
 public final class MobDamageMobFriendlyHandler extends AbstractMaplePacketHandler {
-	public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
-		int attacker = slea.readInt();
-		slea.readInt();
-		int damaged = slea.readInt();
-		MapleMonster monster = c.getPlayer().getMap().getMonsterByOid(damaged);
 
-		if (monster == null || c.getPlayer().getMap().getMonsterByOid(attacker) == null) {
-			return;
-		}
+    public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
+        int attacker = slea.readInt();
+        slea.readInt();
+        int damaged = slea.readInt();
+        MapleMonster monster = c.getPlayer().getMap().getMonsterByOid(damaged);
 
-		int damage = Randomizer.nextInt(((monster.getMaxHp() / 13 + monster.getPADamage() * 10)) * 2 + 500) / 10; //Beng's formula.
-		//  int damage = monster.getStats().getPADamage() + monster.getStats().getPDDamage() - 1;
+        if (monster == null || c.getPlayer().getMap().getMonsterByOid(attacker) == null) {
+            return;
+        }
 
-                if (monster.getHp() - damage < 1) {     // friendly dies
-                        if(monster.getId() == 9300102) {
-                                monster.getMap().broadcastMessage(MaplePacketCreator.serverNotice(6, "The Watch Hog has been injured by the aliens. Better luck next time..."));
-                        }
-                        else if (monster.getId() == 9300061) {  //moon bunny
-                                monster.getMap().broadcastMessage(MaplePacketCreator.serverNotice(6, "The Moon Bunny went home because he was sick."));
-                        }
-                        else if(monster.getId() == 9300093) {   //tylus
-                                monster.getMap().broadcastMessage(MaplePacketCreator.serverNotice(6, "Tylus has fallen by the overwhelming forces of the ambush."));
-                        }
-                        else if(monster.getId() == 9300137) {   //juliet
-                                monster.getMap().broadcastMessage(MaplePacketCreator.serverNotice(6, "Juliet has fainted on the middle of the combat."));
-                        }
-                        else if(monster.getId() == 9300138) {   //romeo
-                                monster.getMap().broadcastMessage(MaplePacketCreator.serverNotice(6, "Romeo has fainted on the middle of the combat."));
-                        }
-                        
-                        c.getPlayer().getMap().killFriendlies(monster);
-                }
-                
-		if (monster.getId() == 9300061) {
-                        MapleMap map = c.getPlayer().getEventInstance().getMapInstance(monster.getMap().getId());
-			map.addBunnyHit();
-		}
+        int damage = Randomizer.nextInt(((monster.getMaxHp() / 13 + monster.getPADamage() * 10)) * 2 + 500) / 10; //Beng's formula.
+        //  int damage = monster.getStats().getPADamage() + monster.getStats().getPDDamage() - 1;
 
-		c.getPlayer().getMap().broadcastMessage(MaplePacketCreator.MobDamageMobFriendly(monster, damage), monster.getPosition());
-		c.announce(MaplePacketCreator.enableActions());
-	}
+        if (monster.getHp() - damage < 1) {     // friendly dies
+            if (monster.getId() == 9300102) {
+                monster.getMap().broadcastMessage(MaplePacketCreator.serverNotice(6, "The Watch Hog has been injured by the aliens. Better luck next time..."));
+            } else if (monster.getId() == 9300061) {  //moon bunny
+                monster.getMap().broadcastMessage(MaplePacketCreator.serverNotice(6, "The Moon Bunny went home because he was sick."));
+            } else if (monster.getId() == 9300093) {   //tylus
+                monster.getMap().broadcastMessage(MaplePacketCreator.serverNotice(6, "Tylus has fallen by the overwhelming forces of the ambush."));
+            } else if (monster.getId() == 9300137) {   //juliet
+                monster.getMap().broadcastMessage(MaplePacketCreator.serverNotice(6, "Juliet has fainted on the middle of the combat."));
+            } else if (monster.getId() == 9300138) {   //romeo
+                monster.getMap().broadcastMessage(MaplePacketCreator.serverNotice(6, "Romeo has fainted on the middle of the combat."));
+            }
+
+            c.getPlayer().getMap().killFriendlies(monster);
+        }
+
+        if (monster.getId() == 9300061) {
+            MapleMap map = c.getPlayer().getEventInstance().getMapInstance(monster.getMap().getId());
+            map.addBunnyHit();
+        }
+
+        c.getPlayer().getMap().broadcastMessage(MaplePacketCreator.MobDamageMobFriendly(monster, damage), monster.getPosition());
+        c.announce(MaplePacketCreator.enableActions());
+    }
 }

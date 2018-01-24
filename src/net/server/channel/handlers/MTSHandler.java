@@ -105,7 +105,7 @@ public final class MTSHandler extends AbstractMaplePacketHandler {
                     Connection con = null;
                     try {
                         con = DatabaseConnection.getConnection();
-                        
+
                         PreparedStatement ps = con.prepareStatement("SELECT COUNT(*) FROM mts_items WHERE seller = ?");
                         ps.setInt(1, c.getPlayer().getId());
                         ResultSet rs = ps.executeQuery();
@@ -204,7 +204,7 @@ public final class MTSHandler extends AbstractMaplePacketHandler {
                         ps.executeUpdate();
                         ps.close();
                         MapleInventoryManipulator.removeFromSlot(c, type, slot, quantity, false);
-                        
+
                         con.close();
                     } catch (SQLException e) {
                         e.printStackTrace();

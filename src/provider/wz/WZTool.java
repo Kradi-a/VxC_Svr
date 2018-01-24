@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package provider.wz;
 
 import java.security.InvalidKeyException;
@@ -35,6 +35,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * Ported Code, see WZFile.java for more info
  */
 public class WZTool {
+
     private static byte[] encKey;
 
     static {

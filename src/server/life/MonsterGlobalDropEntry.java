@@ -17,7 +17,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package server.life;
 
 /**
@@ -25,13 +25,14 @@ package server.life;
  * @author LightPepsi
  */
 public class MonsterGlobalDropEntry {
+
     public MonsterGlobalDropEntry(int itemId, int chance, int continent, byte dropType, int Minimum, int Maximum, short questid) {
-    this.itemId = itemId;
-    this.chance = chance;
-    this.dropType = dropType;
-    this.questid = questid;
-    this.Minimum = Minimum;
-    this.Maximum = Maximum;
+        this.itemId = itemId;
+        this.chance = chance;
+        this.dropType = dropType;
+        this.questid = questid;
+        this.Minimum = Minimum;
+        this.Maximum = Maximum;
     }
     public byte dropType;
     public int itemId, chance, Minimum, Maximum;

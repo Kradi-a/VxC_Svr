@@ -18,10 +18,11 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package provider.wz;
 
 public class ImgMapleSound {
+
     private int dataLength, offset;
 
     public ImgMapleSound(int dataLength, int offset) {

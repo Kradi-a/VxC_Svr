@@ -34,24 +34,24 @@ import tools.MaplePacketCreator;
  * @author Tyler (Twdtwd)
  */
 public class FameAction extends MapleQuestAction {
-	int fame;
-	
-	public FameAction(MapleQuest quest, MapleData data) {
-		super(MapleQuestActionType.FAME, quest);
-		questID = quest.getId();
-		processData(data);
-	}
-	
-	
-	@Override
-	public void processData(MapleData data) {
-		fame = MapleDataTool.getInt(data);
-	}
-	
-	@Override
-	public void run(MapleCharacter chr, Integer extSelection) {
-		chr.addFame(fame);
-		chr.updateSingleStat(MapleStat.FAME, chr.getFame());
-		chr.announce(MaplePacketCreator.getShowFameGain(fame));
-	}
-} 
+
+    int fame;
+
+    public FameAction(MapleQuest quest, MapleData data) {
+        super(MapleQuestActionType.FAME, quest);
+        questID = quest.getId();
+        processData(data);
+    }
+
+    @Override
+    public void processData(MapleData data) {
+        fame = MapleDataTool.getInt(data);
+    }
+
+    @Override
+    public void run(MapleCharacter chr, Integer extSelection) {
+        chr.addFame(fame);
+        chr.updateSingleStat(MapleStat.FAME, chr.getFame());
+        chr.announce(MaplePacketCreator.getShowFameGain(fame));
+    }
+}

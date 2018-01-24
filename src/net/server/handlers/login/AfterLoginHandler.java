@@ -30,7 +30,7 @@ public final class AfterLoginHandler extends AbstractMaplePacketHandler {
 
     @Override
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
-        
+
         byte c2 = slea.readByte();
         byte c3 = 5;
         if (slea.available() > 0) {

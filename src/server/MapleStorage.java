@@ -68,7 +68,7 @@ public class MapleStorage {
                 ps.setInt(2, world);
                 ps.executeUpdate();
             }
-            
+
             con.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -99,7 +99,7 @@ public class MapleStorage {
                     ret.items.add(item.getLeft());
                 }
             }
-            
+
             con.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -158,17 +158,17 @@ public class MapleStorage {
 
     public Item takeOut(byte slot) {
         Item ret;
-        
+
         lock.lock();
         try {
             ret = items.remove(slot);
-            
+
             MapleInventoryType type = ret.getInventoryType();
             typeItems.put(type, new ArrayList<>(filterItems(type)));
         } finally {
             lock.unlock();
         }
-        
+
         return ret;
     }
 
@@ -176,7 +176,7 @@ public class MapleStorage {
         lock.lock();
         try {
             items.add(item);
-            
+
             MapleInventoryType type = item.getInventoryType();
             typeItems.put(type, new ArrayList<>(filterItems(type)));
         } finally {
@@ -196,7 +196,7 @@ public class MapleStorage {
     private List<Item> filterItems(MapleInventoryType type) {
         List<Item> storageItems = getItems();
         List<Item> ret = new LinkedList<>();
-        
+
         for (Item item : storageItems) {
             if (item.getInventoryType() == type) {
                 ret.add(item);
@@ -229,8 +229,8 @@ public class MapleStorage {
             c.announce(MaplePacketCreator.enableActions());
             return;
         }
-        */
-        
+         */
+
         lock.lock();
         try {
             Collections.sort(items, new Comparator<Item>() {
@@ -244,7 +244,7 @@ public class MapleStorage {
                     return 1;
                 }
             });
-            
+
             List<Item> storageItems = getItems();
             for (MapleInventoryType type : MapleInventoryType.values()) {
                 typeItems.put(type, new ArrayList<>(storageItems));
@@ -272,14 +272,14 @@ public class MapleStorage {
             lock.unlock();
         }
     }
-    
+
     public void arrangeItems(MapleClient c) {
         lock.lock();
         try {
             MapleStorageInventory msi = new MapleStorageInventory(c, items);
             msi.mergeItems();
             items = msi.sortItems();
-            
+
             for (MapleInventoryType type : MapleInventoryType.values()) {
                 typeItems.put(type, new ArrayList<>(items));
             }

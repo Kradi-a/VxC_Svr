@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package tools.data.input;
 
 import java.awt.Point;
@@ -32,6 +32,7 @@ import java.io.ByteArrayOutputStream;
  * @since Revision 323
  */
 public class GenericLittleEndianAccessor implements LittleEndianAccessor {
+
     private ByteInputStream bs;
 
     /**
@@ -170,9 +171,8 @@ public class GenericLittleEndianAccessor implements LittleEndianAccessor {
     }
 
     /**
-     * Reads a MapleStory convention lengthed ASCII string.
-     * This consists of a short integer telling the length of the string,
-     * then the string itself.
+     * Reads a MapleStory convention lengthed ASCII string. This consists of a
+     * short integer telling the length of the string, then the string itself.
      *
      * @return The string read.
      */
@@ -197,16 +197,16 @@ public class GenericLittleEndianAccessor implements LittleEndianAccessor {
     }
 
     /**
-     * Reads a MapleStory Position information.
-     * This consists of 2 short integer.
+     * Reads a MapleStory Position information. This consists of 2 short
+     * integer.
      *
      * @return The Position read.
      */
     @Override
     public final Point readPos() {
-	final int x = readShort();
-	final int y = readShort();
-	return new Point(x, y);
+        final int x = readShort();
+        final int y = readShort();
+        return new Point(x, y);
     }
 
     /**

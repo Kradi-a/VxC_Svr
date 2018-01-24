@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package net.server.channel.handlers;
 
 import constants.ServerConstants;
@@ -33,10 +33,11 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * @author Jay Estrella
  */
 public final class FamilyAddHandler extends AbstractMaplePacketHandler {
+
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
-    	if (!ServerConstants.USE_FAMILY_SYSTEM){
-    		return;
-    	}
+        if (!ServerConstants.USE_FAMILY_SYSTEM) {
+            return;
+        }
         System.out.println(slea.toString());
         String toAdd = slea.readMapleAsciiString();
         MapleCharacter addChr = c.getChannelServer().getPlayerStorage().getCharacterByName(toAdd);
@@ -49,4 +50,3 @@ public final class FamilyAddHandler extends AbstractMaplePacketHandler {
         c.announce(MaplePacketCreator.enableActions());
     }
 }
-

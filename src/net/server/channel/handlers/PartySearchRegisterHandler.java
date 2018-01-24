@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package net.server.channel.handlers;
 
 import net.AbstractMaplePacketHandler;
@@ -30,8 +30,9 @@ import client.MapleClient;
  * @author Quasar
  */
 public class PartySearchRegisterHandler extends AbstractMaplePacketHandler {
+
     public void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
-    	return; //Disabling this for now.
+        return; //Disabling this for now.
 /*    	MapleCharacter chr = c.getPlayer();
     	int min = slea.readInt();
     	int max = slea.readInt();

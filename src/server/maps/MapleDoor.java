@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package server.maps;
 
 import java.awt.Point;
@@ -35,29 +35,30 @@ import constants.ServerConstants;
  * @author Ronan
  */
 public class MapleDoor {
+
     private int ownerId;
     private MapleMap town;
     private MaplePortal townPortal;
     private MapleMap target;
     private Pair<String, Integer> posStatus = null;
-    
+
     private MapleDoorObject townDoor;
     private MapleDoorObject areaDoor;
 
     public MapleDoor(MapleCharacter owner, Point targetPosition) {
         this.ownerId = owner.getId();
         this.target = owner.getMap();
-        
-        if(target.canDeployDoor(targetPosition)) {
-            if(ServerConstants.USE_ENFORCE_MDOOR_POSITION) {
+
+        if (target.canDeployDoor(targetPosition)) {
+            if (ServerConstants.USE_ENFORCE_MDOOR_POSITION) {
                 posStatus = target.getDoorPositionStatus(targetPosition);
             }
-            
-            if(posStatus == null) {
+
+            if (posStatus == null) {
                 this.town = this.target.getReturnMap();
                 this.townPortal = getDoorPortal(owner.getDoorSlot());
 
-                if(townPortal != null) {
+                if (townPortal != null) {
                     this.areaDoor = new MapleDoorObject(ownerId, town, target, false, targetPosition, townPortal.getPosition());
                     this.townDoor = new MapleDoorObject(ownerId, target, town, true, townPortal.getPosition(), targetPosition);
 
@@ -73,10 +74,10 @@ public class MapleDoor {
             this.ownerId = -2;
         }
     }
-    
+
     private MaplePortal getDoorPortal(int slot) {
         List<MaplePortal> avail = town.getAvailableDoorPortals();
-        
+
         try {
             return avail.get(slot);
         } catch (IndexOutOfBoundsException e) {
@@ -87,7 +88,7 @@ public class MapleDoor {
             }
         }
     }
-    
+
     public int getOwnerId() {
         return ownerId;
     }
@@ -95,11 +96,11 @@ public class MapleDoor {
     public MapleDoorObject getTownDoor() {
         return townDoor;
     }
-    
+
     public MapleDoorObject getAreaDoor() {
         return areaDoor;
     }
-    
+
     public MapleMap getTown() {
         return town;
     }

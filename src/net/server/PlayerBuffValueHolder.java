@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package net.server;
 
 import server.MapleStatEffect;
@@ -28,6 +28,7 @@ import server.MapleStatEffect;
  * @author Danny
  */
 public class PlayerBuffValueHolder {
+
     public int usedTime;
     public MapleStatEffect effect;
 

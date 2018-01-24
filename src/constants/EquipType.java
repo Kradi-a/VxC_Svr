@@ -16,7 +16,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package constants;
 
 import java.util.HashMap;
@@ -73,23 +73,23 @@ public enum EquipType {
     public int getValue() {
         return i;
     }
-    
+
     static {
         for (EquipType eqEnum : EquipType.values()) {
             map.put(eqEnum.i, eqEnum);
         }
     }
-    
+
     public static EquipType getEquipTypeById(int itemid) {
         EquipType ret;
         int val = itemid / 100000;
-        
-        if(val == 13 || val == 14) {
+
+        if (val == 13 || val == 14) {
             ret = map.get(itemid / 1000);
         } else {
             ret = map.get(itemid / 10000);
         }
-        
+
         return (ret != null) ? ret : EquipType.UNDEFINED;
     }
 }

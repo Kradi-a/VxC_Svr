@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package server.maps;
 
 import client.MapleCharacter;
@@ -44,6 +44,7 @@ import tools.MaplePacketCreator;
  * @author LaiLaiNoob
  */
 public class MapleMist extends AbstractMapleMapObject {
+
     private Rectangle mistPosition;
     private MapleCharacter owner = null;
     private MapleMonster mob = null;
@@ -71,9 +72,9 @@ public class MapleMist extends AbstractMapleMapObject {
         this.isRecoveryMist = false;
         this.isPoisonMist = false;
         switch (source.getSourceId()) {
-        	case Evan.RECOVERY_AURA:
-        		isRecoveryMist = true;
-        		break;
+            case Evan.RECOVERY_AURA:
+                isRecoveryMist = true;
+                break;
             case Shadower.SMOKE_SCREEN: // Smoke Screen
                 isPoisonMist = false;
                 break;
@@ -108,9 +109,9 @@ public class MapleMist extends AbstractMapleMapObject {
     }
 
     public boolean isRecoveryMist() {
-    	return isRecoveryMist;
+        return isRecoveryMist;
     }
-    
+
     public int getSkillDelay() {
         return skillDelay;
     }

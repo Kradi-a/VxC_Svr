@@ -18,16 +18,17 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package server.maps;
 
 import java.awt.Point;
 
 /**
- * 
+ *
  * @author Matze
  */
 public class MapleFoothold implements Comparable<MapleFoothold> {
+
     private Point p1;
     private Point p2;
     private int id;
@@ -57,8 +58,8 @@ public class MapleFoothold implements Comparable<MapleFoothold> {
 
     public int getY2() {
         return p2.y;
-    }    
-    
+    }
+
     // XXX may need more precision
     public int calculateFooting(int x) {
         if (p1.y == p2.y) {

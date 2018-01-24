@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package net.server.channel.handlers;
 
 import client.MapleClient;
@@ -29,10 +29,11 @@ import tools.FilePrinter;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
- * 
+ *
  * @author Matze
  */
 public final class NPCShopHandler extends AbstractMaplePacketHandler {
+
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         byte bmode = slea.readByte();
         if (bmode == 0) { // mode 0 = buy :)
@@ -40,10 +41,10 @@ public final class NPCShopHandler extends AbstractMaplePacketHandler {
             int itemId = slea.readInt();
             short quantity = slea.readShort();
             if (quantity < 1) {
-            	AutobanFactory.PACKET_EDIT.alert(c.getPlayer(), c.getPlayer().getName() + " tried to packet edit a npc shop.");
-            	FilePrinter.printError(FilePrinter.EXPLOITS + c.getPlayer().getName() + ".txt", c.getPlayer().getName() + " tried to buy quantity " + quantity + " of item id " + itemId + "\r\n");
-            	c.disconnect(true, false);
-            	return;
+                AutobanFactory.PACKET_EDIT.alert(c.getPlayer(), c.getPlayer().getName() + " tried to packet edit a npc shop.");
+                FilePrinter.printError(FilePrinter.EXPLOITS + c.getPlayer().getName() + ".txt", c.getPlayer().getName() + " tried to buy quantity " + quantity + " of item id " + itemId + "\r\n");
+                c.disconnect(true, false);
+                return;
             }
             c.getPlayer().getShop().buy(c, slot, itemId, quantity);
         } else if (bmode == 1) { // sell ;)

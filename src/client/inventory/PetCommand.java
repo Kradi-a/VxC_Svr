@@ -18,13 +18,14 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package client.inventory;
 
 /*
  * @author Leifde
  */
 public class PetCommand {
+
     private int petId, skillId, prob, inc;
 
     public PetCommand(int petId, int skillId, int prob, int inc) {

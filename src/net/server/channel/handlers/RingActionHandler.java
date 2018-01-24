@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package net.server.channel.handlers;
 
 //import java.sql.Connection;
@@ -35,6 +35,7 @@ import tools.MaplePacketCreator;
  * @author Jvlaple
  */
 public final class RingActionHandler extends AbstractMaplePacketHandler {
+
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         byte mode = slea.readByte();
         MapleCharacter player = c.getPlayer();

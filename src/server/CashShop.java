@@ -52,6 +52,7 @@ import tools.locks.MonitoredLockType;
  * @author Flav
  */
 public class CashShop {
+
     public static class CashItem {
 
         private int sn, itemId, price;
@@ -93,8 +94,9 @@ public class CashShop {
 
             int petid = -1;
 
-            if (ItemConstants.isPet(itemId))
+            if (ItemConstants.isPet(itemId)) {
                 petid = MaplePet.createPet(itemId);
+            }
 
             if (ItemConstants.getInventoryType(itemId).equals(MapleInventoryType.EQUIP)) {
                 item = MapleItemInformationProvider.getInstance().getEquipById(itemId);
@@ -103,27 +105,29 @@ public class CashShop {
             }
 
             if (ItemConstants.EXPIRING_ITEMS) {
-                    if(period == 1) {
-                            if(itemId == 5211048 || itemId == 5360042) { // 4 Hour 2X coupons, the period is 1, but we don't want them to last a day.
-                                    item.setExpiration(System.currentTimeMillis() + (1000 * 60 * 60 * 4));
-                            /*
+                if (period == 1) {
+                    if (itemId == 5211048 || itemId == 5360042) { // 4 Hour 2X coupons, the period is 1, but we don't want them to last a day.
+                        item.setExpiration(System.currentTimeMillis() + (1000 * 60 * 60 * 4));
+                        /*
                             } else if(itemId == 5211047 || itemId == 5360014) { // 3 Hour 2X coupons, unused as of now
                                     item.setExpiration(System.currentTimeMillis() + (1000 * 60 * 60 * 3));
-                            */
-                            } else if(itemId == 5211060) { // 2 Hour 3X coupons.
-                                    item.setExpiration(System.currentTimeMillis() + (1000 * 60 * 60 * 2));
-                            } else {
-                                    item.setExpiration(System.currentTimeMillis() + (1000 * 60 * 60 * 24));
-                            }
+                         */
+                    } else if (itemId == 5211060) { // 2 Hour 3X coupons.
+                        item.setExpiration(System.currentTimeMillis() + (1000 * 60 * 60 * 2));
                     } else {
-                            item.setExpiration(System.currentTimeMillis() + (1000 * 60 * 60 * 24 * period));
+                        item.setExpiration(System.currentTimeMillis() + (1000 * 60 * 60 * 24));
                     }
+                } else {
+                    item.setExpiration(System.currentTimeMillis() + (1000 * 60 * 60 * 24 * period));
+                }
             }
             item.setSN(sn);
             return item;
         }
     }
+
     public static class SpecialCashItem {
+
         private int sn, modifier;
         private byte info; //?
 
@@ -188,9 +192,15 @@ public class CashShop {
                 ex.printStackTrace();
             } finally {
                 try {
-                    if (rs != null && !rs.isClosed()) rs.close();
-                    if (ps != null && !ps.isClosed()) ps.close();
-                    if (con != null && !con.isClosed()) con.close();
+                    if (rs != null && !rs.isClosed()) {
+                        rs.close();
+                    }
+                    if (ps != null && !ps.isClosed()) {
+                        ps.close();
+                    }
+                    if (con != null && !con.isClosed()) {
+                        con.close();
+                    }
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
@@ -218,7 +228,7 @@ public class CashShop {
         public static List<SpecialCashItem> getSpecialCashItems() {
             return specialcashitems;
         }
-        
+
         public static void reloadSpecialCashItems() {//Yay?
             specialcashitems.clear();
             PreparedStatement ps = null;
@@ -235,16 +245,22 @@ public class CashShop {
                 ex.printStackTrace();
             } finally {
                 try {
-                    if (rs != null && !rs.isClosed()) rs.close();
-                    if (ps != null && !ps.isClosed()) ps.close();
-                    if (con != null && !con.isClosed()) con.close();
+                    if (rs != null && !rs.isClosed()) {
+                        rs.close();
+                    }
+                    if (ps != null && !ps.isClosed()) {
+                        ps.close();
+                    }
+                    if (con != null && !con.isClosed()) {
+                        con.close();
+                    }
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
-            }            
+            }
         }
     }
-    
+
     private int accountId, characterId, nxCredit, maplePoint, nxPrepaid;
     private boolean opened;
     private ItemFactory factory;
@@ -298,9 +314,15 @@ public class CashShop {
             ps.close();
             con.close();
         } finally {
-            if (ps != null && !ps.isClosed()) ps.close();
-            if (rs != null && !rs.isClosed()) rs.close();
-            if (con != null && !con.isClosed()) con.close();
+            if (ps != null && !ps.isClosed()) {
+                ps.close();
+            }
+            if (rs != null && !rs.isClosed()) {
+                rs.close();
+            }
+            if (con != null && !con.isClosed()) {
+                con.close();
+            }
         }
     }
 
@@ -415,8 +437,12 @@ public class CashShop {
             sqle.printStackTrace();
         } finally {
             try {
-                if (ps != null && !ps.isClosed()) ps.close();
-                if (con != null && !con.isClosed()) con.close();
+                if (ps != null && !ps.isClosed()) {
+                    ps.close();
+                }
+                if (con != null && !con.isClosed()) {
+                    con.close();
+                }
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
@@ -443,8 +469,9 @@ public class CashShop {
                     equip = (Equip) item;
                     equip.setRingId(rs.getInt("ringid"));
                     gifts.add(new Pair<Item, String>(equip, rs.getString("message")));
-                } else
+                } else {
                     gifts.add(new Pair<>(item, rs.getString("message")));
+                }
 
                 if (CashItemFactory.isPackage(cItem.getItemId())) { //Packages never contains a ring
                     for (Item packageItem : CashItemFactory.getPackage(cItem.getItemId())) {

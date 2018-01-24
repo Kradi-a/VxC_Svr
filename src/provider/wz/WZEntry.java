@@ -18,13 +18,14 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package provider.wz;
 
 import provider.MapleDataEntity;
 import provider.MapleDataEntry;
 
 public class WZEntry implements MapleDataEntry {
+
     private String name;
     private int size;
     private int checksum;

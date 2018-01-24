@@ -79,10 +79,11 @@ import tools.AutoJCE;
 import tools.locks.MonitoredLockType;
 
 public class Server implements Runnable {
+
     private static final Set<Integer> activeFly = new HashSet<>();
     private static final Map<Integer, Integer> couponRates = new HashMap<>(30);
     private static final List<Integer> activeCoupons = new LinkedList<>();
-    
+
     private IoAcceptor acceptor;
     private List<Map<Integer, String>> channels = new LinkedList<>();
     private List<World> worlds = new ArrayList<>();
@@ -95,10 +96,10 @@ public class Server implements Runnable {
     private final PlayerBuffStorage buffStorage = new PlayerBuffStorage();
     private final Map<Integer, MapleAlliance> alliances = new HashMap<>(100);
     private final Map<Integer, NewYearCardRecord> newyears = new HashMap<>();
-    
+
     private boolean online = false;
     public static long uptime = System.currentTimeMillis();
-    
+
     public static Server getInstance() {
         if (instance == null) {
             instance = new Server();
@@ -113,15 +114,15 @@ public class Server implements Runnable {
     public List<Pair<Integer, String>> worldRecommendedList() {
         return worldRecommendedList;
     }
-    
+
     public void setNewYearCard(NewYearCardRecord nyc) {
         newyears.put(nyc.getId(), nyc);
     }
-    
+
     public NewYearCardRecord getNewYearCard(int cardid) {
         return newyears.get(cardid);
     }
-    
+
     public NewYearCardRecord removeNewYearCard(int cardid) {
         return newyears.remove(cardid);
     }
@@ -135,8 +136,7 @@ public class Server implements Runnable {
             world.removeChannel(channel);
         }
     }
-    */
-
+     */
     public Channel getChannel(int world, int channel) {
         return worlds.get(world).getChannel(channel);
     }
@@ -158,58 +158,59 @@ public class Server implements Runnable {
     public String getIP(int world, int channel) {
         return channels.get(world).get(channel);
     }
-    
+
     private long getTimeLeftForNextHour() {
         Calendar nextHour = Calendar.getInstance();
         nextHour.add(Calendar.HOUR, 1);
         nextHour.set(Calendar.MINUTE, 0);
         nextHour.set(Calendar.SECOND, 0);
-        
+
         return Math.max(0, nextHour.getTimeInMillis() - System.currentTimeMillis());
     }
-    
+
     public Map<Integer, Integer> getCouponRates() {
         return couponRates;
     }
-    
+
     private void loadCouponRates(Connection c) throws SQLException {
         PreparedStatement ps = c.prepareStatement("SELECT couponid, rate FROM nxcoupons");
         ResultSet rs = ps.executeQuery();
-        
-        while(rs.next()) {
+
+        while (rs.next()) {
             int cid = rs.getInt("couponid");
             int rate = rs.getInt("rate");
-            
+
             couponRates.put(cid, rate);
         }
-        
+
         rs.close();
         ps.close();
     }
-    
+
     public List<Integer> getActiveCoupons() {
-        synchronized(activeCoupons) {
+        synchronized (activeCoupons) {
             return activeCoupons;
         }
     }
-    
+
     public void commitActiveCoupons() {
-        for(World world: getWorlds()) {
-            for(MapleCharacter chr: world.getPlayerStorage().getAllCharacters()) {
-                if(!chr.isLoggedin()) continue;
+        for (World world : getWorlds()) {
+            for (MapleCharacter chr : world.getPlayerStorage().getAllCharacters()) {
+                if (!chr.isLoggedin()) {
+                    continue;
+                }
 
                 chr.updateCouponRates();
             }
         }
     }
-    
+
     public void toggleCoupon(Integer couponId) {
-        if(ItemConstants.isRateCoupon(couponId)) {
-            synchronized(activeCoupons) {
-                if(activeCoupons.contains(couponId)) {
+        if (ItemConstants.isRateCoupon(couponId)) {
+            synchronized (activeCoupons) {
+                if (activeCoupons.contains(couponId)) {
                     activeCoupons.remove(couponId);
-                }
-                else {
+                } else {
                     activeCoupons.add(couponId);
                 }
 
@@ -217,9 +218,9 @@ public class Server implements Runnable {
             }
         }
     }
-    
+
     public void updateActiveCoupons() throws SQLException {
-        synchronized(activeCoupons) {
+        synchronized (activeCoupons) {
             activeCoupons.clear();
             Calendar c = Calendar.getInstance();
 
@@ -238,7 +239,7 @@ public class Server implements Runnable {
                 ps.setInt(4, hourDay);
 
                 ResultSet rs = ps.executeQuery();
-                while(rs.next()) {
+                while (rs.next()) {
                     activeCoupons.add(rs.getInt("couponid"));
                 }
 
@@ -250,7 +251,7 @@ public class Server implements Runnable {
                 ex.printStackTrace();
 
                 try {
-                    if(con != null && !con.isClosed()) {
+                    if (con != null && !con.isClosed()) {
                         con.close();
                     }
                 } catch (SQLException ex2) {
@@ -273,9 +274,8 @@ public class Server implements Runnable {
 
         System.out.println("VxC_Svr v" + ServerConstants.VERSION + " starting up.\r\n");
 
-
         Runtime.getRuntime().addShutdownHook(new Thread(shutdown(false)));
-        
+
         Connection c = null;
         try {
             c = DatabaseConnection.getConnection();
@@ -285,10 +285,10 @@ public class Server implements Runnable {
             ps = c.prepareStatement("UPDATE characters SET HasMerchant = 0");
             ps.executeUpdate();
             ps.close();
-            
+
             loadCouponRates(c);
             updateActiveCoupons();
-            
+
             c.close();
         } catch (SQLException sqle) {
             sqle.printStackTrace();
@@ -297,16 +297,16 @@ public class Server implements Runnable {
         IoBuffer.setAllocator(new SimpleBufferAllocator());
         acceptor = new NioSocketAcceptor();
         acceptor.getFilterChain().addLast("codec", (IoFilter) new ProtocolCodecFilter(new MapleCodecFactory()));
-        
+
         TimerManager tMan = TimerManager.getInstance();
         tMan.start();
         tMan.register(tMan.purge(), ServerConstants.PURGING_INTERVAL);//Purging ftw...
         disconnectIdlesOnLoginTask();
-        
+
         long timeLeft = getTimeLeftForNextHour();
         tMan.register(new CouponWorker(), ServerConstants.COUPON_INTERVAL, timeLeft);
         tMan.register(new RankingWorker(), ServerConstants.RANKING_INTERVAL, timeLeft);
-        
+
         long timeToTake = System.currentTimeMillis();
         SkillFactory.loadAllSkills();
         System.out.println("Skills loaded in " + ((System.currentTimeMillis() - timeToTake) / 1000.0) + " seconds");
@@ -316,18 +316,20 @@ public class Server implements Runnable {
 
         CashItemFactory.getSpecialCashItems();
         System.out.println("Items loaded in " + ((System.currentTimeMillis() - timeToTake) / 1000.0) + " seconds");
-        
-	timeToTake = System.currentTimeMillis();
-	MapleQuest.loadAllQuest();
-	System.out.println("Quest loaded in " + ((System.currentTimeMillis() - timeToTake) / 1000.0) + " seconds\r\n");
-	
+
+        timeToTake = System.currentTimeMillis();
+        MapleQuest.loadAllQuest();
+        System.out.println("Quest loaded in " + ((System.currentTimeMillis() - timeToTake) / 1000.0) + " seconds\r\n");
+
         NewYearCardRecord.startPendingNewYearCardRequests();
-        
-        if(ServerConstants.USE_THREAD_TRACKER) ThreadTracker.getInstance().registerThreadTrackerTask();
-        
+
+        if (ServerConstants.USE_THREAD_TRACKER) {
+            ThreadTracker.getInstance().registerThreadTrackerTask();
+        }
+
         try {
             Integer worldCount = Math.min(ServerConstants.WORLD_NAMES.length, Integer.parseInt(p.getProperty("worlds")));
-            
+
             for (int i = 0; i < worldCount; i++) {
                 System.out.println("Starting world " + i);
                 World world = new World(i,
@@ -363,7 +365,7 @@ public class Server implements Runnable {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        
+
         System.out.println("Listening on port 8484\r\n\r\n");
 
         System.out.println("VxC_Svr is now online.\r\n");
@@ -371,12 +373,12 @@ public class Server implements Runnable {
     }
 
     public void shutdown() {
-    	try {
-	        TimerManager.getInstance().stop();
-	        acceptor.unbind();
-    	} catch (NullPointerException e) {
-    		FilePrinter.printError(FilePrinter.EXCEPTION_CAUGHT, e);
-    	}
+        try {
+            TimerManager.getInstance().stop();
+            acceptor.unbind();
+        } catch (NullPointerException e) {
+            FilePrinter.printError(FilePrinter.EXCEPTION_CAUGHT, e);
+        }
         System.out.println("Server offline.");
         System.exit(0);// BOEIEND :D
     }
@@ -501,33 +503,33 @@ public class Server implements Runnable {
     public int createGuild(int leaderId, String name) {
         return MapleGuild.createGuild(leaderId, name);
     }
-    
+
     public MapleGuild getGuildByName(String name) {
         synchronized (guilds) {
-            for(MapleGuild mg: guilds.values()) {
-                if(mg.getName().equalsIgnoreCase(name)) {
+            for (MapleGuild mg : guilds.values()) {
+                if (mg.getName().equalsIgnoreCase(name)) {
                     return mg;
                 }
             }
-            
+
             return null;
         }
     }
-    
+
     public MapleGuild getGuild(int id) {
         synchronized (guilds) {
             if (guilds.get(id) != null) {
                 return guilds.get(id);
             }
-            
+
             return null;
         }
     }
 
     public MapleGuild getGuild(int id, int world) {
-            return getGuild(id, world, null);
+        return getGuild(id, world, null);
     }
-    
+
     public MapleGuild getGuild(int id, int world, MapleCharacter mc) {
         synchronized (guilds) {
             if (guilds.get(id) != null) {
@@ -537,14 +539,16 @@ public class Server implements Runnable {
             if (g.getId() == -1) {
                 return null;
             }
-            
-            if(mc != null) {
+
+            if (mc != null) {
                 mc.setMGC(g.getMGC(mc.getId()));
-                if(g.getMGC(mc.getId()) == null) System.out.println("null for " + mc.getName() + " when loading " + id);
+                if (g.getMGC(mc.getId()) == null) {
+                    System.out.println("null for " + mc.getName() + " when loading " + id);
+                }
                 g.getMGC(mc.getId()).setCharacter(mc);
                 g.setOnline(mc.getId(), true, mc.getClient().getChannel());
             }
-            
+
             guilds.put(id, g);
             return g;
         }
@@ -579,7 +583,7 @@ public class Server implements Runnable {
         }
         return false;
     }
-    
+
     public void resetAllianceGuildPlayersRank(int gId) {
         guilds.get(gId).resetAllianceGuildPlayersRank();
     }
@@ -662,14 +666,14 @@ public class Server implements Runnable {
             g.gainGP(amount);
         }
     }
-	
+
     public void guildMessage(int gid, byte[] packet) {
         guildMessage(gid, packet, -1);
     }
-	
+
     public void guildMessage(int gid, byte[] packet, int exception) {
         MapleGuild g = guilds.get(gid);
-        if(g != null) {
+        if (g != null) {
             g.broadcast(packet, exception);
         }
     }
@@ -686,9 +690,11 @@ public class Server implements Runnable {
             disbandGuild(mc.getMGC().getGuildId());
         }
     }
-    
+
     public void deleteGuildCharacter(MapleGuildCharacter mgc) {
-        if(mgc.getCharacter() != null) setGuildMemberOnline(mgc.getCharacter(), false, (byte) -1);
+        if (mgc.getCharacter() != null) {
+            setGuildMemberOnline(mgc.getCharacter(), false, (byte) -1);
+        }
         if (mgc.getGuildRank() > 1) {
             leaveGuild(mgc);
         } else {
@@ -718,30 +724,30 @@ public class Server implements Runnable {
             ch.broadcastGMPacket(packet);
         }
     }
-    
+
     public boolean isGmOnline(int world) {
         for (Channel ch : getChannelsFromWorld(world)) {
-        	for (MapleCharacter player : ch.getPlayerStorage().getAllCharacters()) {
-        		if (player.isGM()){
-        			return true;
-        		}
-        	}
+            for (MapleCharacter player : ch.getPlayerStorage().getAllCharacters()) {
+                if (player.isGM()) {
+                    return true;
+                }
+            }
         }
         return false;
     }
-    
+
     public void changeFly(Integer accountid, boolean canFly) {
-        if(canFly) {
+        if (canFly) {
             activeFly.add(accountid);
         } else {
             activeFly.remove(accountid);
         }
     }
-    
+
     public boolean canFly(Integer accountid) {
         return activeFly.contains(accountid);
     }
-    
+
     public World getWorld(int id) {
         return worlds.get(id);
     }
@@ -758,7 +764,7 @@ public class Server implements Runnable {
             srvLock.unlock();
         }
     }
-    
+
     public void unregisterLoginState(MapleClient c) {
         srvLock.lock();
         try {
@@ -767,33 +773,33 @@ public class Server implements Runnable {
             srvLock.unlock();
         }
     }
-    
+
     private void disconnectIdlesOnLoginState() {
         srvLock.lock();
         try {
             List<MapleClient> toDisconnect = new LinkedList<>();
             long timeNow = System.currentTimeMillis();
-            
-            for(Entry<MapleClient, Long> mc : inLoginState.entrySet()) {
-                if(timeNow > mc.getValue()) {
+
+            for (Entry<MapleClient, Long> mc : inLoginState.entrySet()) {
+                if (timeNow > mc.getValue()) {
                     toDisconnect.add(mc.getKey());
                 }
             }
-            
-            for(MapleClient c : toDisconnect) {
-                if(c.isLoggedIn()) {
+
+            for (MapleClient c : toDisconnect) {
+                if (c.isLoggedIn()) {
                     c.disconnect(false, false);
                 } else {
                     c.getSession().close(true);
                 }
-                
+
                 inLoginState.remove(c);
             }
         } finally {
             srvLock.unlock();
         }
     }
-    
+
     private void disconnectIdlesOnLoginTask() {
         TimerManager.getInstance().register(new Runnable() {
             @Override
@@ -802,16 +808,18 @@ public class Server implements Runnable {
             }
         }, 300000);
     }
-    
+
     public final Runnable shutdown(final boolean restart) {//no player should be online when trying to shutdown!
         return new Runnable() {
             @Override
             public void run() {
                 srvLock.lock();
-                
+
                 try {
                     System.out.println((restart ? "Restarting" : "Shutting down") + " the server!\r\n");
-                    if (getWorlds() == null) return;//already shutdown
+                    if (getWorlds() == null) {
+                        return;//already shutdown
+                    }
                     for (World w : getWorlds()) {
                         w.shutdown();
                     }
@@ -833,8 +841,10 @@ public class Server implements Runnable {
                             }
                         }
                     }*/
-                    
-                    if(ServerConstants.USE_THREAD_TRACKER) ThreadTracker.getInstance().cancelThreadTrackerTask();
+
+                    if (ServerConstants.USE_THREAD_TRACKER) {
+                        ThreadTracker.getInstance().cancelThreadTrackerTask();
+                    }
 
                     TimerManager.getInstance().purge();
                     TimerManager.getInstance().stop();

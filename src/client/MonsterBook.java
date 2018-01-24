@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package client;
 
 import java.sql.Connection;
@@ -37,6 +37,7 @@ import tools.MaplePacketCreator;
 import tools.locks.MonitoredLockType;
 
 public final class MonsterBook {
+
     private int specialCard = 0;
     private int normalCard = 0;
     private int bookLevel = 1;
@@ -51,23 +52,23 @@ public final class MonsterBook {
             lock.unlock();
         }
     }
-    
+
     public void addCard(final MapleClient c, final int cardid) {
         c.getPlayer().getMap().broadcastMessage(c.getPlayer(), MaplePacketCreator.showForeignCardEffect(c.getPlayer().getId()), false);
-        
+
         Integer qty;
         lock.lock();
         try {
             qty = cards.get(cardid);
-            
-            if(qty != null) {
-                if(qty < 5) {
+
+            if (qty != null) {
+                if (qty < 5) {
                     cards.put(cardid, qty + 1);
                 }
             } else {
                 cards.put(cardid, 1);
                 qty = 0;
-                
+
                 if (cardid / 1000 >= 2388) {
                     specialCard++;
                 } else {
@@ -77,10 +78,10 @@ public final class MonsterBook {
         } finally {
             lock.unlock();
         }
-        
-        if(qty < 5) {
+
+        if (qty < 5) {
             calculateLevel();   // current leveling system only accounts unique cards...
-            
+
             c.announce(MaplePacketCreator.addCard(false, cardid, qty + 1));
             c.announce(MaplePacketCreator.showGainCard());
         } else {
@@ -167,13 +168,13 @@ public final class MonsterBook {
         } finally {
             lock.unlock();
         }
-        
+
         calculateLevel();
     }
 
     public void saveCards(final int charid) {
         Set<Entry<Integer, Integer>> cardSet = getCardSet();
-        
+
         if (cardSet.isEmpty()) {
             return;
         }

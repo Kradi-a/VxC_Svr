@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package server.life;
 
 import java.util.ArrayList;
@@ -36,6 +36,7 @@ import tools.Pair;
  * @author Frz
  */
 public class MapleMonsterStats {
+
     private boolean changeable;
     private int exp, hp, mp, level, PADamage, PDDamage, MADamage, MDDamage, dropPeriod, cp, buffToGive, removeAfter;
     private boolean boss, undead, ffaLoot, isExplosiveReward, firstAttack, removeOnMiss;
@@ -58,7 +59,7 @@ public class MapleMonsterStats {
     public boolean isChangeable() {
         return changeable;
     }
-    
+
     public int getExp() {
         return exp;
     }
@@ -277,7 +278,7 @@ public class MapleMonsterStats {
     public void setSelfDestruction(selfDestruction sd) {
         this.selfDestruction = sd;
     }
-    
+
     public void setExplosiveReward(boolean isExplosiveReward) {
         this.isExplosiveReward = isExplosiveReward;
     }
@@ -301,36 +302,36 @@ public class MapleMonsterStats {
     public Pair<Integer, Integer> getCool() {
         return cool;
     }
-    
+
     public int getPDDamage() {
         return PDDamage;
     }
-    
+
     public int getMADamage() {
         return MADamage;
     }
-    
+
     public int getMDDamage() {
         return MDDamage;
     }
-    
+
     public boolean isFriendly() {
         return friendly;
     }
-    
+
     public void setFriendly(boolean value) {
         this.friendly = value;
     }
-    
+
     public void setPDDamage(int PDDamage) {
         this.PDDamage = PDDamage;
     }
-    
+
     public void setMADamage(int MADamage) {
         this.MADamage = MADamage;
     }
-    
+
     public void setMDDamage(int MDDamage) {
         this.MDDamage = MDDamage;
-    } 
+    }
 }

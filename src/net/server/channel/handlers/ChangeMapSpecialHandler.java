@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package net.server.channel.handlers;
 
 import client.MapleClient;
@@ -29,23 +29,24 @@ import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class ChangeMapSpecialHandler extends AbstractMaplePacketHandler {
+
     @Override
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
-            slea.readByte();
-            String startwp = slea.readMapleAsciiString();
-            slea.readShort();
-            MaplePortal portal = c.getPlayer().getMap().getPortal(startwp);
-            if (portal == null || c.getPlayer().portalDelay() > System.currentTimeMillis() || c.getPlayer().getBlockedPortals().contains(portal.getScriptName())) {
-                    c.announce(MaplePacketCreator.enableActions());
-                    return;
-            }
-            if (c.getPlayer().isChangingMaps() || c.getPlayer().isBanned()) {
-                    c.announce(MaplePacketCreator.enableActions());
-                    return;
-            }
-            if (c.getPlayer().getTrade() != null) {
-                    MapleTrade.cancelTrade(c.getPlayer());
-            }
-            portal.enterPortal(c);   
+        slea.readByte();
+        String startwp = slea.readMapleAsciiString();
+        slea.readShort();
+        MaplePortal portal = c.getPlayer().getMap().getPortal(startwp);
+        if (portal == null || c.getPlayer().portalDelay() > System.currentTimeMillis() || c.getPlayer().getBlockedPortals().contains(portal.getScriptName())) {
+            c.announce(MaplePacketCreator.enableActions());
+            return;
+        }
+        if (c.getPlayer().isChangingMaps() || c.getPlayer().isBanned()) {
+            c.announce(MaplePacketCreator.enableActions());
+            return;
+        }
+        if (c.getPlayer().getTrade() != null) {
+            MapleTrade.cancelTrade(c.getPlayer());
+        }
+        portal.enterPortal(c);
     }
 }

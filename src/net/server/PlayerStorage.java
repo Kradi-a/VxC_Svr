@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package net.server;
 
 import client.MapleCharacter;
@@ -33,6 +33,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
 import tools.locks.MonitoredLockType;
 
 public class PlayerStorage {
+
     private final ReentrantReadWriteLock locks = new MonitoredReentrantReadWriteLock(MonitoredLockType.PLAYER_STORAGE, true);
     private final ReadLock rlock = locks.readLock();
     private final WriteLock wlock = locks.writeLock();
@@ -43,8 +44,8 @@ public class PlayerStorage {
         try {
             storage.put(chr.getId(), chr);
         } finally {
-	    wlock.unlock();
-	}
+            wlock.unlock();
+        }
     }
 
     public MapleCharacter removePlayer(int chr) {
@@ -57,11 +58,12 @@ public class PlayerStorage {
     }
 
     public MapleCharacter getCharacterByName(String name) {
-        rlock.lock();    
+        rlock.lock();
         try {
             for (MapleCharacter chr : storage.values()) {
-                if (chr.getName().toLowerCase().equals(name.toLowerCase()))
+                if (chr.getName().toLowerCase().equals(name.toLowerCase())) {
                     return chr;
+                }
             }
             return null;
         } finally {
@@ -69,8 +71,8 @@ public class PlayerStorage {
         }
     }
 
-    public MapleCharacter getCharacterById(int id) { 
-        rlock.lock();    
+    public MapleCharacter getCharacterById(int id) {
+        rlock.lock();
         try {
             return storage.get(id);
         } finally {
@@ -88,18 +90,18 @@ public class PlayerStorage {
     }
 
     public final void disconnectAll() {
-	wlock.lock();
-	try {	    
+        wlock.lock();
+        try {
             final Iterator<MapleCharacter> chrit = storage.values().iterator();
-	    while (chrit.hasNext()) {
+            while (chrit.hasNext()) {
                 chrit.next().getClient().disconnect(true, false);
                 chrit.remove();
             }
-	} finally {
-	    wlock.unlock();
-	}
+        } finally {
+            wlock.unlock();
+        }
     }
-    
+
     public int getSize() {
         rlock.lock();
         try {

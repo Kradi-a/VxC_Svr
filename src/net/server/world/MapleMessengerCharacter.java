@@ -18,12 +18,13 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package net.server.world;
 
 import client.MapleCharacter;
 
 public class MapleMessengerCharacter {
+
     private String name;
     private int id, position;
     private int channel;

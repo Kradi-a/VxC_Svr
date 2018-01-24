@@ -18,12 +18,13 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package server.maps;
 
 import java.awt.Point;
 
 public abstract class AbstractMapleMapObject implements MapleMapObject {
+
     private Point position = new Point();
     private int objectId;
 
@@ -50,9 +51,9 @@ public abstract class AbstractMapleMapObject implements MapleMapObject {
     public void setObjectId(int id) {
         this.objectId = id;
     }
-    
+
     @Override
     public void nullifyPosition() {
         this.position = null;
-    }    
+    }
 }

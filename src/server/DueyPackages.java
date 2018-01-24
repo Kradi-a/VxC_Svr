@@ -18,13 +18,14 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package server;
 
 import client.inventory.Item;
 import java.util.Calendar;
 
 public class DueyPackages {
+
     private String sender = null;
     private Item item = null;
     private int mesos = 0;

@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package net.mina;
 
 import org.apache.mina.core.session.IoSession;
@@ -27,6 +27,7 @@ import org.apache.mina.filter.codec.ProtocolDecoder;
 import org.apache.mina.filter.codec.ProtocolEncoder;
 
 public class MapleCodecFactory implements ProtocolCodecFactory {
+
     private final ProtocolEncoder encoder;
     private final ProtocolDecoder decoder;
 

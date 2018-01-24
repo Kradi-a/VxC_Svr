@@ -91,7 +91,7 @@ public final class BBSOperationHandler extends AbstractMaplePacketHandler {
                 deleteBBSReply(c, replyid);
                 break;
             default:
-                //System.out.println("Unhandled BBS mode: " + slea.toString());
+            //System.out.println("Unhandled BBS mode: " + slea.toString());
         }
     }
 
@@ -104,7 +104,7 @@ public final class BBSOperationHandler extends AbstractMaplePacketHandler {
                     c.announce(MaplePacketCreator.BBSThreadList(rs, start));
                 }
             }
-            
+
             con.close();
         } catch (SQLException se) {
             se.printStackTrace();
@@ -323,7 +323,7 @@ public final class BBSOperationHandler extends AbstractMaplePacketHandler {
             if (ps2 != null) {
                 ps2.close();
             }
-            
+
             con.close();
         } catch (SQLException se) {
             se.printStackTrace();

@@ -17,8 +17,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
+ */
 package net.server.channel.handlers;
 
 import client.MapleCharacter;
@@ -34,6 +33,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * @author Flav
  */
 public class EnterCashShopHandler extends AbstractMaplePacketHandler {
+
     @Override
     public void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         try {
@@ -42,15 +42,15 @@ public class EnterCashShopHandler extends AbstractMaplePacketHandler {
             if (mc.cannotEnterCashShop()) {
                 c.announce(MaplePacketCreator.enableActions());
                 return;
-                
+
             }
-            
-            if(MapleMiniDungeonInfo.isDungeonMap(c.getPlayer().getMapId())) {
+
+            if (MapleMiniDungeonInfo.isDungeonMap(c.getPlayer().getMapId())) {
                 c.announce(MaplePacketCreator.serverNotice(5, "Changing channels or entering Cash Shop or MTS are disabled when inside a Mini-Dungeon."));
                 c.announce(MaplePacketCreator.enableActions());
                 return;
             }
-            
+
             if (mc.getCashShop().isOpened()) {
                 return;
             }

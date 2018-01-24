@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package server;
 
 import client.inventory.Item;
@@ -29,6 +29,7 @@ import java.util.Calendar;
  * @author Traitor
  */
 public class MTSItemInfo {
+
     private int price;
     private Item item;
     private String seller;

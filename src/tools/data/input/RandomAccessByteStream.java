@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package tools.data.input;
 
 import java.io.IOException;
@@ -27,12 +27,13 @@ import java.io.RandomAccessFile;
 /**
  * Provides an abstract layer to a byte stream. This layer can be accessed
  * randomly.
- * 
+ *
  * @author Frz
  * @version 1.0
  * @since Revision 323
  */
 public class RandomAccessByteStream implements SeekableInputStreamBytestream {
+
     private RandomAccessFile raf;
     private long read = 0;
 

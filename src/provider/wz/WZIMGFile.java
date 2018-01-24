@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package provider.wz;
 
 import java.awt.Point;
@@ -32,10 +32,11 @@ import tools.data.input.RandomAccessByteStream;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public class WZIMGFile {
+
     private WZFileEntry file;
     private WZIMGEntry root;
     private boolean provideImages;
-    @SuppressWarnings ("unused")
+    @SuppressWarnings("unused")
     private boolean modernImg;
 
     public WZIMGFile(File wzfile, WZFileEntry file, boolean provideImages, boolean modernImg) throws IOException {
@@ -138,8 +139,8 @@ public class WZIMGFile {
                 type = WZTool.readDecodedStringAtOffsetAndReset(slea, file.getOffset() + slea.readInt());
                 break;
             default:
-                throw new RuntimeException("Unknown extended image identifier: " + marker + " at offset " +
-                        (slea.getPosition() - file.getOffset()));
+                throw new RuntimeException("Unknown extended image identifier: " + marker + " at offset "
+                        + (slea.getPosition() - file.getOffset()));
         }
         if (type.equals("Property")) {
             entry.setType(MapleDataType.PROPERTY);

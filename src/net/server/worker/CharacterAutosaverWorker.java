@@ -16,7 +16,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package net.server.worker;
 
 import net.server.world.World;
@@ -28,19 +28,21 @@ import net.server.PlayerStorage;
  * @author Ronan
  */
 public class CharacterAutosaverWorker extends BaseWorker implements Runnable {
-    
+
     @Override
     public void run() {
-        if(!ServerConstants.USE_AUTOSAVE) return;
-        
+        if (!ServerConstants.USE_AUTOSAVE) {
+            return;
+        }
+
         PlayerStorage ps = wserv.getPlayerStorage();
-        for(MapleCharacter chr: ps.getAllCharacters()) {
-            if(chr != null && chr.isLoggedin()) {
+        for (MapleCharacter chr : ps.getAllCharacters()) {
+            if (chr != null && chr.isLoggedin()) {
                 chr.saveToDB(false);
             }
         }
     }
-    
+
     public CharacterAutosaverWorker(World world) {
         super(world);
     }

@@ -30,7 +30,6 @@ import server.movement.LifeMovementFragment;
 import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
-
 public class MoveDragonHandler extends AbstractMovementPacketHandler {
 
     @Override

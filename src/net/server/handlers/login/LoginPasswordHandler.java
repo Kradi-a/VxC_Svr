@@ -42,7 +42,6 @@ public final class LoginPasswordHandler implements MaplePacketHandler {
         return !c.isLoggedIn();
     }
 
-
     @Override
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 
@@ -111,7 +110,7 @@ public final class LoginPasswordHandler implements MaplePacketHandler {
         }
     }
 
-    private static void login(MapleClient c){
+    private static void login(MapleClient c) {
         c.announce(MaplePacketCreator.getAuthSuccess(c));//why the fk did I do c.getAccountName()?
 
         Server.getInstance().registerLoginState(c);

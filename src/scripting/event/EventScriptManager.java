@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package scripting.event;
 
 import java.util.LinkedHashMap;
@@ -37,7 +37,9 @@ import scripting.AbstractScriptManager;
  * @author Matze
  */
 public class EventScriptManager extends AbstractScriptManager {
+
     private class EventEntry {
+
         public EventEntry(Invocable iv, EventManager em) {
             this.iv = iv;
             this.em = em;
@@ -76,10 +78,10 @@ public class EventScriptManager extends AbstractScriptManager {
             }
         }
     }
-    
-    public void reload(){
-    	cancel();
-    	init();
+
+    public void reload() {
+        cancel();
+        init();
     }
 
     public void cancel() {

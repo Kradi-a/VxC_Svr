@@ -26,6 +26,7 @@ package constants.skills;
  * @author BubblesDev
  */
 public class Aran {
+
     public static final int DOUBLE_SWING = 21000002;
     public static final int TRIPLE_SWING = 21100001;
     public static final int COMBO_ABILITY = 21000000;

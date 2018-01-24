@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package net.server.channel.handlers;
 
 import client.MapleCharacter;
@@ -37,6 +37,7 @@ import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class SpawnPetHandler extends AbstractMaplePacketHandler {
+
     private static MapleDataProvider dataRoot = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("wzpath") + "/Item.wz"));
 
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
@@ -46,8 +47,10 @@ public final class SpawnPetHandler extends AbstractMaplePacketHandler {
         slea.readByte();
         boolean lead = slea.readByte() == 1;
         MaplePet pet = chr.getInventory(MapleInventoryType.CASH).getItem(slot).getPet();
-        if (pet == null) return;
-        
+        if (pet == null) {
+            return;
+        }
+
         int petid = pet.getItemId();
         if (petid == 5000028 || petid == 5000047) //Handles Dragon AND Robos
         {
@@ -65,7 +68,7 @@ public final class SpawnPetHandler extends AbstractMaplePacketHandler {
                 MapleInventoryManipulator.removeById(c, MapleInventoryType.CASH, petid, (short) 1, false, false);
                 MapleInventoryManipulator.addById(c, evolveid, (short) 1, null, petId, expiration);
                 pet.deleteFromDb();
-                
+
                 c.announce(MaplePacketCreator.enableActions());
                 return;
             }
@@ -90,7 +93,7 @@ public final class SpawnPetHandler extends AbstractMaplePacketHandler {
             chr.getMap().broadcastMessage(c.getPlayer(), MaplePacketCreator.showPet(c.getPlayer(), pet, false, false), true);
             c.announce(MaplePacketCreator.petStatUpdate(c.getPlayer()));
             c.announce(MaplePacketCreator.enableActions());
-            
+
             chr.commitExcludedItems();
             chr.getClient().getWorldServer().registerPetHunger(chr, chr.getPetIndex(pet));
         }

@@ -28,22 +28,22 @@ import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class CancelChairHandler extends AbstractMaplePacketHandler {
-    
+
     @Override
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         int id = slea.readShort();
         MapleCharacter mc = c.getPlayer();
-        
+
         if (id == -1) { // Cancel Chair
             mc.setChair(0);
             mc.unregisterChairBuff();
-            
+
             c.announce(MaplePacketCreator.cancelChair(-1));
             c.getPlayer().getMap().broadcastMessage(c.getPlayer(), MaplePacketCreator.showChair(c.getPlayer().getId(), 0), false);
         } else { // Use In-Map Chair
             mc.setChair(id);
             mc.registerChairBuff();
-            
+
             c.announce(MaplePacketCreator.cancelChair(id));
         }
     }

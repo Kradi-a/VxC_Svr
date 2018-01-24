@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package net.server.guild;
 
 import client.MapleCharacter;
@@ -45,16 +45,17 @@ import tools.MaplePacketCreator;
 import tools.locks.MonitoredLockType;
 
 public class MapleGuild {
+
     public final static int CREATE_GUILD_COST = 1500000;
     public final static int CHANGE_EMBLEM_COST = 5000000;
 
     private enum BCOp {
         NONE, DISBAND, EMBLEMCHANGE
     }
-    
+
     private final List<MapleGuildCharacter> members;
     private final Lock membersLock = new MonitoredReentrantLock(MonitoredLockType.GUILD, true);
-    
+
     private String rankTitles[] = new String[5]; // 1 = master, 2 = jr, 5 = lowest member
     private String name, notice;
     private int id, gp, logo, logoColor, leader, capacity, logoBG, logoBGColor, signature, allianceId;
@@ -104,7 +105,7 @@ public class MapleGuild {
             do {
                 members.add(new MapleGuildCharacter(null, rs.getInt("id"), rs.getInt("level"), rs.getString("name"), (byte) -1, world, rs.getInt("job"), rs.getInt("guildrank"), guildid, false, rs.getInt("allianceRank")));
             } while (rs.next());
-            
+
             ps.close();
             rs.close();
             con.close();
@@ -129,7 +130,7 @@ public class MapleGuild {
                 l.clear();
             }
         }
-        
+
         membersLock.lock();
         try {
             for (MapleGuildCharacter mgc : members) {
@@ -137,20 +138,22 @@ public class MapleGuild {
                     continue;
                 }
                 List<Integer> ch = notifications.get(mgc.getChannel());
-                if (ch != null) ch.add(mgc.getId());
+                if (ch != null) {
+                    ch.add(mgc.getId());
+                }
                 //Unable to connect to Channel... error was here
             }
         } finally {
             membersLock.unlock();
         }
-        
+
         bDirty = false;
     }
 
     public void writeToDB(boolean bDisband) {
         try {
             Connection con = DatabaseConnection.getConnection();
-            
+
             if (!bDisband) {
                 StringBuilder builder = new StringBuilder();
                 builder.append("UPDATE guilds SET GP = ?, logo = ?, logoColor = ?, logoBG = ?, logoBGColor = ?, ");
@@ -181,7 +184,7 @@ public class MapleGuild {
                 ps.setInt(1, this.id);
                 ps.execute();
                 ps.close();
-                
+
                 membersLock.lock();
                 try {
                     this.broadcast(MaplePacketCreator.guildDisband(this.id));
@@ -189,7 +192,7 @@ public class MapleGuild {
                     membersLock.unlock();
                 }
             }
-            
+
             con.close();
         } catch (SQLException se) {
             se.printStackTrace();
@@ -203,7 +206,7 @@ public class MapleGuild {
     public int getLeaderId() {
         return leader;
     }
-    
+
     public int setLeaderId(int charId) {
         return leader = charId;
     }
@@ -319,16 +322,16 @@ public class MapleGuild {
             membersLock.unlock();
         }
     }
-    
+
     public void dropMessage(String message) {
         dropMessage(5, message);
     }
-    
+
     public void dropMessage(int type, String message) {
         membersLock.lock();
         try {
             for (MapleGuildCharacter mgc : members) {
-                if(mgc.getCharacter() != null) {
+                if (mgc.getCharacter() != null) {
                     mgc.getCharacter().dropMessage(type, message);
                 }
             }
@@ -336,7 +339,7 @@ public class MapleGuild {
             membersLock.unlock();
         }
     }
-    
+
     public void broadcastMessage(byte[] packet) {
         Server.getInstance().guildMessage(id, packet);
     }
@@ -390,14 +393,14 @@ public class MapleGuild {
             }
             ps.close();
             rs.close();
-            
+
             ps = con.prepareStatement("INSERT INTO guilds (`leader`, `name`, `signature`) VALUES (?, ?, ?)");
             ps.setInt(1, leaderId);
             ps.setString(2, name);
             ps.setInt(3, (int) System.currentTimeMillis());
             ps.execute();
             ps.close();
-            
+
             ps = con.prepareStatement("SELECT guildid FROM guilds WHERE leader = ?");
             ps.setInt(1, leaderId);
             rs = ps.executeQuery();
@@ -405,13 +408,13 @@ public class MapleGuild {
             int guildId = rs.getInt("guildid");
             rs.close();
             ps.close();
-            
+
             ps = con.prepareStatement("UPDATE characters SET guildid = ? WHERE id = ?");
             ps.setInt(1, guildId);
             ps.setInt(2, leaderId);
             ps.executeUpdate();
             ps.close();
-            
+
             con.close();
             return guildId;
         } catch (Exception e) {
@@ -434,7 +437,7 @@ public class MapleGuild {
                     break;
                 }
             }
-            
+
             this.broadcast(MaplePacketCreator.newGuildMember(mgc));
             return 1;
         } finally {
@@ -477,7 +480,7 @@ public class MapleGuild {
                                     ps.setLong(4, System.currentTimeMillis());
                                     ps.executeUpdate();
                                 }
-                                
+
                                 con.close();
                             } catch (SQLException e) {
                                 e.printStackTrace();
@@ -511,7 +514,7 @@ public class MapleGuild {
             membersLock.unlock();
         }
     }
-    
+
     public void changeRank(MapleGuildCharacter mgc, int newRank) {
         try {
             if (mgc.isOnline()) {
@@ -525,7 +528,7 @@ public class MapleGuild {
             re.printStackTrace();
             return;
         }
-        
+
         membersLock.lock();
         try {
             this.broadcast(MaplePacketCreator.changeRank(mgc));
@@ -533,11 +536,11 @@ public class MapleGuild {
             membersLock.unlock();
         }
     }
-    
+
     public void setGuildNotice(String notice) {
         this.notice = notice;
         writeToDB(false);
-        
+
         membersLock.lock();
         try {
             this.broadcast(MaplePacketCreator.guildNotice(this.id, notice));
@@ -581,25 +584,28 @@ public class MapleGuild {
 
     public void changeRankTitle(String[] ranks) {
         System.arraycopy(ranks, 0, rankTitles, 0, 5);
-        
+
         membersLock.lock();
         try {
             this.broadcast(MaplePacketCreator.rankTitleChange(this.id, ranks));
         } finally {
             membersLock.unlock();
         }
-        
+
         this.writeToDB(false);
     }
 
     public void disbandGuild() {
-        if(allianceId > 0) {
+        if (allianceId > 0) {
             MapleAlliance alliance = Server.getInstance().getAlliance(allianceId);
-            
-            if(alliance.getLeader().getGuildId() != id) MapleAlliance.removeGuildFromAlliance(allianceId, id, world);
-            else MapleAlliance.disbandAlliance(allianceId);
+
+            if (alliance.getLeader().getGuildId() != id) {
+                MapleAlliance.removeGuildFromAlliance(allianceId, id, world);
+            } else {
+                MapleAlliance.disbandAlliance(allianceId);
+            }
         }
-        
+
         membersLock.lock();
         try {
             this.writeToDB(true);
@@ -615,7 +621,7 @@ public class MapleGuild {
         this.logo = logo;
         this.logoColor = logocolor;
         this.writeToDB(false);
-        
+
         membersLock.lock();
         try {
             this.broadcast(null, -1, BCOp.EMBLEMCHANGE);
@@ -644,14 +650,14 @@ public class MapleGuild {
         }
         capacity += 5;
         this.writeToDB(false);
-        
+
         membersLock.lock();
         try {
             this.broadcast(MaplePacketCreator.guildCapacityChange(this.id, this.capacity));
         } finally {
             membersLock.unlock();
         }
-        
+
         return true;
     }
 
@@ -661,8 +667,8 @@ public class MapleGuild {
         this.guildMessage(MaplePacketCreator.updateGP(this.id, this.gp));
         this.guildMessage(MaplePacketCreator.getGPMessage(amount));
     }
-    
-    public void removeGP(int amount){
+
+    public void removeGP(int amount) {
         this.gp -= amount;
         this.writeToDB(false);
         this.guildMessage(MaplePacketCreator.updateGP(this.id, this.gp));
@@ -709,33 +715,33 @@ public class MapleGuild {
                 ps.setInt(2, id);
                 ps.executeUpdate();
             }
-            
+
             con.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-    
+
     public void resetAllianceGuildPlayersRank() {
         try {
             membersLock.lock();
             try {
-                for(MapleGuildCharacter mgc: members) {
-                    if(mgc.isOnline()) {
+                for (MapleGuildCharacter mgc : members) {
+                    if (mgc.isOnline()) {
                         mgc.setAllianceRank(5);
                     }
                 }
             } finally {
                 membersLock.unlock();
             }
-            
+
             Connection con = DatabaseConnection.getConnection();
             try (PreparedStatement ps = con.prepareStatement("UPDATE characters SET allianceRank = ? WHERE guildid = ?")) {
                 ps.setInt(1, 5);
                 ps.setInt(2, id);
                 ps.executeUpdate();
             }
-            
+
             con.close();
         } catch (SQLException e) {
             e.printStackTrace();

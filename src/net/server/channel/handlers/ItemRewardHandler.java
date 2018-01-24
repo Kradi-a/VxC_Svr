@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package net.server.channel.handlers;
 
 import client.MapleClient;
@@ -40,11 +40,14 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * @author Jay Estrella/ Modified by kevintjuh93
  */
 public final class ItemRewardHandler extends AbstractMaplePacketHandler {
+
     @Override
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         byte slot = (byte) slea.readShort();
         int itemId = slea.readInt(); // will load from xml I don't care.
-        if (c.getPlayer().getInventory(MapleInventoryType.USE).getItem(slot).getItemId() != itemId || c.getPlayer().getInventory(MapleInventoryType.USE).countById(itemId) < 1) return;
+        if (c.getPlayer().getInventory(MapleInventoryType.USE).getItem(slot).getItemId() != itemId || c.getPlayer().getInventory(MapleInventoryType.USE).countById(itemId) < 1) {
+            return;
+        }
         MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
         Pair<Integer, List<RewardItem>> rewards = ii.getItemReward(itemId);
         for (RewardItem reward : rewards.getRight()) {
@@ -53,10 +56,10 @@ public final class ItemRewardHandler extends AbstractMaplePacketHandler {
                 break;
             }
             if (Randomizer.nextInt(rewards.getLeft()) < reward.prob) {//Is it even possible to get an item with prob 1?
-            	if (ItemConstants.getInventoryType(reward.itemid) == MapleInventoryType.EQUIP) {
+                if (ItemConstants.getInventoryType(reward.itemid) == MapleInventoryType.EQUIP) {
                     final Item item = ii.getEquipById(reward.itemid);
                     if (reward.period != -1) {
-                    	item.setExpiration(System.currentTimeMillis() + (reward.period * 60 * 60 * 10));
+                        item.setExpiration(System.currentTimeMillis() + (reward.period * 60 * 60 * 10));
                     }
                     MapleInventoryManipulator.addFromDrop(c, item, false);
                 } else {

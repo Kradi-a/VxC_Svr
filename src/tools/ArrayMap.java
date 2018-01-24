@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package tools;
 
 import java.util.AbstractMap;
@@ -31,6 +31,7 @@ import java.util.Set;
 public class ArrayMap<K, V> extends AbstractMap<K, V> {
 
     static class Entry<K, V> implements Map.Entry<K, V> {
+
         protected K key;
         protected V value;
 
@@ -94,7 +95,7 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
     }
 
     @Override
-    @SuppressWarnings ("unchecked")
+    @SuppressWarnings("unchecked")
     public Set<java.util.Map.Entry<K, V>> entrySet() {
         if (entries == null) {
             entries = new AbstractSet<Entry<K, V>>() {

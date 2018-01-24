@@ -18,13 +18,14 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package server.movement;
 
 import java.awt.Point;
 import tools.data.output.LittleEndianWriter;
 
 public class ChairMovement extends AbstractLifeMovement {
+
     private int unk;
 
     public ChairMovement(int type, Point position, int duration, int newstate) {
@@ -49,4 +50,3 @@ public class ChairMovement extends AbstractLifeMovement {
         lew.writeShort(getDuration());
     }
 }
-

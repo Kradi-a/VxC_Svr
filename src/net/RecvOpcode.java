@@ -18,12 +18,12 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package net;
 
 public enum RecvOpcode {
     CUSTOM_PACKET(0x3713),//13 37 lol
-    
+
     LOGIN_PASSWORD(0x1),
     GUEST_LOGIN(0x2),
     SERVERLIST_REREQUEST(0x4),
@@ -51,6 +51,7 @@ public enum RecvOpcode {
     CHAR_SELECT_WITH_PIC(0x1F),
     VIEW_ALL_PIC_REGISTER(0x20),
     VIEW_ALL_WITH_PIC(0x21),
+    TRY_AUTO_LOGIN(0x24), //Found,,
     CHANGE_MAP(0x2B),
     CHANGE_CHANNEL(0x2C),
     ENTER_CASHSHOP(0x2D),
@@ -76,8 +77,8 @@ public enum RecvOpcode {
     HIRED_MERCHANT_REQUEST(0x45),
     FREDRICK_ACTION(0x46),
     DUEY_ACTION(0x47),
-    OWL_ACTION(0x49),   //sends most searched info to client
-    OWL_WARP(0x4A),     //handles player warp to store
+    OWL_ACTION(0x49), //sends most searched info to client
+    OWL_WARP(0x4A), //handles player warp to store
     ADMIN_SHOP(0x4B),
     ITEM_SORT(0x4C),
     ITEM_SORT2(0x4D),
@@ -96,11 +97,10 @@ public enum RecvOpcode {
     USE_TELEPORT_ROCK(0x5B),
     USE_RETURN_SCROLL(0x5C),
     USE_UPGRADE_SCROLL(0x5D),
-    
     HyperUpgradeItemUse(0x5E), //New!!
     ItemOptionUpgradeItemUse(0x5F), //New!!
     ItemReleaseRequest(0x60), //New!!
-    
+
     DISTRIBUTE_AP(0x61),
     AUTO_DISTRIBUTE_AP(0x62),
     HEAL_OVER_TIME(0x63),
@@ -126,11 +126,10 @@ public enum RecvOpcode {
     MAKER_SKILL(0x7C),
     USE_REMOTE(0x7F),
     WATER_OF_LIFE(0x80),
-    
     UserFollowCharacterRequest(0x85), //New!!
     UserFollowCharacterWithdraw(0x86), //New!!
     SetPassenserResult(0x87), //New!!
-    
+
     ADMIN_CHAT(0x88),
     PARTYCHAT(0x89),
     WHISPER(0x8A),
@@ -152,7 +151,6 @@ public enum RecvOpcode {
     ITEM_VAC_ALERT(0xA2),
     ALLIANCE_REQUEST(0xA4),
     ALLIANCE_OPERATION(0xA5),
-    
     //FamilyChartRequest(0xA6),
     //FamilyInfoRequest(0xA7),
     //FamilyRegisterJunior(0xA8),
@@ -166,7 +164,6 @@ public enum RecvOpcode {
     ADD_FAMILY(0xA8),
     ACCEPT_FAMILY(0xAB),
     USE_FAMILY(0xAC),
-    
     BBS_OPERATION(0xB0),
     ENTER_MTS(0xB1),
     USE_SOLOMON_ITEM(0xB2),
@@ -214,14 +211,13 @@ public enum RecvOpcode {
     CHECK_CASH(0x10B),
     CASHSHOP_OPERATION(0x10C),
     COUPON_CODE(0x10D),
-    
     OPEN_ITEMUI(0xEEE), //Unknown..
     CLOSE_ITEMUI(0xEEE), //Unknown..
     USE_ITEMUI(0xEEE), //Unknown..
-    
+
     MTS_OPERATION(0xEEE), //Unknown..
     USE_MAPLELIFE(0xEEE), //Unknown..
-    
+
     USE_HAMMER(0xEEE); //Unknown..
     private int code = -2;
 

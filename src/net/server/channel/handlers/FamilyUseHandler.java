@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package net.server.channel.handlers;
 
 import constants.ServerConstants;
@@ -34,11 +34,12 @@ import tools.data.output.MaplePacketLittleEndianWriter;
  * @author Moogra
  */
 public final class FamilyUseHandler extends AbstractMaplePacketHandler {
+
     @Override
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
-    	if (!ServerConstants.USE_FAMILY_SYSTEM){
-    		return;
-    	}
+        if (!ServerConstants.USE_FAMILY_SYSTEM) {
+            return;
+        }
         int[] repCost = {3, 5, 7, 8, 10, 12, 15, 20, 25, 40, 50};
         final int type = slea.readInt();
         MapleCharacter victim;

@@ -50,6 +50,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import server.TimerManager;
+import tools.HexTool;
 import tools.locks.MonitoredLockType;
 
 public class MapleServerHandler extends IoHandlerAdapter {
@@ -58,16 +59,16 @@ public class MapleServerHandler extends IoHandlerAdapter {
     private int world = -1, channel = -1;
     private static final SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
     private static AtomicLong sessionId = new AtomicLong(7777);
-    
+
     private Lock idleLock = new MonitoredReentrantLock(MonitoredLockType.SRVHANDLER_IDLE, true);
     private Lock tempLock = new MonitoredReentrantLock(MonitoredLockType.SRVHANDLER_TEMP, true);
     private Map<MapleClient, Long> idleSessions = new HashMap<>(100);
     private Map<MapleClient, Long> tempIdleSessions = new HashMap<>();
     private ScheduledFuture<?> idleManager = null;
-    
+
     public MapleServerHandler() {
         this.processor = PacketProcessor.getProcessor(-1, -1);
-        
+
         idleManagerTask();
     }
 
@@ -75,15 +76,15 @@ public class MapleServerHandler extends IoHandlerAdapter {
         this.processor = PacketProcessor.getProcessor(world, channel);
         this.world = world;
         this.channel = channel;
-        
+
         idleManagerTask();
     }
-    
+
     @Override
     public void exceptionCaught(IoSession session, Throwable cause) throws Exception {
-    	System.out.println("disconnect by exception");
+        System.out.println("disconnect by exception");
         cause.printStackTrace();
-        
+
         if (cause instanceof IOException || cause instanceof ClassCastException) {
             return;
         }
@@ -136,7 +137,7 @@ public class MapleServerHandler extends IoHandlerAdapter {
                 FilePrinter.printError(FilePrinter.ACCOUNT_STUCK, t);
             } finally {
                 session.close();
-                session.removeAttribute(MapleClient.CLIENT_KEY);      
+                session.removeAttribute(MapleClient.CLIENT_KEY);
                 //client.empty();
             }
         }
@@ -149,12 +150,14 @@ public class MapleServerHandler extends IoHandlerAdapter {
         SeekableLittleEndianAccessor slea = new GenericSeekableLittleEndianAccessor(new ByteArrayByteStream(content));
         short packetId = slea.readShort();
         MapleClient client = (MapleClient) session.getAttribute(MapleClient.CLIENT_KEY);
-        
-        if(ServerConstants.USE_DEBUG_SHOW_RCVD_PACKET) System.out.println("Received packet id " + packetId);
+
+        if (ServerConstants.USE_DEBUG_SHOW_RCVD_PACKET) {
+            System.out.println("Received packet id " + Integer.toHexString(packetId) + " : " + HexTool.toString(content));
+        }
         final MaplePacketHandler packetHandler = processor.getHandler(packetId);
         if (packetHandler != null && packetHandler.validateState(client)) {
             try {
-            	MapleLogger.logRecv(client, packetId, message);
+                MapleLogger.logRecv(client, packetId, message);
                 packetHandler.handlePacket(slea, client);
             } catch (final Throwable t) {
                 FilePrinter.printError(FilePrinter.PACKET_HANDLER + packetHandler.getClass().getName() + ".txt", t, "Error for " + (client.getPlayer() == null ? "" : "player ; " + client.getPlayer() + " on map ; " + client.getPlayer().getMapId() + " - ") + "account ; " + client.getAccountName() + "\r\n" + slea.toString());
@@ -162,14 +165,14 @@ public class MapleServerHandler extends IoHandlerAdapter {
             }
         }
     }
-    
+
     @Override
     public void messageSent(IoSession session, Object message) {
-    	byte[] content = (byte[]) message;
-    	SeekableLittleEndianAccessor slea = new GenericSeekableLittleEndianAccessor(new ByteArrayByteStream(content));
-    	slea.readShort(); //packetId
+        byte[] content = (byte[]) message;
+        SeekableLittleEndianAccessor slea = new GenericSeekableLittleEndianAccessor(new ByteArrayByteStream(content));
+        slea.readShort(); //packetId
     }
-    
+
     @Override
     public void sessionIdle(final IoSession session, final IdleStatus status) throws Exception {
         MapleClient client = (MapleClient) session.getAttribute(MapleClient.CLIENT_KEY);
@@ -178,12 +181,12 @@ public class MapleServerHandler extends IoHandlerAdapter {
         }
         super.sessionIdle(session, status);
     }
-    
+
     private void registerIdleSession(MapleClient c) {
-        if(idleLock.tryLock()) {
+        if (idleLock.tryLock()) {
             idleSessions.put(c, System.currentTimeMillis());
             c.announce(MaplePacketCreator.getPing());
-            
+
             idleLock.unlock();
         } else {
             tempLock.lock();
@@ -195,28 +198,28 @@ public class MapleServerHandler extends IoHandlerAdapter {
             }
         }
     }
-    
+
     private void manageIdleSessions() {
         long timeNow = System.currentTimeMillis();
         long timeThen = timeNow - 15000;
-        
+
         idleLock.lock();
         try {
-            for(Entry<MapleClient, Long> mc : idleSessions.entrySet()) {
-                if(timeNow - mc.getValue() >= 15000) {
+            for (Entry<MapleClient, Long> mc : idleSessions.entrySet()) {
+                if (timeNow - mc.getValue() >= 15000) {
                     mc.getKey().testPing(timeThen);
                 }
             }
-            
+
             idleSessions.clear();
-            
-            if(!tempIdleSessions.isEmpty()) {
+
+            if (!tempIdleSessions.isEmpty()) {
                 tempLock.lock();
                 try {
-                    for(Entry<MapleClient, Long> mc : tempIdleSessions.entrySet()) {
+                    for (Entry<MapleClient, Long> mc : tempIdleSessions.entrySet()) {
                         idleSessions.put(mc.getKey(), mc.getValue());
                     }
-                    
+
                     tempIdleSessions.clear();
                 } finally {
                     tempLock.unlock();
@@ -226,7 +229,7 @@ public class MapleServerHandler extends IoHandlerAdapter {
             idleLock.unlock();
         }
     }
-    
+
     private void idleManagerTask() {
         this.idleManager = TimerManager.getInstance().register(new Runnable() {
             @Override
@@ -235,7 +238,7 @@ public class MapleServerHandler extends IoHandlerAdapter {
             }
         }, 10000);
     }
-    
+
     private void cancelIdleManagerTask() {
         this.idleManager.cancel(false);
         this.idleManager = null;

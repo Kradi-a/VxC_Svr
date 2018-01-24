@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package provider.wz;
 
 import java.io.BufferedInputStream;
@@ -38,6 +38,7 @@ import tools.data.input.RandomAccessByteStream;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public class WZFile implements MapleDataProvider {
+
     static {
         ListWZFile.init();
     }

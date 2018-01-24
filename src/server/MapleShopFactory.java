@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package server;
 
 import java.util.HashMap;
@@ -29,6 +29,7 @@ import java.util.Map;
  * @author Matze
  */
 public class MapleShopFactory {
+
     private Map<Integer, MapleShop> shops = new HashMap<Integer, MapleShop>();
     private Map<Integer, MapleShop> npcShops = new HashMap<Integer, MapleShop>();
     private static MapleShopFactory instance = new MapleShopFactory();
@@ -40,7 +41,7 @@ public class MapleShopFactory {
     public void reloadShops() {
         shops.clear();
     }
-    
+
     private MapleShop loadShop(int id, boolean isShopId) {
         MapleShop ret = MapleShop.createFromDB(id, isShopId);
         if (ret != null) {

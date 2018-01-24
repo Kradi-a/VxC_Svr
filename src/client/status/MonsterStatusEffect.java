@@ -60,9 +60,9 @@ public class MonsterStatusEffect {
     }
 
     public final void cancelTask() {
-	if (cancelTask != null) {
-	    cancelTask.cancel(false);
-	}
+        if (cancelTask != null) {
+            cancelTask.cancel(false);
+        }
         cancelTask = null;
     }
 

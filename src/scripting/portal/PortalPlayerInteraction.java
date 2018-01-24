@@ -77,7 +77,7 @@ public class PortalPlayerInteraction extends AbstractPlayerInteraction {
                 ex.printStackTrace();
             }
         }
-        
+
         return getPlayer().getLevel() >= 30;
     }
 

@@ -40,36 +40,42 @@ public final class InventoryMergeHandler extends AbstractMaplePacketHandler {
         MapleCharacter chr = c.getPlayer();
         chr.getAutobanManager().setTimestamp(2, slea.readInt(), 3);
         MapleInventoryType inventoryType = MapleInventoryType.getByType(slea.readByte());
-                
-	if(!ServerConstants.USE_ITEM_SORT) {
+
+        if (!ServerConstants.USE_ITEM_SORT) {
             c.announce(MaplePacketCreator.enableActions());
             return;
-	}
-		
-	MapleInventory inventory = c.getPlayer().getInventory(inventoryType);
-        
+        }
+
+        MapleInventory inventory = c.getPlayer().getInventory(inventoryType);
+
         //------------------- RonanLana's SLOT MERGER -----------------
-        
         MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
         Item srcItem, dstItem;
 
-        for(short dst = 1; dst <= inventory.getSlotLimit(); dst++) {
+        for (short dst = 1; dst <= inventory.getSlotLimit(); dst++) {
             dstItem = inventory.getItem(dst);
-            if(dstItem == null) continue;
+            if (dstItem == null) {
+                continue;
+            }
 
-            for(short src = (short)(dst + 1); src <= inventory.getSlotLimit(); src++) {
+            for (short src = (short) (dst + 1); src <= inventory.getSlotLimit(); src++) {
                 srcItem = inventory.getItem(src);
-                if(srcItem == null) continue;
+                if (srcItem == null) {
+                    continue;
+                }
 
-                if(dstItem.getItemId() != srcItem.getItemId()) continue;
-                if(dstItem.getQuantity() == ii.getSlotMax(c, inventory.getItem(dst).getItemId())) break;
+                if (dstItem.getItemId() != srcItem.getItemId()) {
+                    continue;
+                }
+                if (dstItem.getQuantity() == ii.getSlotMax(c, inventory.getItem(dst).getItemId())) {
+                    break;
+                }
 
                 MapleInventoryManipulator.move(c, inventoryType, src, dst);
             }
         }
-        
+
         //------------------------------------------------------------
-                
         inventory = c.getPlayer().getInventory(inventoryType);
         boolean sorted = false;
 

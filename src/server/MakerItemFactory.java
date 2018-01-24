@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package server;
 
 import constants.EquipType;
@@ -34,29 +34,30 @@ import tools.Pair;
  * @author Jay Estrella, Ronan
  */
 public class MakerItemFactory {
+
     private static MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
-    
+
     public static MakerItemCreateEntry getItemCreateEntry(int toCreate, int stimulantid, Map<Integer, Short> reagentids) {
         MakerItemCreateEntry makerEntry = ii.getMakerItemEntry(toCreate);
-        if(makerEntry == null) {
+        if (makerEntry == null) {
             return null;
         }
-        
-          // THEY DECIDED FOR SOME BIZARRE PATTERN ON THE FEE THING, ALMOST RANDOMIZED.
-        if(stimulantid != -1) {
+
+        // THEY DECIDED FOR SOME BIZARRE PATTERN ON THE FEE THING, ALMOST RANDOMIZED.
+        if (stimulantid != -1) {
             makerEntry.addCost(getMakerStimulantFee(toCreate));
         }
-        
-        if(!reagentids.isEmpty()) {
-            for(Entry<Integer, Short> r : reagentids.entrySet()) {
+
+        if (!reagentids.isEmpty()) {
+            for (Entry<Integer, Short> r : reagentids.entrySet()) {
                 makerEntry.addCost((getMakerReagentFee(toCreate, ((r.getKey() % 10) + 1))) * r.getValue());
             }
         }
-        
+
         makerEntry.trimCost();  // "commit" the real cost of the recipe.
         return makerEntry;
     }
-    
+
     public static MakerItemCreateEntry generateLeftoverCrystalEntry(int fromLeftoverid) {
         MakerItemCreateEntry ret = new MakerItemCreateEntry(0, 0, 1, 1);
         ret.addReqItem(fromLeftoverid, 100);
@@ -67,13 +68,13 @@ public class MakerItemFactory {
         MakerItemCreateEntry ret = new MakerItemCreateEntry(cost, 0, 1, crystalGain);
         return ret;
     }
-            
+
     private static double getMakerStimulantFee(int itemid) {
-        if(ServerConstants.USE_MAKER_FEE_HEURISTICS) {
+        if (ServerConstants.USE_MAKER_FEE_HEURISTICS) {
             EquipType et = EquipType.getEquipTypeById(itemid);
             int eqpLevel = ii.getEquipStats(itemid).get("reqLevel");
 
-            switch(et) {
+            switch (et) {
                 case CAP:
                     return 1145.736246 * Math.exp(0.03336832546 * eqpLevel);
 
@@ -102,13 +103,13 @@ public class MakerItemFactory {
             return 14000;
         }
     }
-    
+
     private static double getMakerReagentFee(int itemid, int reagentLevel) {
-        if(ServerConstants.USE_MAKER_FEE_HEURISTICS) {
+        if (ServerConstants.USE_MAKER_FEE_HEURISTICS) {
             EquipType et = EquipType.getEquipTypeById(itemid);
             int eqpLevel = ii.getEquipStats(itemid).get("reqLevel");
 
-            switch(et) {
+            switch (et) {
                 case CAP:
                     return 5592.01613 * Math.exp(0.02914576018 * eqpLevel) * reagentLevel;
 
@@ -137,8 +138,9 @@ public class MakerItemFactory {
             return 8000 * reagentLevel;
         }
     }
-    
+
     public static class MakerItemCreateEntry {
+
         private int reqLevel, reqMakerLevel;
         private double cost;
         private int reqCost;
@@ -151,14 +153,14 @@ public class MakerItemFactory {
             this.reqMakerLevel = reqMakerLevel;
             this.toGive = toGive;
         }
-        
+
         public MakerItemCreateEntry(MakerItemCreateEntry mi) {
             this.cost = mi.cost;
             this.reqLevel = mi.reqLevel;
             this.reqMakerLevel = mi.reqMakerLevel;
             this.toGive = mi.toGive;
-            
-            for(Pair<Integer, Integer> p : mi.reqItems) {
+
+            for (Pair<Integer, Integer> p : mi.reqItems) {
                 reqItems.add(p);
             }
         }
@@ -182,7 +184,7 @@ public class MakerItemFactory {
         public int getCost() {
             return reqCost;
         }
-        
+
         public void addCost(double amount) {
             cost += amount;
         }
@@ -190,7 +192,7 @@ public class MakerItemFactory {
         protected void addReqItem(int itemId, int amount) {
             reqItems.add(new Pair<>(itemId, amount));
         }
-        
+
         public void trimCost() {
             reqCost = (int) (cost / 1000);
             reqCost *= 1000;

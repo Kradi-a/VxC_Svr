@@ -16,7 +16,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package server.quest.requirements;
 
 import provider.MapleData;
@@ -30,21 +30,21 @@ import client.MapleCharacter;
  * @author Ronan
  */
 public class MesoRequirement extends MapleQuestRequirement {
-        private int meso = 0;
-    
-	public MesoRequirement(MapleQuest quest, MapleData data) {
-		super(MapleQuestRequirementType.MESO);
-		processData(data);
-	}
-	
-	@Override
-	public void processData(MapleData data) {
-		meso = MapleDataTool.getInt(data);
-	}
-	
-	
-	@Override
-	public boolean check(MapleCharacter chr, Integer npcid) {
-		return chr.getMeso() >= meso;
-	}
+
+    private int meso = 0;
+
+    public MesoRequirement(MapleQuest quest, MapleData data) {
+        super(MapleQuestRequirementType.MESO);
+        processData(data);
+    }
+
+    @Override
+    public void processData(MapleData data) {
+        meso = MapleDataTool.getInt(data);
+    }
+
+    @Override
+    public boolean check(MapleCharacter chr, Integer npcid) {
+        return chr.getMeso() >= meso;
+    }
 }

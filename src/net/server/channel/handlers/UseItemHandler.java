@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package net.server.channel.handlers;
 
 import client.MapleClient;
@@ -36,6 +36,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * @author Matze
  */
 public final class UseItemHandler extends AbstractMaplePacketHandler {
+
     @Override
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         if (!c.getPlayer().isAlive()) {
@@ -52,29 +53,26 @@ public final class UseItemHandler extends AbstractMaplePacketHandler {
                 c.getPlayer().dispelDebuffs();
                 remove(c, slot);
                 return;
-            }
-            else if (itemId == 2050001) {
-		c.getPlayer().dispelDebuff(MapleDisease.DARKNESS);
+            } else if (itemId == 2050001) {
+                c.getPlayer().dispelDebuff(MapleDisease.DARKNESS);
                 remove(c, slot);
                 return;
-	    } else if (itemId == 2050002) {
-		c.getPlayer().dispelDebuff(MapleDisease.WEAKEN);
+            } else if (itemId == 2050002) {
+                c.getPlayer().dispelDebuff(MapleDisease.WEAKEN);
                 c.getPlayer().dispelDebuff(MapleDisease.SLOW);
                 remove(c, slot);
                 return;
             } else if (itemId == 2050003) {
                 c.getPlayer().dispelDebuff(MapleDisease.SEAL);
-		c.getPlayer().dispelDebuff(MapleDisease.CURSE);
+                c.getPlayer().dispelDebuff(MapleDisease.CURSE);
                 remove(c, slot);
                 return;
-            }
-            else if (ItemConstants.isTownScroll(itemId)) {
+            } else if (ItemConstants.isTownScroll(itemId)) {
                 if (ii.getItemEffect(toUse.getItemId()).applyTo(c.getPlayer())) {
                     remove(c, slot);
                 }
                 return;
-            }
-            else if (ItemConstants.isAntibanishScroll(itemId)) {
+            } else if (ItemConstants.isAntibanishScroll(itemId)) {
                 if (ii.getItemEffect(toUse.getItemId()).applyTo(c.getPlayer())) {
                     remove(c, slot);
                 } else {
@@ -82,9 +80,9 @@ public final class UseItemHandler extends AbstractMaplePacketHandler {
                 }
                 return;
             }
-            
+
             remove(c, slot);
-            
+
             ii.getItemEffect(toUse.getItemId()).applyTo(c.getPlayer());
             c.getPlayer().checkBerserk(c.getPlayer().isHidden());
         }

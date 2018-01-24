@@ -32,25 +32,25 @@ import server.quest.MapleQuestActionType;
  * @author Tyler (Twdtwd)
  */
 public class ExpAction extends MapleQuestAction {
-	int exp;
-	
-	public ExpAction(MapleQuest quest, MapleData data) {
-		super(MapleQuestActionType.EXP, quest);
-		processData(data);
-	}
-	
-	
-	@Override
-	public void processData(MapleData data) {
-		exp = MapleDataTool.getInt(data);
-	}
-	
-	@Override
-	public void run(MapleCharacter chr, Integer extSelection) {
-		if (chr.isBeginnerJob() && chr.getLevel() < 10) {
-			chr.gainExp(exp, true, true);
-		} else {
-			chr.gainExp(exp * chr.getExpRate(), true, true);
-		}
-	}
-} 
+
+    int exp;
+
+    public ExpAction(MapleQuest quest, MapleData data) {
+        super(MapleQuestActionType.EXP, quest);
+        processData(data);
+    }
+
+    @Override
+    public void processData(MapleData data) {
+        exp = MapleDataTool.getInt(data);
+    }
+
+    @Override
+    public void run(MapleCharacter chr, Integer extSelection) {
+        if (chr.isBeginnerJob() && chr.getLevel() < 10) {
+            chr.gainExp(exp, true, true);
+        } else {
+            chr.gainExp(exp * chr.getExpRate(), true, true);
+        }
+    }
+}

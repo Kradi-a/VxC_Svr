@@ -17,7 +17,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package server.maps;
 
 /**
@@ -29,7 +29,7 @@ public enum FieldLimit {
     MOVEMENTSKILLS(0x02),
     SUMMON(0x04),
     DOOR(0x08),
-    CANNOTMIGRATE(0x10),    //change channel, town portal scroll, access cash shop, etc etc
+    CANNOTMIGRATE(0x10), //change channel, town portal scroll, access cash shop, etc etc
     //NO_NOTES(0x20),
     CANNOTVIPROCK(0x40),
     CANNOTMINIGAME(0x80),
@@ -44,7 +44,7 @@ public enum FieldLimit {
     //ANTI_MACRO_LIMIT(0x10000), // No notes
     CANNOTJUMPDOWN(0x20000);
     //SUMMON_NPC_LIMIT(0x40000); // Seems to .. disable Rush if 0x2 is set
-    
+
     //......... EVEN MORE LIMITS ............
     //SUMMON_NPC_LIMIT(0x40000),
     //NO_EXP_DECREASE(0x80000),
@@ -52,7 +52,6 @@ public enum FieldLimit {
     //PARCEL_OPEN_LIMIT(0x200000),
     //DROP_LIMIT(0x400000),
     //ROCKETBOOSTER_LIMIT(0x800000)     //lol we don't even have mechanics <3
-    
     private long i;
 
     private FieldLimit(long i) {

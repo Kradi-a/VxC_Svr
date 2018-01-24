@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package client.inventory;
 
 import java.io.File;
@@ -34,6 +34,7 @@ import provider.MapleDataTool;
  * @author Danny (Leifde)
  */
 public class PetDataFactory {
+
     private static MapleDataProvider dataRoot = MapleDataProviderFactory.getDataProvider(new File(System.getProperty("wzpath") + "/Item.wz"));
     private static Map<String, PetCommand> petCommands = new HashMap<String, PetCommand>();
     private static Map<Integer, Integer> petHunger = new HashMap<Integer, Integer>();

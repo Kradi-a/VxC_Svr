@@ -60,17 +60,19 @@ public final class PetFoodHandler extends AbstractMaplePacketHandler {
                 }
             }
         }
-        
+
         MaplePet pet = chr.getPet(slot);
-        if(pet == null) return;
-        
+        if (pet == null) {
+            return;
+        }
+
         short pos = slea.readShort();
         int itemId = slea.readInt();
         Item use = chr.getInventory(MapleInventoryType.USE).getItem(pos);
         if (use == null || (itemId / 10000) != 212 || use.getItemId() != itemId) {
             return;
         }
-        
+
         // 50% chance to get +1 closeness
         pet.gainClosenessFullness(chr, (Randomizer.nextInt(101) <= 50) ? 1 : 0, 30, 1);
         MapleInventoryManipulator.removeFromSlot(c, MapleInventoryType.USE, pos, (short) 1, false);

@@ -18,12 +18,13 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package net;
 
 import client.MapleClient;
 
 public abstract class AbstractMaplePacketHandler implements MaplePacketHandler {
+
     @Override
     public boolean validateState(MapleClient c) {
         return c.isLoggedIn();

@@ -28,7 +28,6 @@ public class CreateINI {
 
         System.out.println("\r\n");
 
-
         for (byte b = 0; b < worlds; b++) {
             sb.append("#Properties for world ").append(b).append("\r\n");
 

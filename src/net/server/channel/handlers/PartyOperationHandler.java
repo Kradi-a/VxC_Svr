@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package net.server.channel.handlers;
 
 import net.AbstractMaplePacketHandler;
@@ -35,11 +35,11 @@ import scripting.event.EventInstanceManager;
 import server.maps.MapleMap;
 
 public final class PartyOperationHandler extends AbstractMaplePacketHandler {
-    
+
     public static void leaveParty(MapleParty party, MaplePartyCharacter partyplayer, MapleClient c) {
         World world = c.getWorldServer();
         MapleCharacter player = c.getPlayer();
-        
+
         if (party != null && partyplayer != null) {
             if (partyplayer.getId() == party.getLeaderId()) {
                 c.getWorldServer().removeMapPartyMembers(party.getId());
@@ -60,7 +60,7 @@ public final class PartyOperationHandler extends AbstractMaplePacketHandler {
             player.setParty(null);
         }
     }
-    
+
     @Override
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         int operation = slea.readByte();
@@ -70,10 +70,10 @@ public final class PartyOperationHandler extends AbstractMaplePacketHandler {
         MaplePartyCharacter partyplayer = player.getMPC();
         switch (operation) {
             case 1: { // create
-               	if(player.getLevel() < 10 && !ServerConstants.USE_PARTY_FOR_STARTERS) {
+                if (player.getLevel() < 10 && !ServerConstants.USE_PARTY_FOR_STARTERS) {
                     c.announce(MaplePacketCreator.partyStatusMessage(10));
                     return;
-            	}
+                }
                 if (player.getParty() == null) {
                     partyplayer = new MaplePartyCharacter(player);
                     party = world.createParty(partyplayer);
@@ -94,21 +94,21 @@ public final class PartyOperationHandler extends AbstractMaplePacketHandler {
             case 3: { // join
                 int partyid = slea.readInt();
                 if (c.getPlayer().getParty() == null) {
-                        party = world.getParty(partyid);
-                        if (party != null) {
-                            if (party.getMembers().size() < 6) {
-                                partyplayer = new MaplePartyCharacter(player);
-                                player.getMap().addPartyMember(player);
-                                
-                                world.updateParty(party.getId(), PartyOperation.JOIN, partyplayer);
-                                player.receivePartyMemberHP();
-                                player.updatePartyMemberHP();
-                            } else {
-                                c.announce(MaplePacketCreator.partyStatusMessage(17));
-                            }
+                    party = world.getParty(partyid);
+                    if (party != null) {
+                        if (party.getMembers().size() < 6) {
+                            partyplayer = new MaplePartyCharacter(player);
+                            player.getMap().addPartyMember(player);
+
+                            world.updateParty(party.getId(), PartyOperation.JOIN, partyplayer);
+                            player.receivePartyMemberHP();
+                            player.updatePartyMemberHP();
                         } else {
-                            c.announce(MaplePacketCreator.serverNotice(5, "The person you have invited to the party is already in one."));
+                            c.announce(MaplePacketCreator.partyStatusMessage(17));
                         }
+                    } else {
+                        c.announce(MaplePacketCreator.serverNotice(5, "The person you have invited to the party is already in one."));
+                    }
                 } else {
                     c.announce(MaplePacketCreator.serverNotice(5, "You can't join the party as you are already in one."));
                 }
@@ -118,22 +118,22 @@ public final class PartyOperationHandler extends AbstractMaplePacketHandler {
                 String name = slea.readMapleAsciiString();
                 MapleCharacter invited = world.getPlayerStorage().getCharacterByName(name);
                 if (invited != null) {
-                    if(invited.getLevel() < 10 && (!ServerConstants.USE_PARTY_FOR_STARTERS || player.getLevel() >= 10)) { //min requirement is level 10
+                    if (invited.getLevel() < 10 && (!ServerConstants.USE_PARTY_FOR_STARTERS || player.getLevel() >= 10)) { //min requirement is level 10
                         c.announce(MaplePacketCreator.serverNotice(5, "The player you have invited does not meet the requirements."));
                         return;
                     }
-                    if(ServerConstants.USE_PARTY_FOR_STARTERS && invited.getLevel() >= 10 && player.getLevel() < 10) {    //trying to invite high level
+                    if (ServerConstants.USE_PARTY_FOR_STARTERS && invited.getLevel() >= 10 && player.getLevel() < 10) {    //trying to invite high level
                         c.announce(MaplePacketCreator.serverNotice(5, "The player you have invited does not meet the requirements."));
                         return;
                     }
-                    
+
                     if (invited.getParty() == null) {
                         if (player.getParty() == null) {
-                            if(player.getLevel() < 10 && !ServerConstants.USE_PARTY_FOR_STARTERS) {
+                            if (player.getLevel() < 10 && !ServerConstants.USE_PARTY_FOR_STARTERS) {
                                 c.announce(MaplePacketCreator.partyStatusMessage(10));
                                 return;
                             }
-                            
+
                             partyplayer = new MaplePartyCharacter(player);
                             party = world.createParty(partyplayer);
                             player.setParty(party);
@@ -160,18 +160,20 @@ public final class PartyOperationHandler extends AbstractMaplePacketHandler {
                     MaplePartyCharacter expelled = party.getMemberById(cid);
                     if (expelled != null) {
                         MapleCharacter emc = expelled.getPlayer();
-                        if(emc != null) {
+                        if (emc != null) {
                             MapleMap map = emc.getMap();
-                            if(map != null) map.removePartyMember(emc);
-                            
+                            if (map != null) {
+                                map.removePartyMember(emc);
+                            }
+
                             EventInstanceManager eim = emc.getEventInstance();
-                            if(eim != null) {
+                            if (eim != null) {
                                 eim.leftParty(emc);
                             }
-                            
+
                             emc.setParty(null);
                         }
-                        
+
                         world.updateParty(party.getId(), PartyOperation.EXPEL, expelled);
                     }
                 }
@@ -183,6 +185,6 @@ public final class PartyOperationHandler extends AbstractMaplePacketHandler {
                 world.updateParty(party.getId(), PartyOperation.CHANGE_LEADER, newLeadr);
                 break;
             }
-        }    
+        }
     }
 }

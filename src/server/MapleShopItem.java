@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package server;
 
 /**
@@ -26,6 +26,7 @@ package server;
  * @author Matze
  */
 public class MapleShopItem {
+
     private short buyable;
     private int itemId;
     private int price;

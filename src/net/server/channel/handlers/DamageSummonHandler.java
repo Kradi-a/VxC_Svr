@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package net.server.channel.handlers;
 
 import client.MapleBuffStat;
@@ -32,18 +32,19 @@ import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class DamageSummonHandler extends AbstractMaplePacketHandler {
+
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         int oid = slea.readInt();
         slea.skip(1);   // -1
         int damage = slea.readInt();
         int monsterIdFrom = slea.readInt();
-        
+
         MapleCharacter player = c.getPlayer();
         MapleMapObject mmo = player.getMap().getMapObject(oid);
-        
-        if(mmo != null && mmo instanceof MapleSummon) {
+
+        if (mmo != null && mmo instanceof MapleSummon) {
             MapleSummon summon = (MapleSummon) mmo;
-        
+
             summon.addHP(-damage);
             if (summon.getHP() <= 0) {
                 player.cancelEffectFromBuffStat(MapleBuffStat.PUPPET);

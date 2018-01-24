@@ -68,9 +68,10 @@ public class FredrickHandler extends AbstractMaplePacketHandler {
                     chr.gainMeso(chr.getMerchantMeso(), false);
                     chr.setMerchantMeso(0);
                     if (deleteItems(chr)) {
-                        if(chr.getHiredMerchant() != null)
+                        if (chr.getHiredMerchant() != null) {
                             chr.getHiredMerchant().clearItems();
-                        
+                        }
+
                         for (int i = 0; i < items.size(); i++) {
                             Item item = items.get(i).getLeft();
                             MapleInventoryManipulator.addFromDrop(c, item, false);
@@ -78,7 +79,7 @@ public class FredrickHandler extends AbstractMaplePacketHandler {
                             FilePrinter.print(FilePrinter.FREDRICK + chr.getName() + ".txt", chr.getName() + " gained " + item.getQuantity() + " " + itemName + " (" + item.getItemId() + ")\r\n");
                         }
                         c.announce(MaplePacketCreator.fredrickMessage((byte) 0x1E));
-                        
+
                     } else {
                         chr.message("An unknown error has occured.");
                     }

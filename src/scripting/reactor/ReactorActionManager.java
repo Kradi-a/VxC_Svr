@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package scripting.reactor;
 
 import client.MapleCharacter;
@@ -52,6 +52,7 @@ import server.maps.ReactorDropEntry;
  * @author Ronan
  */
 public class ReactorActionManager extends AbstractPlayerInteraction {
+
     private MapleReactor reactor;
     private MapleClient client;
     private Invocable iv;
@@ -67,7 +68,7 @@ public class ReactorActionManager extends AbstractPlayerInteraction {
     public void hitReactor() {
         reactor.hitReactor(client);
     }
-    
+
     public void destroyNpc(int npcId) {
         reactor.getMap().destroyNPC(npcId);
     }
@@ -79,15 +80,15 @@ public class ReactorActionManager extends AbstractPlayerInteraction {
     public void sprayItems(boolean meso, int mesoChance, int minMeso, int maxMeso) {
         sprayItems(meso, mesoChance, minMeso, maxMeso, 0);
     }
-    
+
     public void sprayItems(boolean meso, int mesoChance, int minMeso, int maxMeso, int minItems) {
-        sprayItems((int)reactor.getPosition().getX(), (int)reactor.getPosition().getY(), meso, mesoChance, minMeso, maxMeso, minItems);
+        sprayItems((int) reactor.getPosition().getX(), (int) reactor.getPosition().getY(), meso, mesoChance, minMeso, maxMeso, minItems);
     }
 
     public void sprayItems(int posX, int posY, boolean meso, int mesoChance, int minMeso, int maxMeso, int minItems) {
         dropItems(true, posX, posY, meso, mesoChance, minMeso, maxMeso, minItems);
     }
-    
+
     public void dropItems() {
         dropItems(false, 0, 0, 0, 0);
     }
@@ -95,18 +96,20 @@ public class ReactorActionManager extends AbstractPlayerInteraction {
     public void dropItems(boolean meso, int mesoChance, int minMeso, int maxMeso) {
         dropItems(meso, mesoChance, minMeso, maxMeso, 0);
     }
-    
+
     public void dropItems(boolean meso, int mesoChance, int minMeso, int maxMeso, int minItems) {
-        dropItems((int)reactor.getPosition().getX(), (int)reactor.getPosition().getY(), meso, mesoChance, minMeso, maxMeso, minItems);
+        dropItems((int) reactor.getPosition().getX(), (int) reactor.getPosition().getY(), meso, mesoChance, minMeso, maxMeso, minItems);
     }
 
     public void dropItems(int posX, int posY, boolean meso, int mesoChance, int minMeso, int maxMeso, int minItems) {
         dropItems(false, posX, posY, meso, mesoChance, minMeso, maxMeso, minItems);
     }
-    
+
     public void dropItems(boolean delayed, int posX, int posY, boolean meso, int mesoChance, final int minMeso, final int maxMeso, int minItems) {
-        if(c.getPlayer() == null) return;
-        
+        if (c.getPlayer() == null) {
+            return;
+        }
+
         List<ReactorDropEntry> chances = getDropChances();
         List<ReactorDropEntry> items = new LinkedList<>();
         int numItems = 0;
@@ -126,13 +129,13 @@ public class ReactorActionManager extends AbstractPlayerInteraction {
             numItems++;
         }
         java.util.Collections.shuffle(items);
-        
+
         final Point dropPos = new Point(posX, posY);
         dropPos.x -= (12 * numItems);
-        
-        if(!delayed) {
+
+        if (!delayed) {
             MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
-            
+
             for (ReactorDropEntry d : items) {
                 if (d.itemId == 0) {
                     int range = maxMeso - minMeso;
@@ -141,14 +144,14 @@ public class ReactorActionManager extends AbstractPlayerInteraction {
                     reactor.getMap().spawnMesoDrop(mesoDrop, reactor.getMap().calcDropPos(dropPos, reactor.getPosition()), reactor, client.getPlayer(), false, (byte) 2);
                 } else {
                     Item drop;
-                    
+
                     if (ItemConstants.getInventoryType(d.itemId) != MapleInventoryType.EQUIP) {
                         drop = new Item(d.itemId, (short) 0, (short) 1);
                     } else {
                         drop = ii.randomizeStats((Equip) ii.getEquipById(d.itemId));
                     }
 
-                    reactor.getMap().dropFromReactor(getPlayer(), reactor, drop, dropPos, (short)d.questid);
+                    reactor.getMap().dropFromReactor(getPlayer(), reactor, drop, dropPos, (short) d.questid);
                 }
                 dropPos.x += 25;
             }
@@ -157,15 +160,15 @@ public class ReactorActionManager extends AbstractPlayerInteraction {
             final MapleReactor r = reactor;
             final List<ReactorDropEntry> dropItems = items;
             final int worldMesoRate = client.getWorldServer().getMesoRate();
-            
+
             sprayTask = TimerManager.getInstance().register(new Runnable() {
                 @Override
                 public void run() {
-                    if(dropItems.isEmpty()) {
+                    if (dropItems.isEmpty()) {
                         sprayTask.cancel(false);
                         return;
                     }
-                    
+
                     ReactorDropEntry d = dropItems.remove(0);
                     if (d.itemId == 0) {
                         int range = maxMeso - minMeso;
@@ -174,7 +177,7 @@ public class ReactorActionManager extends AbstractPlayerInteraction {
                         r.getMap().spawnMesoDrop(mesoDrop, r.getMap().calcDropPos(dropPos, r.getPosition()), r, chr, false, (byte) 2);
                     } else {
                         Item drop;
-                        
+
                         if (ItemConstants.getInventoryType(d.itemId) != MapleInventoryType.EQUIP) {
                             drop = new Item(d.itemId, (short) 0, (short) 1);
                         } else {
@@ -182,9 +185,9 @@ public class ReactorActionManager extends AbstractPlayerInteraction {
                             drop = ii.randomizeStats((Equip) ii.getEquipById(d.itemId));
                         }
 
-                        r.getMap().dropFromReactor(getPlayer(), r, drop, dropPos, (short)d.questid);
+                        r.getMap().dropFromReactor(getPlayer(), r, drop, dropPos, (short) d.questid);
                     }
-                    
+
                     dropPos.x += 25;
                 }
             }, 100);
@@ -222,19 +225,19 @@ public class ReactorActionManager extends AbstractPlayerInteraction {
         pos.y -= 10;
         return pos;
     }
-    
+
     public void spawnNpc(int npcId) {
         spawnNpc(npcId, getPosition());
     }
-    
+
     public void spawnNpc(int npcId, Point pos) {
         spawnNpc(npcId, pos, reactor.getMap());
     }
-    
+
     public void hitMonsterWithReactor(int id, int hitsToKill) {  // until someone comes with a better solution, why not?
         MapleMonster mm = reactor.getMap().getMonsterById(id);
-        if(mm != null) {
-            int damage = (int)Math.ceil(mm.getMaxHp() / hitsToKill);
+        if (mm != null) {
+            int damage = (int) Math.ceil(mm.getMaxHp() / hitsToKill);
             reactor.getMap().damageMonster(this.getPlayer(), mm, damage);
         }
     }
@@ -246,7 +249,7 @@ public class ReactorActionManager extends AbstractPlayerInteraction {
     public void spawnFakeMonster(int id) {
         reactor.getMap().spawnFakeMonsterOnGroundBelow(MapleLifeFactory.getMonster(id), getPosition());
     }
-    
+
     public ScheduledFuture<?> schedule(String methodName, long delay) {
         return schedule(methodName, null, delay);
     }

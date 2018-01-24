@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package net.server.channel.handlers;
 
 import java.sql.PreparedStatement;
@@ -33,17 +33,19 @@ import client.MapleClient;
 import java.sql.Connection;
 
 public final class NoteActionHandler extends AbstractMaplePacketHandler {
+
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         int action = slea.readByte();
         if (action == 0 && c.getPlayer().getCashShop().getAvailableNotes() > 0) {
             String charname = slea.readMapleAsciiString();
             String message = slea.readMapleAsciiString();
             try {
-                if (c.getPlayer().getCashShop().isOpened())
+                if (c.getPlayer().getCashShop().isOpened()) {
                     c.announce(MaplePacketCreator.showCashInventory(c));
-                
-                    c.getPlayer().sendNote(charname, message, (byte) 1);
-                    c.getPlayer().getCashShop().decreaseNotes();
+                }
+
+                c.getPlayer().sendNote(charname, message, (byte) 1);
+                c.getPlayer().getCashShop().decreaseNotes();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -61,8 +63,9 @@ public final class NoteActionHandler extends AbstractMaplePacketHandler {
                     ps = con.prepareStatement("SELECT `fame` FROM notes WHERE id=? AND deleted=0");
                     ps.setInt(1, id);
                     ResultSet rs = ps.executeQuery();
-                    if (rs.next())
-                            fame += rs.getInt("fame");
+                    if (rs.next()) {
+                        fame += rs.getInt("fame");
+                    }
                     rs.close();
 
                     ps = con.prepareStatement("UPDATE notes SET `deleted` = 1 WHERE id = ?");

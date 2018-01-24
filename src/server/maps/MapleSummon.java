@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package server.maps;
 
 import java.awt.Point;
@@ -32,6 +32,7 @@ import tools.MaplePacketCreator;
  * @author Jan
  */
 public class MapleSummon extends AbstractAnimatedMapleMapObject {
+
     private MapleCharacter owner;
     private byte skillLevel;
     private int skill, hp;
@@ -41,14 +42,18 @@ public class MapleSummon extends AbstractAnimatedMapleMapObject {
         this.owner = owner;
         this.skill = skill;
         this.skillLevel = owner.getSkillLevel(SkillFactory.getSkill(skill));
-        if (skillLevel == 0) throw new RuntimeException();
-        
+        if (skillLevel == 0) {
+            throw new RuntimeException();
+        }
+
         this.movementType = movementType;
         setPosition(pos);
     }
 
     public void sendSpawnData(MapleClient client) {
-        if (this != null) client.announce(MaplePacketCreator.spawnSummon(this, false));
+        if (this != null) {
+            client.announce(MaplePacketCreator.spawnSummon(this, false));
+        }
 
     }
 
@@ -90,12 +95,12 @@ public class MapleSummon extends AbstractAnimatedMapleMapObject {
     }
 
     public final boolean isPuppet() {
-	switch (skill) {
-	    case 3111002:
-	    case 3211002:
-	    case 13111004:
-		return true;
-	}
-	return false;
+        switch (skill) {
+            case 3111002:
+            case 3211002:
+            case 13111004:
+                return true;
+        }
+        return false;
     }
 }

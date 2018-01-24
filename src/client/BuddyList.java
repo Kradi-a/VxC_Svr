@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package client;
 
 import java.sql.PreparedStatement;
@@ -34,6 +34,7 @@ import tools.DatabaseConnection;
 import tools.MaplePacketCreator;
 
 public class BuddyList {
+
     public enum BuddyOperation {
         ADDED, DELETED
     }
@@ -111,7 +112,7 @@ public class BuddyList {
     public void loadFromDb(int characterId) {
         try {
             Connection con = DatabaseConnection.getConnection();
-            
+
             PreparedStatement ps = con.prepareStatement("SELECT b.buddyid, b.pending, b.group, c.name as buddyname FROM buddies as b, characters as c WHERE c.id = b.buddyid AND b.characterid = ?");
             ps.setInt(1, characterId);
             ResultSet rs = ps.executeQuery();

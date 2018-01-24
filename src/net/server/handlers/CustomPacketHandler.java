@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package net.server.handlers;
 
 import client.MapleClient;
@@ -27,6 +27,7 @@ import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public class CustomPacketHandler implements MaplePacketHandler {
+
     @Override
     public void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         if (slea.available() > 0 && c.getGMLevel() == 4) {//w/e       

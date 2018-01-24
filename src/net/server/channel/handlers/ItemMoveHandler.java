@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package net.server.channel.handlers;
 
 import client.MapleClient;
@@ -33,19 +33,20 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * @author Matze
  */
 public final class ItemMoveHandler extends AbstractMaplePacketHandler {
+
     @Override
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         slea.skip(4);
-        if(c.getPlayer().getAutobanManager().getLastSpam(6) + 300 > System.currentTimeMillis()) {
+        if (c.getPlayer().getAutobanManager().getLastSpam(6) + 300 > System.currentTimeMillis()) {
             c.announce(MaplePacketCreator.enableActions());
             return;
         }
-        
+
         MapleInventoryType type = MapleInventoryType.getByType(slea.readByte());
         short src = slea.readShort();     //is there any reason to use byte instead of short in src and action?
         short action = slea.readShort();
         short quantity = slea.readShort();
-        
+
         if (src < 0 && action > 0) {
             MapleInventoryManipulator.unequip(c, src, action);
         } else if (action < 0) {
@@ -55,8 +56,10 @@ public final class ItemMoveHandler extends AbstractMaplePacketHandler {
         } else {
             MapleInventoryManipulator.move(c, type, src, action);
         }
-        
-        if (c.getPlayer().getMap().getHPDec() > 0) c.getPlayer().resetHpDecreaseTask();
+
+        if (c.getPlayer().getMap().getHPDec() > 0) {
+            c.getPlayer().resetHpDecreaseTask();
+        }
         c.getPlayer().getAutobanManager().spam(6);
     }
 }

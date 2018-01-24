@@ -18,19 +18,20 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package tools.data.output;
 
 import java.io.ByteArrayOutputStream;
 
 /**
  * Uses a byte array to output a stream of bytes.
- * 
+ *
  * @author Frz
  * @version 1.0
  * @since Revision 352
  */
 class BAOSByteOutputStream implements ByteOutputStream {
+
     private ByteArrayOutputStream baos;
 
     /**

@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package scripting.item;
 
 import client.MapleClient;
@@ -29,7 +29,8 @@ import scripting.AbstractPlayerInteraction;
  * @author kevintjuh93
  */
 public class ItemScriptMethods extends AbstractPlayerInteraction {
+
     public ItemScriptMethods(MapleClient c) {
-    	super(c);
+        super(c);
     }
 }

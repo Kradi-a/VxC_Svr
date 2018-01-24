@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package net.server.channel.handlers;
 
 import client.MapleCharacter;
@@ -37,6 +37,7 @@ import tools.data.input.SeekableLittleEndianAccessor;
  * @author kevintjuh93
  */
 public final class UseCatchItemHandler extends AbstractMaplePacketHandler {
+
     @Override
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         MapleCharacter chr = c.getPlayer();
@@ -48,10 +49,10 @@ public final class UseCatchItemHandler extends AbstractMaplePacketHandler {
 
         MapleMonster mob = chr.getMap().getMonsterByOid(monsterid);
         if (chr.getInventory(ItemConstants.getInventoryType(itemId)).countById(itemId) <= 0) {
-           return;
+            return;
         }
         if (mob == null) {
-           return;
+            return;
         }
         switch (itemId) {
             case 2270000:
@@ -60,7 +61,7 @@ public final class UseCatchItemHandler extends AbstractMaplePacketHandler {
                     mob.getMap().killMonster(mob, null, false);
                     MapleInventoryManipulator.removeById(c, MapleInventoryType.USE, itemId, 1, true, true);
                     MapleInventoryManipulator.addById(c, 1902000, (short) 1, "", -1);
-                 }
+                }
                 c.announce(MaplePacketCreator.enableActions());
                 break;
             case 2270001:
@@ -96,7 +97,7 @@ public final class UseCatchItemHandler extends AbstractMaplePacketHandler {
                             c.announce(MaplePacketCreator.catchMessage(0));
                         }
                     }
-                c.announce(MaplePacketCreator.enableActions());
+                    c.announce(MaplePacketCreator.enableActions());
                 }
                 break;
             case 2270003:
@@ -154,12 +155,12 @@ public final class UseCatchItemHandler extends AbstractMaplePacketHandler {
             case 2270004:
                 if (mob.getId() == 9300175) {
                     if (mob.getHp() < ((mob.getMaxHp() / 10) * 4)) {
-                    chr.getMap().broadcastMessage(MaplePacketCreator.catchMonster(monsterid, itemId, (byte) 1));
-                    mob.getMap().killMonster(mob, null, false);
-                    MapleInventoryManipulator.removeById(c, MapleInventoryType.USE, itemId, 1, true, true);
-                    MapleInventoryManipulator.addById(c, 4001169, (short) 1, "", -1);
+                        chr.getMap().broadcastMessage(MaplePacketCreator.catchMonster(monsterid, itemId, (byte) 1));
+                        mob.getMap().killMonster(mob, null, false);
+                        MapleInventoryManipulator.removeById(c, MapleInventoryType.USE, itemId, 1, true, true);
+                        MapleInventoryManipulator.addById(c, 4001169, (short) 1, "", -1);
                     } else {
-                    c.announce(MaplePacketCreator.catchMessage(0));
+                        c.announce(MaplePacketCreator.catchMessage(0));
                     }
                 }
                 c.announce(MaplePacketCreator.enableActions());
@@ -179,7 +180,7 @@ public final class UseCatchItemHandler extends AbstractMaplePacketHandler {
                 }
                 break;
             default:
-               // System.out.println("UseCatchItemHandler: \r\n" + slea.toString());
+            // System.out.println("UseCatchItemHandler: \r\n" + slea.toString());
         }
     }
 }

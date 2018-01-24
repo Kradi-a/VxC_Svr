@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package provider.wz;
 
 import java.io.BufferedInputStream;
@@ -36,6 +36,7 @@ import tools.data.input.InputStreamByteStream;
 import tools.data.input.LittleEndianAccessor;
 
 public class ListWZFile {
+
     private LittleEndianAccessor lea;
     private List<String> entries = new ArrayList<String>();
     private static Collection<String> modernImgs = new HashSet<String>();

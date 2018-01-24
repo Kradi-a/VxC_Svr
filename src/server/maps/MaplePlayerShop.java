@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package server.maps;
 
 import client.MapleCharacter;
@@ -49,6 +49,7 @@ import tools.locks.MonitoredLockType;
  * @author Ronan (concurrency protection)
  */
 public class MaplePlayerShop extends AbstractMapleMapObject {
+
     private AtomicBoolean open = new AtomicBoolean(false);
     private MapleCharacter owner;
     private MapleCharacter[] visitors = new MapleCharacter[3];
@@ -69,19 +70,19 @@ public class MaplePlayerShop extends AbstractMapleMapObject {
     public int getChannel() {
         return owner.getClient().getChannel();
     }
-    
+
     public int getMapId() {
         return owner.getMapId();
     }
-    
+
     public boolean isOpen() {
         return open.get();
     }
-    
+
     public void setOpen(boolean openShop) {
         open.set(openShop);
     }
-    
+
     public boolean hasFreeSlot() {
         visitorLock.lock();
         try {
@@ -103,8 +104,10 @@ public class MaplePlayerShop extends AbstractMapleMapObject {
                     visitors[i] = visitor;
                     visitor.setSlot(i);
                     this.broadcast(MaplePacketCreator.getPlayerShopNewVisitor(visitor, i + 1));
-                    
-                    if(i == 2) visitor.getMap().broadcastMessage(MaplePacketCreator.addCharBox(owner, 1));
+
+                    if (i == 2) {
+                        visitor.getMap().broadcastMessage(MaplePacketCreator.addCharBox(owner, 1));
+                    }
                     break;
                 }
             }
@@ -118,7 +121,7 @@ public class MaplePlayerShop extends AbstractMapleMapObject {
             owner.getMap().removeMapObject(this);
             owner.setPlayerShop(null);
         }
-        
+
         visitorLock.lock();
         try {
             for (int i = 0; i < 3; i++) {
@@ -133,7 +136,7 @@ public class MaplePlayerShop extends AbstractMapleMapObject {
             visitorLock.unlock();
         }
     }
-    
+
     public void removeVisitor(MapleCharacter visitor) {
         if (visitor == owner) {
             owner.getMap().removeMapObject(this);
@@ -144,17 +147,23 @@ public class MaplePlayerShop extends AbstractMapleMapObject {
                 for (int i = 0; i < 3; i++) {
                     if (visitors[i] != null && visitors[i].getId() == visitor.getId()) {
                         visitor.setSlot(-1);    //absolutely cant remove player slot for late players without dc'ing them... heh
-                        
-                        for(int j = i; j < 2; j++) {
-                            if(visitors[j] != null) owner.announce(MaplePacketCreator.getPlayerShopRemoveVisitor(j + 1));
+
+                        for (int j = i; j < 2; j++) {
+                            if (visitors[j] != null) {
+                                owner.announce(MaplePacketCreator.getPlayerShopRemoveVisitor(j + 1));
+                            }
                             visitors[j] = visitors[j + 1];
-                            if(visitors[j] != null) visitors[j].setSlot(j);
+                            if (visitors[j] != null) {
+                                visitors[j].setSlot(j);
+                            }
                         }
                         visitors[2] = null;
-                        for(int j = i; j < 2; j++) {
-                            if(visitors[j] != null) owner.announce(MaplePacketCreator.getPlayerShopNewVisitor(visitors[j], j + 1));
+                        for (int j = i; j < 2; j++) {
+                            if (visitors[j] != null) {
+                                owner.announce(MaplePacketCreator.getPlayerShopNewVisitor(visitors[j], j + 1));
+                            }
                         }
-                        
+
                         this.broadcastRestoreToVisitors();
                         return;
                     }
@@ -162,8 +171,10 @@ public class MaplePlayerShop extends AbstractMapleMapObject {
             } finally {
                 visitorLock.unlock();
             }
-            
-            if(owner.getPlayerShop() != null) visitor.getMap().broadcastMessage(MaplePacketCreator.addCharBox(owner, 4));
+
+            if (owner.getPlayerShop() != null) {
+                visitor.getMap().broadcastMessage(MaplePacketCreator.addCharBox(owner, 4));
+            }
         }
     }
 
@@ -191,9 +202,10 @@ public class MaplePlayerShop extends AbstractMapleMapObject {
     private static boolean canBuy(MapleClient c, Item newItem) {
         return MapleInventoryManipulator.checkSpace(c, newItem.getItemId(), newItem.getQuantity(), newItem.getOwner()) && MapleInventoryManipulator.addFromDrop(c, newItem, false);
     }
-    
+
     /**
      * no warnings for now o.o
+     *
      * @param c
      * @param item
      * @param quantity
@@ -210,15 +222,15 @@ public class MaplePlayerShop extends AbstractMapleMapObject {
                     return;
                 }
                 synchronized (c.getPlayer()) {
-                    int price = (int) Math.min((long)pItem.getPrice() * quantity, Integer.MAX_VALUE);
-                    
+                    int price = (int) Math.min((long) pItem.getPrice() * quantity, Integer.MAX_VALUE);
+
                     if (c.getPlayer().getMeso() >= price) {
                         if (canBuy(c, newItem)) {
                             c.getPlayer().gainMeso(-price, false);
-                            
+
                             announceItemSold(newItem, price);   // idea thanks to vcoc
                             owner.gainMeso(price, true);
-                            
+
                             pItem.setBundles((short) (pItem.getBundles() - quantity));
                             if (pItem.getBundles() < 1) {
                                 pItem.setDoesExist(false);
@@ -237,10 +249,10 @@ public class MaplePlayerShop extends AbstractMapleMapObject {
             }
         }
     }
-    
+
     private void announceItemSold(Item item, int mesos) {
         String qtyStr = (item.getQuantity() > 1) ? " (qty. " + item.getQuantity() + ")" : "";
-        
+
         owner.dropMessage(6, "[PLAYER SHOP] Item '" + MapleItemInformationProvider.getInstance().getName(item.getItemId()) + "'" + qtyStr + " has been sold for " + mesos + " mesos.");
     }
 
@@ -256,7 +268,7 @@ public class MaplePlayerShop extends AbstractMapleMapObject {
             visitorLock.unlock();
         }
     }
-    
+
     public void broadcastRestoreToVisitors() {
         visitorLock.lock();
         try {
@@ -265,13 +277,13 @@ public class MaplePlayerShop extends AbstractMapleMapObject {
                     visitors[i].getClient().announce(MaplePacketCreator.getPlayerShopRemoveVisitor(i + 1));
                 }
             }
-            
+
             for (int i = 0; i < 3; i++) {
                 if (visitors[i] != null) {
                     visitors[i].getClient().announce(MaplePacketCreator.getPlayerShop(this, false));
                 }
             }
-            
+
             recoverChatLog();
         } finally {
             visitorLock.unlock();
@@ -280,7 +292,7 @@ public class MaplePlayerShop extends AbstractMapleMapObject {
 
     public void removeVisitors() {
         List<MapleCharacter> visitorList = new ArrayList<>(3);
-        
+
         visitorLock.lock();
         try {
             try {
@@ -296,8 +308,10 @@ public class MaplePlayerShop extends AbstractMapleMapObject {
         } finally {
             visitorLock.unlock();
         }
-        
-        for(MapleCharacter mc : visitorList) forceRemoveVisitor(mc);
+
+        for (MapleCharacter mc : visitorList) {
+            forceRemoveVisitor(mc);
+        }
         if (owner != null) {
             forceRemoveVisitor(owner);
         }
@@ -331,39 +345,41 @@ public class MaplePlayerShop extends AbstractMapleMapObject {
                 s = 0;
             }
         }
-        
+
         return s;
     }
-    
+
     public void chat(MapleClient c, String chat) {
         byte s = getVisitorSlot(c.getPlayer());
-        
-        synchronized(chatLog) {
+
+        synchronized (chatLog) {
             chatLog.add(new Pair<>(c.getPlayer(), chat));
-            if(chatLog.size() > 25) chatLog.remove(0);
+            if (chatLog.size() > 25) {
+                chatLog.remove(0);
+            }
             chatSlot.put(c.getPlayer().getId(), s);
         }
-        
+
         broadcast(MaplePacketCreator.getPlayerShopChat(c.getPlayer(), chat, s));
     }
-    
+
     private void recoverChatLog() {
-        synchronized(chatLog) {
-            for(Pair<MapleCharacter, String> it : chatLog) {
+        synchronized (chatLog) {
+            for (Pair<MapleCharacter, String> it : chatLog) {
                 MapleCharacter chr = it.getLeft();
                 Byte pos = chatSlot.get(chr.getId());
-                
+
                 broadcastToVisitors(MaplePacketCreator.getPlayerShopChat(chr, it.getRight(), pos));
             }
         }
     }
-    
+
     private void clearChatLog() {
-        synchronized(chatLog) {
+        synchronized (chatLog) {
             chatLog.clear();
         }
     }
-    
+
     public void closeShop() {
         owner.getMap().broadcastMessage(MaplePacketCreator.removeCharBox(owner));
         clearChatLog();
@@ -388,7 +404,7 @@ public class MaplePlayerShop extends AbstractMapleMapObject {
         try {
             MapleCharacter[] copy = new MapleCharacter[3];
             System.arraycopy(visitors, 0, copy, 0, visitors.length);
-                    
+
             return copy;
         } finally {
             visitorLock.unlock();
@@ -400,14 +416,14 @@ public class MaplePlayerShop extends AbstractMapleMapObject {
             return Collections.unmodifiableList(items);
         }
     }
-    
+
     public boolean hasItem(int itemid) {
-        for(MaplePlayerShopItem mpsi : getItems()) {
-            if(mpsi.getItem().getItemId() == itemid && mpsi.isExist() && mpsi.getBundles() > 0) {
+        for (MaplePlayerShopItem mpsi : getItems()) {
+            if (mpsi.getItem().getItemId() == itemid && mpsi.isExist() && mpsi.getBundles() > 0) {
                 return true;
             }
         }
-        
+
         return false;
     }
 
@@ -423,7 +439,7 @@ public class MaplePlayerShop extends AbstractMapleMapObject {
         if (!bannedList.contains(name)) {
             bannedList.add(name);
         }
-        
+
         MapleCharacter target = null;
         visitorLock.lock();
         try {
@@ -436,8 +452,8 @@ public class MaplePlayerShop extends AbstractMapleMapObject {
         } finally {
             visitorLock.unlock();
         }
-        
-        if(target != null) {
+
+        if (target != null) {
             target.getClient().announce(MaplePacketCreator.shopErrorMessage(5, 1));
             removeVisitor(target);
         }
@@ -446,18 +462,18 @@ public class MaplePlayerShop extends AbstractMapleMapObject {
     public boolean isBanned(String name) {
         return bannedList.contains(name);
     }
-    
+
     public synchronized boolean visitShop(MapleCharacter chr) {
-        if(!open.get()) {
+        if (!open.get()) {
             chr.dropMessage(1, "This store is not yet open.");
             return false;
         }
-        
+
         if (this.isBanned(chr.getName())) {
             chr.dropMessage(1, "You have been banned from this store.");
             return false;
         }
-        
+
         visitorLock.lock();
         try {
             if (this.hasFreeSlot() && !this.isVisitor(chr)) {
@@ -473,17 +489,19 @@ public class MaplePlayerShop extends AbstractMapleMapObject {
             visitorLock.unlock();
         }
     }
-    
+
     public List<MaplePlayerShopItem> sendAvailableBundles(int itemid) {
         List<MaplePlayerShopItem> list = new LinkedList<>();
         List<MaplePlayerShopItem> all = new ArrayList<>();
-        
+
         synchronized (items) {
-            for(MaplePlayerShopItem mpsi : items) all.add(mpsi);
+            for (MaplePlayerShopItem mpsi : items) {
+                all.add(mpsi);
+            }
         }
-        
-        for(MaplePlayerShopItem mpsi : all) {
-            if(mpsi.getItem().getItemId() == itemid && mpsi.getBundles() > 0 && mpsi.isExist()) {
+
+        for (MaplePlayerShopItem mpsi : all) {
+            if (mpsi.getItem().getItemId() == itemid && mpsi.getBundles() > 0 && mpsi.isExist()) {
                 list.add(mpsi);
             }
         }

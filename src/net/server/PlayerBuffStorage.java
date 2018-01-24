@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package net.server;
 
 import java.util.HashMap;
@@ -33,8 +33,9 @@ import tools.locks.MonitoredReentrantLock;
  * @author Danny//changed to map :3
  */
 public class PlayerBuffStorage {
+
     private int id = (int) (Math.random() * 100);
-    private final Lock lock = new MonitoredReentrantLock(MonitoredLockType.BUFF_STORAGE, true);    
+    private final Lock lock = new MonitoredReentrantLock(MonitoredLockType.BUFF_STORAGE, true);
     private Map<Integer, List<PlayerBuffValueHolder>> buffs = new HashMap<>();
 
     public void addBuffsToStorage(int chrid, List<PlayerBuffValueHolder> toStore) {
@@ -52,7 +53,7 @@ public class PlayerBuffStorage {
             return buffs.remove(chrid);
         } finally {
             lock.unlock();
-        }        
+        }
     }
 
     @Override

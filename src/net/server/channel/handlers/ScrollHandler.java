@@ -90,7 +90,7 @@ public final class ScrollHandler extends AbstractMaplePacketHandler {
                 return;
             }
         }
-        
+
         if (ItemConstants.isCleanSlate(scroll.getItemId()) && !(toScroll.getLevel() + toScroll.getUpgradeSlots() < ii.getEquipStats(toScroll.getItemId()).get("tuc"))) { //upgrade slots can be over because of hammers
             return;
         }
@@ -126,11 +126,11 @@ public final class ScrollHandler extends AbstractMaplePacketHandler {
 
     public boolean canScroll(int scrollid, int itemid) {
         int sid = scrollid / 100;
-        
-        switch(sid) {
+
+        switch (sid) {
             case 20492: //scroll for accessory (pendant, belt, ring)
                 return canScroll(2041100, itemid) || canScroll(2041200, itemid) || canScroll(2041300, itemid);
-                
+
             default:
                 return (scrollid / 100) % 100 == (itemid / 10000) % 100;
         }

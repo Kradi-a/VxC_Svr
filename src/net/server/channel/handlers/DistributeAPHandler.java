@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package net.server.channel.handlers;
 
 import client.MapleCharacter;
@@ -39,6 +39,7 @@ import tools.Randomizer;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class DistributeAPHandler extends AbstractMaplePacketHandler {
+
     private static final int max = 32767;
 
     @Override
@@ -100,23 +101,24 @@ public final class DistributeAPHandler extends AbstractMaplePacketHandler {
         if (player.getHpMpApUsed() > 9999 || MaxHP >= 30000) {
             return MaxHP;
         }
-        
+
         return MaxHP + calcHpChange(player, job, usedAPReset);
     }
-    
+
     public static int calcHpChange(MapleCharacter player, MapleJob job, boolean usedAPReset) {
         int MaxHP = 0;
-        
+
         if (job.isA(MapleJob.WARRIOR) || job.isA(MapleJob.DAWNWARRIOR1)) {
-            if(!usedAPReset) {
+            if (!usedAPReset) {
                 Skill increaseHP = SkillFactory.getSkill(job.isA(MapleJob.DAWNWARRIOR1) ? DawnWarrior.MAX_HP_INCREASE : Warrior.IMPROVED_MAXHP);
                 int sLvl = player.getSkillLevel(increaseHP);
 
-                if(sLvl > 0)
+                if (sLvl > 0) {
                     MaxHP += increaseHP.getEffect(sLvl).getY();
+                }
             }
-            
-            if(ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
+
+            if (ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
                 if (usedAPReset) {
                     MaxHP += 20;
                 } else {
@@ -125,8 +127,8 @@ public final class DistributeAPHandler extends AbstractMaplePacketHandler {
             } else {
                 MaxHP += 20;
             }
-        } else if(job.isA(MapleJob.ARAN1)) {
-            if(ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
+        } else if (job.isA(MapleJob.ARAN1)) {
+            if (ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
                 if (usedAPReset) {
                     MaxHP += 20;
                 } else {
@@ -136,7 +138,7 @@ public final class DistributeAPHandler extends AbstractMaplePacketHandler {
                 MaxHP += 28;
             }
         } else if (job.isA(MapleJob.MAGICIAN) || job.isA(MapleJob.BLAZEWIZARD1)) {
-            if(ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
+            if (ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
                 if (usedAPReset) {
                     MaxHP += 6;
                 } else {
@@ -146,7 +148,7 @@ public final class DistributeAPHandler extends AbstractMaplePacketHandler {
                 MaxHP += 6;
             }
         } else if (job.isA(MapleJob.THIEF) || job.isA(MapleJob.NIGHTWALKER1)) {
-            if(ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
+            if (ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
                 if (usedAPReset) {
                     MaxHP += 16;
                 } else {
@@ -155,8 +157,8 @@ public final class DistributeAPHandler extends AbstractMaplePacketHandler {
             } else {
                 MaxHP += 16;
             }
-        } else if(job.isA(MapleJob.BOWMAN) || job.isA(MapleJob.WINDARCHER1)) {
-            if(ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
+        } else if (job.isA(MapleJob.BOWMAN) || job.isA(MapleJob.WINDARCHER1)) {
+            if (ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
                 if (usedAPReset) {
                     MaxHP += 16;
                 } else {
@@ -166,15 +168,16 @@ public final class DistributeAPHandler extends AbstractMaplePacketHandler {
                 MaxHP += 16;
             }
         } else if (job.isA(MapleJob.PIRATE) || job.isA(MapleJob.THUNDERBREAKER1)) {
-            if(!usedAPReset) {
+            if (!usedAPReset) {
                 Skill increaseHP = SkillFactory.getSkill(Brawler.IMPROVE_MAX_HP);
                 int sLvl = player.getSkillLevel(increaseHP);
 
-                if(sLvl > 0)
+                if (sLvl > 0) {
                     MaxHP += increaseHP.getEffect(sLvl).getY();
+                }
             }
-            
-            if(ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
+
+            if (ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
                 if (usedAPReset) {
                     MaxHP += 18;
                 } else {
@@ -185,14 +188,12 @@ public final class DistributeAPHandler extends AbstractMaplePacketHandler {
             }
         } else if (usedAPReset) {
             MaxHP += 8;
+        } else if (ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
+            MaxHP += Randomizer.rand(8, 12);
         } else {
-            if(ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
-                MaxHP += Randomizer.rand(8, 12);
-            } else {
-                MaxHP += 10;
-            }
+            MaxHP += 10;
         }
-        
+
         return MaxHP;
     }
 
@@ -203,16 +204,16 @@ public final class DistributeAPHandler extends AbstractMaplePacketHandler {
         if (player.getHpMpApUsed() > 9999 || player.getMaxMp() >= 30000) {
             return MaxMP;
         }
-        
+
         return MaxMP + calcMpChange(player, job, usedAPReset);
     }
-    
+
     public static int calcMpChange(MapleCharacter player, MapleJob job, boolean usedAPReset) {
         int MaxMP = 0;
-        
+
         if (job.isA(MapleJob.WARRIOR) || job.isA(MapleJob.DAWNWARRIOR1) || job.isA(MapleJob.ARAN1)) {
-            if(ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
-                if(!usedAPReset) {
+            if (ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
+                if (!usedAPReset) {
                     MaxMP += (Randomizer.rand(2, 4) + (player.getInt() / 10));
                 } else {
                     MaxMP += 2;
@@ -221,16 +222,17 @@ public final class DistributeAPHandler extends AbstractMaplePacketHandler {
                 MaxMP += 3;
             }
         } else if (job.isA(MapleJob.MAGICIAN) || job.isA(MapleJob.BLAZEWIZARD1)) {
-            if(!usedAPReset) {
+            if (!usedAPReset) {
                 Skill increaseMP = SkillFactory.getSkill(job.isA(MapleJob.BLAZEWIZARD1) ? BlazeWizard.INCREASING_MAX_MP : Magician.IMPROVED_MAX_MP_INCREASE);
                 int sLvl = player.getSkillLevel(increaseMP);
 
-                if(sLvl > 0)
+                if (sLvl > 0) {
                     MaxMP += increaseMP.getEffect(sLvl).getY();
+                }
             }
-            
-            if(ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
-                if(!usedAPReset) {
+
+            if (ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
+                if (!usedAPReset) {
                     MaxMP += (Randomizer.rand(12, 16) + (player.getInt() / 20));
                 } else {
                     MaxMP += 18;
@@ -239,8 +241,8 @@ public final class DistributeAPHandler extends AbstractMaplePacketHandler {
                 MaxMP += 18;
             }
         } else if (job.isA(MapleJob.BOWMAN) || job.isA(MapleJob.WINDARCHER1)) {
-            if(ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
-                if(!usedAPReset) {
+            if (ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
+                if (!usedAPReset) {
                     MaxMP += (Randomizer.rand(6, 8) + (player.getInt() / 10));
                 } else {
                     MaxMP += 10;
@@ -248,9 +250,9 @@ public final class DistributeAPHandler extends AbstractMaplePacketHandler {
             } else {
                 MaxMP += 10;
             }
-        } else if(job.isA(MapleJob.THIEF) || job.isA(MapleJob.NIGHTWALKER1)) {
-            if(ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
-                if(!usedAPReset) {
+        } else if (job.isA(MapleJob.THIEF) || job.isA(MapleJob.NIGHTWALKER1)) {
+            if (ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
+                if (!usedAPReset) {
                     MaxMP += (Randomizer.rand(6, 8) + (player.getInt() / 10));
                 } else {
                     MaxMP += 10;
@@ -259,8 +261,8 @@ public final class DistributeAPHandler extends AbstractMaplePacketHandler {
                 MaxMP += 10;
             }
         } else if (job.isA(MapleJob.PIRATE) || job.isA(MapleJob.THUNDERBREAKER1)) {
-            if(ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
-                if(!usedAPReset) {
+            if (ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
+                if (!usedAPReset) {
                     MaxMP += (Randomizer.rand(7, 9) + (player.getInt() / 10));
                 } else {
                     MaxMP += 14;
@@ -268,18 +270,16 @@ public final class DistributeAPHandler extends AbstractMaplePacketHandler {
             } else {
                 MaxMP += 14;
             }
-        } else {
-            if(ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
-                if(!usedAPReset) {
-                    MaxMP += (Randomizer.rand(4, 6) + (player.getInt() / 10));
-                } else {
-                    MaxMP += 6;
-                }
+        } else if (ServerConstants.USE_RANDOMIZE_HPMP_GAIN) {
+            if (!usedAPReset) {
+                MaxMP += (Randomizer.rand(4, 6) + (player.getInt() / 10));
             } else {
                 MaxMP += 6;
             }
+        } else {
+            MaxMP += 6;
         }
-        
+
         return MaxMP;
     }
 
@@ -296,44 +296,44 @@ public final class DistributeAPHandler extends AbstractMaplePacketHandler {
         player.setMaxMp(MaxMP);
         player.updateSingleStat(MapleStat.MAXMP, MaxMP);
     }
-    
+
     public static int takeHp(MapleCharacter player, MapleJob job) {
         int MaxHP = 0;
-        
+
         if (job.isA(MapleJob.WARRIOR) || job.isA(MapleJob.DAWNWARRIOR1) || job.isA(MapleJob.ARAN1)) {
             MaxHP += 54;
         } else if (job.isA(MapleJob.MAGICIAN) || job.isA(MapleJob.BLAZEWIZARD1)) {
             MaxHP += 10;
         } else if (job.isA(MapleJob.THIEF) || job.isA(MapleJob.NIGHTWALKER1)) {
             MaxHP += 20;
-        } else if(job.isA(MapleJob.BOWMAN) || job.isA(MapleJob.WINDARCHER1)) {
+        } else if (job.isA(MapleJob.BOWMAN) || job.isA(MapleJob.WINDARCHER1)) {
             MaxHP += 20;
         } else if (job.isA(MapleJob.PIRATE) || job.isA(MapleJob.THUNDERBREAKER1)) {
             MaxHP += 42;
         } else {
             MaxHP += 12;
         }
-        
+
         return MaxHP;
     }
-    
+
     public static int takeMp(MapleCharacter player, MapleJob job) {
         int MaxMP = 0;
-        
+
         if (job.isA(MapleJob.WARRIOR) || job.isA(MapleJob.DAWNWARRIOR1) || job.isA(MapleJob.ARAN1)) {
             MaxMP += 4;
         } else if (job.isA(MapleJob.MAGICIAN) || job.isA(MapleJob.BLAZEWIZARD1)) {
             MaxMP += 31;
         } else if (job.isA(MapleJob.BOWMAN) || job.isA(MapleJob.WINDARCHER1)) {
             MaxMP += 12;
-        } else if(job.isA(MapleJob.THIEF) || job.isA(MapleJob.NIGHTWALKER1)) {
+        } else if (job.isA(MapleJob.THIEF) || job.isA(MapleJob.NIGHTWALKER1)) {
             MaxMP += 12;
         } else if (job.isA(MapleJob.PIRATE) || job.isA(MapleJob.THUNDERBREAKER1)) {
             MaxMP += 16;
         } else {
             MaxMP += 8;
         }
-        
+
         return MaxMP;
     }
 }

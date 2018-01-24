@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package net.server.channel.handlers;
 
 import client.MapleCharacter;
@@ -31,6 +31,7 @@ import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class MessengerHandler extends AbstractMaplePacketHandler {
+
     @Override
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         String input;
@@ -73,12 +74,10 @@ public final class MessengerHandler extends AbstractMaplePacketHandler {
                         } else {
                             c.announce(MaplePacketCreator.messengerChat(player.getName() + " : " + input + " is already using Maple Messenger"));
                         }
+                    } else if (world.find(input) > -1) {
+                        world.messengerInvite(c.getPlayer().getName(), messenger.getId(), input, c.getChannel());
                     } else {
-                        if (world.find(input) > -1) {
-                            world.messengerInvite(c.getPlayer().getName(), messenger.getId(), input, c.getChannel());
-                        } else {
-                            c.announce(MaplePacketCreator.messengerNote(input, 4, 0));
-                        }
+                        c.announce(MaplePacketCreator.messengerNote(input, 4, 0));
                     }
                 } else {
                     c.announce(MaplePacketCreator.messengerChat(player.getName() + " : You cannot have more than 3 people in the Maple Messenger"));

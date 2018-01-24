@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package server.maps;
 
 import client.MapleClient;
@@ -43,6 +43,7 @@ import tools.locks.MonitoredLockType;
  * @author Ronan
  */
 public class MapleReactor extends AbstractMapleMapObject {
+
     private int rid;
     private MapleReactorStats stats;
     private byte state;
@@ -57,24 +58,24 @@ public class MapleReactor extends AbstractMapleMapObject {
     private Lock reactorLock = new MonitoredReentrantLock(MonitoredLockType.REACTOR, true);
 
     public MapleReactor(MapleReactorStats stats, int rid) {
-        this.evstate = (byte)0;
+        this.evstate = (byte) 0;
         this.stats = stats;
         this.rid = rid;
         this.alive = true;
     }
-    
+
     public void setShouldCollect(boolean collect) {
         this.shouldCollect = collect;
     }
-    
+
     public boolean getShouldCollect() {
         return shouldCollect;
     }
-    
+
     public void lockReactor() {
         reactorLock.lock();
     }
-    
+
     public void unlockReactor() {
         reactorLock.unlock();
     }
@@ -82,19 +83,19 @@ public class MapleReactor extends AbstractMapleMapObject {
     public void setState(byte state) {
         this.state = state;
     }
-    
+
     public byte getState() {
         return state;
     }
-    
+
     public void setEventState(byte substate) {
         this.evstate = substate;
     }
-    
+
     public byte getEventState() {
         return evstate;
     }
-    
+
     public MapleReactorStats getStats() {
         return stats;
     }
@@ -119,7 +120,7 @@ public class MapleReactor extends AbstractMapleMapObject {
     public int getReactorType() {
         return stats.getType(state);
     }
-    
+
     public boolean isRecentHitFromAttack() {
         return attackHit;
     }
@@ -167,10 +168,12 @@ public class MapleReactor extends AbstractMapleMapObject {
         cancelReactorTimeout();
         setShouldCollect(true);
         refreshReactorTimeout();
-        
-        if(map != null) map.searchItemReactors(this);
+
+        if (map != null) {
+            map.searchItemReactors(this);
+        }
     }
-    
+
     public void forceHitReactor(final byte newState) {
         this.lockReactor();
         try {
@@ -180,10 +183,12 @@ public class MapleReactor extends AbstractMapleMapObject {
             this.unlockReactor();
         }
     }
-    
+
     private void tryForceHitReactor(final byte newState) {  // weak hit state signal, if already changed reactor state before timeout then drop this
-        if(!this.reactorLock.tryLock()) return;
-        
+        if (!this.reactorLock.tryLock()) {
+            return;
+        }
+
         try {
             this.resetReactorActions(newState);
             map.broadcastMessage(MaplePacketCreator.triggerReactor(this, (short) 0));
@@ -191,19 +196,19 @@ public class MapleReactor extends AbstractMapleMapObject {
             this.unlockReactor();
         }
     }
-    
+
     public void cancelReactorTimeout() {
         if (timeoutTask != null) {
             timeoutTask.cancel(false);
             timeoutTask = null;
         }
     }
-    
+
     private void refreshReactorTimeout() {
         int timeOut = stats.getTimeout(state);
-        if(timeOut > -1) {
+        if (timeOut > -1) {
             final byte nextState = stats.getTimeoutState(state);
-            
+
             timeoutTask = TimerManager.getInstance().schedule(new Runnable() {
                 @Override
                 public void run() {
@@ -213,7 +218,7 @@ public class MapleReactor extends AbstractMapleMapObject {
             }, timeOut);
         }
     }
-    
+
     public void delayedHitReactor(final MapleClient c, long delay) {
         TimerManager.getInstance().schedule(new Runnable() {
             @Override
@@ -226,19 +231,21 @@ public class MapleReactor extends AbstractMapleMapObject {
     public void hitReactor(MapleClient c) {
         hitReactor(false, 0, (short) 0, 0, c);
     }
-    
+
     public synchronized void hitReactor(boolean wHit, int charPos, short stance, int skillid, MapleClient c) {
         try {
-            if(!this.isAlive()) {
+            if (!this.isAlive()) {
                 return;
             }
-            
+
             this.lockReactor();
             try {
                 cancelReactorTimeout();
                 attackHit = wHit;
 
-                if(ServerConstants.USE_DEBUG == true) c.getPlayer().dropMessage(5, "Hitted REACTOR " + this.getId() + " with POS " + charPos + " , STANCE " + stance + " , SkillID " + skillid + " , STATE " + stats.getType(state) + " STATESIZE " + stats.getStateSize(state));
+                if (ServerConstants.USE_DEBUG == true) {
+                    c.getPlayer().dropMessage(5, "Hitted REACTOR " + this.getId() + " with POS " + charPos + " , STANCE " + stance + " , SkillID " + skillid + " , STATE " + stats.getType(state) + " STATESIZE " + stats.getStateSize(state));
+                }
                 ReactorScriptManager.getInstance().onHit(c, this);
 
                 int reactorType = stats.getType(state);
@@ -247,7 +254,9 @@ public class MapleReactor extends AbstractMapleMapObject {
                         for (byte b = 0; b < stats.getStateSize(state); b++) {//YAY?
                             List<Integer> activeSkills = stats.getActiveSkills(state, b);
                             if (activeSkills != null) {
-                                if (!activeSkills.contains(skillid)) continue;
+                                if (!activeSkills.contains(skillid)) {
+                                    continue;
+                                }
                             }
                             state = stats.getNextState(state, b);
                             if (stats.getNextState(state, b) == -1) {//end of reactor
@@ -270,7 +279,7 @@ public class MapleReactor extends AbstractMapleMapObject {
 
                                 setShouldCollect(true);     // refresh collectability on item drop-based reactors
                                 refreshReactorTimeout();
-                                if(stats.getType(state) == 100) {
+                                if (stats.getType(state) == 100) {
                                     map.searchItemReactors(this);
                                 }
                             }
@@ -284,14 +293,14 @@ public class MapleReactor extends AbstractMapleMapObject {
 
                     setShouldCollect(true);
                     refreshReactorTimeout();
-                    if(stats.getType(state) == 100) {
+                    if (stats.getType(state) == 100) {
                         map.searchItemReactors(this);
                     }
                 }
             } finally {
                 this.unlockReactor();
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

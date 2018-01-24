@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package net.server.channel.handlers;
 
 import client.MapleCharacter;
@@ -39,11 +39,12 @@ import tools.Randomizer;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class MoveLifeHandler extends AbstractMovementPacketHandler {
+
     @Override
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         MapleMap map = c.getPlayer().getMap();
         List<MapleCharacter> banishPlayers = new ArrayList<>();
-        
+
         int objectid = slea.readInt();
         short moveid = slea.readShort();
 
@@ -94,7 +95,7 @@ public final class MoveLifeHandler extends AbstractMovementPacketHandler {
         }
         boolean aggro = monster.isControllerHasAggro();
         if (toUse != null) {
-                c.announce(MaplePacketCreator.moveMonsterResponse(objectid, moveid, monster.getMp(), aggro, toUse.getSkillId(), toUse.getSkillLevel()));
+            c.announce(MaplePacketCreator.moveMonsterResponse(objectid, moveid, monster.getMp(), aggro, toUse.getSkillId(), toUse.getSkillLevel()));
         } else {
             c.announce(MaplePacketCreator.moveMonsterResponse(objectid, moveid, monster.getMp(), aggro));
         }

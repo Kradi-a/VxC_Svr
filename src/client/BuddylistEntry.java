@@ -18,10 +18,11 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package client;
 
 public class BuddylistEntry {
+
     private String name;
     private String group;
     private int cid;
@@ -44,7 +45,8 @@ public class BuddylistEntry {
     }
 
     /**
-     * @return the channel the character is on. If the character is offline returns -1.
+     * @return the channel the character is on. If the character is offline
+     * returns -1.
      */
     public int getChannel() {
         return channel;

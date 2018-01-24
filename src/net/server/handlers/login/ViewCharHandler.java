@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package net.server.handlers.login;
 
 import client.MapleCharacter;
@@ -35,13 +35,14 @@ import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class ViewCharHandler extends AbstractMaplePacketHandler {
+
     @Override
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         try {
             short charsNum;
             List<Integer> worlds;
             List<MapleCharacter> chars;
-            
+
             Connection con = DatabaseConnection.getConnection();
             try (PreparedStatement ps = con.prepareStatement("SELECT world, id FROM characters WHERE accountid = ?")) {
                 ps.setInt(1, c.getAccID());
@@ -78,7 +79,7 @@ public final class ViewCharHandler extends AbstractMaplePacketHandler {
                 }
                 c.announce(MaplePacketCreator.showAllCharacterInfo(w, chrsinworld));
             }
-            
+
             con.close();
         } catch (Exception e) {
             e.printStackTrace();

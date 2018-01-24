@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package net.server.channel.handlers;
 
 import net.AbstractMaplePacketHandler;
@@ -35,6 +35,7 @@ import constants.GameConstants;
 import constants.skills.Aran;
 
 public final class DistributeSPHandler extends AbstractMaplePacketHandler {
+
     @Override
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         slea.readInt();
@@ -43,9 +44,9 @@ public final class DistributeSPHandler extends AbstractMaplePacketHandler {
             c.getSession().write(MaplePacketCreator.enableActions());
             return;
         }
-        
+
         MapleCharacter player = c.getPlayer();
-        int remainingSp = player.getRemainingSpBySkill(GameConstants.getSkillBook(skillid/10000));
+        int remainingSp = player.getRemainingSpBySkill(GameConstants.getSkillBook(skillid / 10000));
         boolean isBeginnerSkill = false;
         if ((!GameConstants.isPqSkillMap(player.getMapId()) && GameConstants.isPqSkill(skillid)) || (!player.isGM() && GameConstants.isGMSkills(skillid)) || (!GameConstants.isInJobTree(skillid, player.getJob().getId()) && !player.isGM())) {
             AutobanFactory.PACKET_EDIT.alert(player, "tried to packet edit in distributing sp.");
@@ -60,24 +61,24 @@ public final class DistributeSPHandler extends AbstractMaplePacketHandler {
             }
             remainingSp = Math.min((player.getLevel() - 1), 6) - total;
             isBeginnerSkill = true;
-        }  		
+        }
         Skill skill = SkillFactory.getSkill(skillid);
         int curLevel = player.getSkillLevel(skill);
         if ((remainingSp > 0 && curLevel + 1 <= (skill.isFourthJob() ? player.getMasterLevel(skill) : skill.getMaxLevel()))) {
             if (!isBeginnerSkill) {
-                player.setRemainingSp(player.getRemainingSpBySkill(GameConstants.getSkillBook(skillid/10000)) - 1, GameConstants.getSkillBook(skillid/10000));
-            }       	
-            player.updateSingleStat(MapleStat.AVAILABLESP, player.getRemainingSpBySkill(GameConstants.getSkillBook(skillid/10000)));
+                player.setRemainingSp(player.getRemainingSpBySkill(GameConstants.getSkillBook(skillid / 10000)) - 1, GameConstants.getSkillBook(skillid / 10000));
+            }
+            player.updateSingleStat(MapleStat.AVAILABLESP, player.getRemainingSpBySkill(GameConstants.getSkillBook(skillid / 10000)));
             if (skill.getId() == Aran.FULL_SWING) {
-            	player.changeSkillLevel(skill, (byte) (curLevel + 1), player.getMasterLevel(skill), player.getSkillExpiration(skill));
-            	player.changeSkillLevel(SkillFactory.getSkill(Aran.HIDDEN_FULL_DOUBLE), (byte) player.getSkillLevel(skill), player.getMasterLevel(skill),  player.getSkillExpiration(skill));
-            	player.changeSkillLevel(SkillFactory.getSkill(Aran.HIDDEN_FULL_TRIPLE), (byte) player.getSkillLevel(skill), player.getMasterLevel(skill),  player.getSkillExpiration(skill));            
+                player.changeSkillLevel(skill, (byte) (curLevel + 1), player.getMasterLevel(skill), player.getSkillExpiration(skill));
+                player.changeSkillLevel(SkillFactory.getSkill(Aran.HIDDEN_FULL_DOUBLE), (byte) player.getSkillLevel(skill), player.getMasterLevel(skill), player.getSkillExpiration(skill));
+                player.changeSkillLevel(SkillFactory.getSkill(Aran.HIDDEN_FULL_TRIPLE), (byte) player.getSkillLevel(skill), player.getMasterLevel(skill), player.getSkillExpiration(skill));
             } else if (skill.getId() == Aran.OVER_SWING) {
-            	player.changeSkillLevel(skill, (byte) (curLevel + 1), player.getMasterLevel(skill), player.getSkillExpiration(skill));
-            	player.changeSkillLevel(SkillFactory.getSkill(Aran.HIDDEN_OVER_DOUBLE), (byte) player.getSkillLevel(skill), player.getMasterLevel(skill),  player.getSkillExpiration(skill));
-            	player.changeSkillLevel(SkillFactory.getSkill(Aran.HIDDEN_OVER_TRIPLE), (byte) player.getSkillLevel(skill), player.getMasterLevel(skill),  player.getSkillExpiration(skill));
+                player.changeSkillLevel(skill, (byte) (curLevel + 1), player.getMasterLevel(skill), player.getSkillExpiration(skill));
+                player.changeSkillLevel(SkillFactory.getSkill(Aran.HIDDEN_OVER_DOUBLE), (byte) player.getSkillLevel(skill), player.getMasterLevel(skill), player.getSkillExpiration(skill));
+                player.changeSkillLevel(SkillFactory.getSkill(Aran.HIDDEN_OVER_TRIPLE), (byte) player.getSkillLevel(skill), player.getMasterLevel(skill), player.getSkillExpiration(skill));
             } else {
-            	player.changeSkillLevel(skill, (byte) (curLevel + 1), player.getMasterLevel(skill), player.getSkillExpiration(skill));
+                player.changeSkillLevel(skill, (byte) (curLevel + 1), player.getMasterLevel(skill), player.getSkillExpiration(skill));
             }
         }
     }

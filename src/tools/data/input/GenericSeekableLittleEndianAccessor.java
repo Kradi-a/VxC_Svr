@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package tools.data.input;
 
 import java.io.IOException;
@@ -26,18 +26,19 @@ import java.io.IOException;
 /**
  * Provides an abstract accessor to a generic Little Endian byte stream. This
  * accessor is seekable.
- * 
+ *
  * @author Frz
  * @version 1.0
  * @since Revision 323
  * @see tools.data.input.GenericLittleEndianAccessor
  */
 public class GenericSeekableLittleEndianAccessor extends GenericLittleEndianAccessor implements SeekableLittleEndianAccessor {
+
     private SeekableInputStreamBytestream bs;
 
     /**
-     * Class constructor
-     * Provide a seekable input stream to wrap this object around.
+     * Class constructor Provide a seekable input stream to wrap this object
+     * around.
      *
      * @param bs The byte stream to wrap this around.
      */

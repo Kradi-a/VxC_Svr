@@ -18,7 +18,7 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package constants.skills;
 
 /**
@@ -26,6 +26,7 @@ package constants.skills;
  * @author kevintjuh93
  */
 public class Legend {
+
     public static final int THREE_SNAILS = 20001000;
     public static final int RECOVERY = 20001001;
     public static final int AGILE_BODY = 20001002;

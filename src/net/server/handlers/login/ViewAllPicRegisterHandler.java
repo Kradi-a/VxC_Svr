@@ -11,7 +11,6 @@ import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class ViewAllPicRegisterHandler extends AbstractMaplePacketHandler { //Gey class name lol
 
-
     @Override
     public final void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         slea.readByte();
