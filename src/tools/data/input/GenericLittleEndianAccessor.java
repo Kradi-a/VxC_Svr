@@ -23,6 +23,7 @@ package tools.data.input;
 
 import java.awt.Point;
 import java.io.ByteArrayOutputStream;
+import java.io.UnsupportedEncodingException;
 
 /**
  * Provides a generic interface to a Little Endian stream of bytes.
@@ -130,11 +131,11 @@ public class GenericLittleEndianAccessor implements LittleEndianAccessor {
      * @return The string read.
      */
     public final String readAsciiString(int n) {
-        char ret[] = new char[n];
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(n);
         for (int x = 0; x < n; x++) {
-            ret[x] = (char) readByte();
+            baos.write(readByte());
         }
-        return String.valueOf(ret);
+        return toStringDefault949(baos);
     }
 
     /**
@@ -152,12 +153,15 @@ public class GenericLittleEndianAccessor implements LittleEndianAccessor {
             }
             baos.write(b);
         }
-        byte[] buf = baos.toByteArray();
-        char[] chrBuf = new char[buf.length];
-        for (int x = 0; x < buf.length; x++) {
-            chrBuf[x] = (char) buf[x];
+        return toStringDefault949(baos);
+    }
+
+    private static String toStringDefault949(ByteArrayOutputStream baos) {
+        try {
+            return baos.toString("MS949");
+        } catch (UnsupportedEncodingException ex) {
+            return baos.toString();
         }
-        return String.valueOf(chrBuf);
     }
 
     /**

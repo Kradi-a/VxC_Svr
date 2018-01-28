@@ -22,6 +22,7 @@
 package tools.data.output;
 
 import java.awt.Point;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 
 /**
@@ -120,7 +121,8 @@ public class GenericLittleEndianWriter implements LittleEndianWriter {
      */
     @Override
     public void writeAsciiString(String s) {
-        write(s.getBytes(ASCII));
+        byte[] ba = toByteArrayDefault949(s);
+        write(ba);
     }
 
     /**
@@ -130,8 +132,9 @@ public class GenericLittleEndianWriter implements LittleEndianWriter {
      */
     @Override
     public void writeMapleAsciiString(String s) {
-        writeShort((short) s.length());
-        writeAsciiString(s);
+        byte[] ba = toByteArrayDefault949(s);
+        writeShort((short) ba.length);
+        write(ba);
     }
 
     /**
@@ -143,6 +146,14 @@ public class GenericLittleEndianWriter implements LittleEndianWriter {
     public void writeNullTerminatedAsciiString(String s) {
         writeAsciiString(s);
         write(0);
+    }
+
+    private byte[] toByteArrayDefault949(String s) {
+        try {
+            return s.getBytes("MS949");
+        } catch (UnsupportedEncodingException ex) {
+            return s.getBytes();
+        }
     }
 
     /**
